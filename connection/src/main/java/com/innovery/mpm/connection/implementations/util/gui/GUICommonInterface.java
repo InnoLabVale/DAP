@@ -1,0 +1,63 @@
+package com.innovery.mpm.connection.implementations.util.gui;
+
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+
+public interface GUICommonInterface {
+	
+	public static final String font = "Euphemia";
+	public static final int style = Font.PLAIN;
+	public static final int size = 12;
+
+	public GridBagConstraints setContraints(int top, int left, int buttom,
+			int right, int x, int y);
+
+	public GridBagConstraints setContraints(int in_fill, int in_anchor,
+			int in_gridwidth, int x, int y);
+
+	public GridBagConstraints setContraintsAnchor(int in_anchor, int x, int y);
+
+	public GridBagConstraints setContraints(int in_fill, int in_anchor,
+			int top, int left, int buttom, int right, int x, int y);
+
+	public GridBagConstraints setContraintsGridWidth(int in_fill,
+			int in_anchor, int in_gridwidth, int top, int left, int buttom,
+			int right, int x, int y);
+
+	public GridBagConstraints setContraintsGridWidth(int in_fill,
+			int in_gridwidth, int top, int left, int buttom, int right, int x,
+			int y);
+
+	public GridBagConstraints setContraints(int in_fill, int top, int left,
+			int buttom, int right, int x, int y);
+
+	public GridBagConstraints setContraints(int in_fill, int in_anchor,
+			int top, int left, int buttom, int right, int x, int y, int ix);
+
+	public GridBagConstraints setContraintsFill(int in_fill, int top, int left,
+			int buttom, int right, int x, int y, int ix);
+
+	public GridBagConstraints setContraints(int in_fill, int x, int y,
+			int gridwidth);
+
+	public GridBagConstraints setContraintsFill(int in_fill, int x, int y);
+
+	public GridBagConstraints setContraints(int x, int y);
+
+	public String getFontName();
+
+	public Font setFontSize(int size);
+
+	public Font setFontSize(int style, int size);
+
+	public Font getFont();
+
+	public String mandatory(String input);
+
+	public String optional(String input);
+
+	public boolean isOptional(String input);
+
+	public boolean isMandatory(String input);
+
+}

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opt code="OPT50">
+	<action value="in"/>
+	<action value="out"/>
+	<action value="get">
+		<parameter name="RETURNDATA" value="ALL"/>
+	</action>
+</opt>

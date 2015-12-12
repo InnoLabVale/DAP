@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opt code="OPT47">
+	<action value="in">
+		<parameter name="[ONESHOTFEE]" value="[0-9]{1,256}"/>
+	</action>
+	<action value="out"/>
+	<action value="get">
+		<parameter name="RETURNDATA" value="ALL"/>
+	</action>
+</opt>

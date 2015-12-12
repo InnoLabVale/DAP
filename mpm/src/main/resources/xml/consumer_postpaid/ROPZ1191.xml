@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ropz code="ROPZ1191">
+	<action value="in">
+		<parameter name="ACCOUNTB" value="[0-9]{1,28}"/>
+	</action>
+	<action value="out"/>
+	<action value="chg">
+		<parameter name="ACCOUNTB" value="[0-9]{1,28}"/>
+	</action>
+	<action value="get"/>
+</ropz>

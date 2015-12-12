@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ropz code="ROPZ4431">
+	<action value="in">
+		<parameter name="PROMOOFFSET" value="[0-9]{1,16}"/>
+	</action>
+	<action value="out"/>
+	<action value="get"/>
+</ropz>

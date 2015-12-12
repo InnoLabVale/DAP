@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ropz code="ROPZ4100">
+	<action value="in">
+		<parameter name="FEEDISCOUNT" value="NULL|ROPZ4101|ROPZ4103|ROPZ4136|ROPZ4140|ROPZ4146"/>
+		<parameter name="FEEDELAY" value="[0-9]{1,16}"/>
+	</action>
+	<action value="out"/>
+	<action value="book_out"/>
+	<action value="get"/>
+</ropz>

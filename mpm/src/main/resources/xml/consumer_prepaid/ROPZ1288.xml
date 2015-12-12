@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ropz code="ROPZ1288">
+	<action value="in">
+		<parameter name="FEEDELAY" value="[0-9]{1,16}"/>
+	</action>
+</ropz>

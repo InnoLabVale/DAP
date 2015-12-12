@@ -1,0 +1,68 @@
+package com.innovery.mpm.resource.implementations.gui.grid;
+
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.swing.JLabel;
+
+import com.innovery.mpm.connection.interfaces.component.DAPBeanInterface;
+
+public class PromotionPlanResponseGrid {
+
+	private DAPBeanInterface components;
+	
+	private Map<Object, GridBagConstraints> gridList;
+	
+	public PromotionPlanResponseGrid(DAPBeanInterface components){
+		this.components = components;
+	}
+	
+	public Map<Object, GridBagConstraints> getGrid(String[] mpm_response_splitted){
+		gridList = new HashMap<>();
+		setHeader();
+		setValues(mpm_response_splitted);
+		return gridList;
+	}
+	
+	public void setHeader(){
+		JLabel resource_1_label = new JLabel("PROMOTION PLAN ID:");
+		JLabel resource_2_label = new JLabel("PROMOTION START DATE:");
+		JLabel resource_3_label = new JLabel("PROMOTION END DATE:");
+		
+		resource_1_label.setFont(new Font(resource_1_label.getFont().getName(), Font.BOLD, resource_1_label.getFont().getSize()));
+		resource_2_label.setFont(new Font(resource_2_label.getFont().getName(), Font.BOLD, resource_2_label.getFont().getSize()));
+		resource_3_label.setFont(new Font(resource_3_label.getFont().getName(), Font.BOLD, resource_3_label.getFont().getSize()));
+		
+		gridList.put(resource_1_label, components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.EAST, 5, 15, 0, 0, 0, 0));
+		gridList.put(resource_2_label, components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.EAST, 5, 15, 0, 0, 0, 1));
+		gridList.put(resource_3_label, components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.EAST, 5, 15, 0, 0, 0, 2));
+	}
+	
+	private void setValues(String[] mpm_response_splitted){
+		String[] resource_response_splitted = mpm_response_splitted[3].split(",");
+		
+		int y = 0;
+		
+		for(int i=1; i<resource_response_splitted.length-1; i++){
+			
+			JLabel label_temp = new JLabel(resource_response_splitted[i+1]);
+			
+			if(resource_response_splitted[i].equals("PROMOTIONPLANID")){
+				gridList.put(label_temp, components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 5, 15, 0, 0, 1, y));
+				y = y+1;
+			}
+			
+			else if(resource_response_splitted[i].equals("PROMOTIONSTARTDATE")){
+				gridList.put(label_temp, components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 5, 15, 0, 0, 1, y));
+				y = y+1;
+			}
+			
+			else if(resource_response_splitted[i].equals("PROMOTIONENDDATE")){
+				gridList.put(label_temp, components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 5, 15, 0, 0, 1, y));
+				y = y+1;
+			}
+		}
+	}
+}
