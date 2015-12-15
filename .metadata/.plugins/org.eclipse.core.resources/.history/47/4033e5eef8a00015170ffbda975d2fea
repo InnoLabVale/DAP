@@ -1,0 +1,33 @@
+package com.innovery.mpm.resource.interfaces.gui;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
+import com.innovery.mpm.resource.interfaces.gui.util.AirResourceResponseManagerInterface;
+import com.innovery.mpm.resource.interfaces.gui.util.AirResourceUtilInterface;
+import com.innovery.mpm.resource.interfaces.gui.util.AirResourceResponseGridManagerInterface;
+import com.innovery.mpm.resource.interfaces.gui.verification.AirResourceVerifyInterface;
+
+public interface AirResourceInterface {
+	
+	public void initialize();
+	
+	public JButton getBtnExecute();
+
+	public JFrame getFrame();
+
+	public void setUtil(AirResourceUtilInterface util);
+
+	public void setResponseManager(AirResourceResponseManagerInterface responseManager);
+
+	public void setGrid_managment(AirResourceResponseGridManagerInterface grid_managment);
+
+	public void setResourceVerifier(AirResourceVerifyInterface resourceVerifier);
+}

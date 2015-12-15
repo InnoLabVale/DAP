@@ -1,0 +1,65 @@
+package com.innovery.mpm.provisioning.interfaces.gui.util;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
+import com.innovery.mpm.connection.interfaces.component.DAPBeanInterface;
+import com.innovery.mpm.provisioning.interfaces.gui.BsoResourceInterface;
+import com.innovery.mpm.provisioning.interfaces.gui.BsoResponseGridManagmentInterface;
+
+public interface ProvisioningResponseManagmentInterface {
+
+	public void getResponse();
+	
+	public void setComponents(DAPBeanInterface components);
+
+	void setGridManager(BsoResponseGridManagmentInterface gridManager);
+
+	void setBtnExecute(JButton btnExecute);
+
+	void setTextArea(JTextArea textArea);
+
+	void setCugButtonGroup(ButtonGroup cugButtonGroup);
+
+	void setDiscountComboboxSelection(JComboBox discountComboboxSelection);
+
+	void setDiscountLabel(JLabel discountLabel);
+
+	void setParameter_6_name(JLabel parameter_6_name);
+
+	void setParameter_5_name(JLabel parameter_5_name);
+
+	void setParameter_4_name(JLabel parameter_4_name);
+
+	void setParameter_3_name(JLabel parameter_3_name);
+
+	void setParameter_2_name(JLabel parameter_2_name);
+
+	void setParameter_1_name(JLabel parameter_1_name);
+
+	void setParameter_6_value(JTextField parameter_6_value);
+
+	void setParameter_5_value(JTextField parameter_5_value);
+
+	void setParameter_4_value(JTextField parameter_4_value);
+
+	void setParameter_3_value(JTextField parameter_3_value);
+
+	void setParameter_2_value(JTextField parameter_2_value);
+
+	void setParameter_1_value(JTextField parameter_1_value);
+
+	void setOptionComboboxSelection(JComboBox optionComboboxSelection);
+
+	void setCtypeButtonGroup(ButtonGroup ctypeButtonGroup);
+
+	void setMarketButtonGroup(ButtonGroup marketButtonGroup);
+
+	void setActionButtonGroup(ButtonGroup actionButtonGroup);
+
+	void setMsisdnField(JTextField msisdnField);
+}

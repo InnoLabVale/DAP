@@ -1,0 +1,10 @@
+package com.innovery.mpm.util.actions;
+
+public class AIRActions{
+
+	public static final String AIR_ACTION_CREATE = "create";
+	public static final String AIR_ACTION_DELETE = "delete";
+	public static final String AIR_ACTION_GET = "get";
+	public static final String AIR_ACTION_SET = "set";
+	public static final String AIR_ACTION_RUN = "run";
+}

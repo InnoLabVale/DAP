@@ -1,0 +1,74 @@
+package com.innovery.mpm.resource.interfaces.gui;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
+import com.innovery.mpm.resource.interfaces.gui.util.AirResourceResponseManagerInterface;
+import com.innovery.mpm.resource.interfaces.gui.util.AirResourceUtilInterface;
+import com.innovery.mpm.resource.interfaces.gui.verification.AirResourceVerifyInterface;
+
+public interface AirResourceInterface {
+	
+	public void initialize();
+	
+//	public void setSpecificResourcePanel(JPanel resource);
+
+	public JTextArea getTextArea();
+
+	public JTextField getMsisdn_text();
+
+	public JButton getBtnExecute();
+
+	public ButtonGroup getRadioGroupMarket();
+
+	public ButtonGroup getRadioGroupAction();
+
+	public String getResourceSelected();
+
+	public JFrame getFrame();
+
+	public JComboBox getResource_combo();
+
+	public JPanel getVoidResourcesPanel();
+
+	public JRadioButton getRdbtnCreate();
+
+	public JRadioButton getRdbtnDelete();
+
+	public JRadioButton getRdbtnGet();
+
+	public JRadioButton getRdbtnUpdate();
+
+	public JRadioButton getRdbtnRun();
+
+	public JPanel getCai_command_fieldset();
+
+	public AirResourceUtilInterface getUtil();
+
+	public JPanel getResponse_fieldset();
+
+	public JPanel getResponse_fieldset_grid();
+
+	public void setResponse_fieldset_grid(JPanel response_fieldset_grid);
+
+	public JLabel getGeneric_response_msg();
+
+	public void setGeneric_response_msg(JLabel generic_response_msg);
+
+	public AirResponseGridManagerInterface getGrid_managment();
+	
+	public void setUtil(AirResourceUtilInterface util);
+
+	public void setResponseManager(AirResourceResponseManagerInterface responseManager);
+
+	public void setGrid_managment(AirResponseGridManagerInterface grid_managment);
+
+	public void setResourceVerifier(AirResourceVerifyInterface resourceVerifier);
+}

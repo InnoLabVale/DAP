@@ -1,0 +1,45 @@
+1443623015709	Move compilation unit
+1443623059359	Extract interface 'AutoCompleteMsisdnInterface'
+1443623068410	Move compilation unit
+1443623094801	Delete element
+1443623518260	Move compilation unit
+1443623545846	Extract interface 'GUICommonInterface'
+1443623549884	Move compilation unit
+1443623586513	Move compilation unit
+1443623600285	Extract interface 'NotificationInterface'
+1443623603877	Move compilation unit
+1443623691974	Move compilation unit
+1443623712190	Extract interface 'TransIdGeneratorInterface'
+1443623725838	Move compilation unit
+1443623955857	Rename package 'com.innovery.mpm.util.implementations.autocomplete'
+1443623977543	Rename package 'com.innovery.mpm.util.interfaces.autocomplete'
+1443623991631	Move compilation unit
+1443624018311	Extract interface 'CompleteDateInterface'
+1443624024274	Move compilation unit
+1443624072091	Extract interface 'CSCHAINInterface'
+1443624076390	Move compilation unit
+1443624080267	Move compilation unit
+1443624083660	Delete element
+1443624140577	Extract interface 'CTYPEInterface'
+1443624145253	Move compilation unit
+1443624149070	Move compilation unit
+1443624160143	Extract interface 'MARKETInterface'
+1443624164632	Move compilation unit
+1443624167934	Move compilation unit
+1443624173712	Delete elements
+1443624361767	Extract interface 'SettingFilesControlInterface'
+1443624367334	Move compilation unit
+1443624371076	Move compilation unit
+1443624397800	Extract interface 'PreferedListLoaderInterface'
+1443624406787	Move compilation unit
+1443624412292	Move compilation unit
+1443624493399	Extract interface 'PackagesControlInterface'
+1443624497798	Move compilation unit
+1443624502566	Move compilation unit
+1443624639779	Extract interface 'LookAndFeelInterface'
+1443624644771	Move compilation unit
+1443624650156	Move compilation unit
+1443625768077	Extract interface 'JarReaderInterface'
+1443625772414	Move compilation unit
+1443625777596	Move compilation unit
+1443625781043	Delete element

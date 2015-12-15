@@ -1,0 +1,259 @@
+package com.innovery.mpm.provisioning.implementations.gui.util;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
+import com.innovery.mpm.connection.interfaces.component.DAPBeanInterface;
+import com.innovery.mpm.provisioning.implementations.action.ActionCommandBSO;
+import com.innovery.mpm.provisioning.implementations.bean.CommandBSO;
+import com.innovery.mpm.provisioning.implementations.util.PROVISIONINGActions;
+import com.innovery.mpm.provisioning.interfaces.action.ActionCommandBSOInterface;
+import com.innovery.mpm.provisioning.interfaces.bean.CommandBSOInterface;
+import com.innovery.mpm.provisioning.interfaces.gui.BsoResponseGridManagmentInterface;
+import com.innovery.mpm.provisioning.interfaces.gui.util.ProvisioningResponseManagmentInterface;
+
+public class ProvisioningResponseManagment implements ProvisioningResponseManagmentInterface{
+	
+	private DAPBeanInterface components;
+	
+	private JTextArea textArea;
+	private JButton btnExecute;
+	
+	private JTextField msisdnField;
+	private ButtonGroup actionButtonGroup;
+	private ButtonGroup marketButtonGroup;
+	private ButtonGroup ctypeButtonGroup;
+	
+	private JComboBox optionComboboxSelection;
+	
+	private JTextField parameter_1_value;
+	private JTextField parameter_2_value;
+	private JTextField parameter_3_value;
+	private JTextField parameter_4_value;
+	private JTextField parameter_5_value;
+	private JTextField parameter_6_value;
+	
+	private JLabel parameter_1_name;
+	private JLabel parameter_2_name;
+	private JLabel parameter_3_name;
+	private JLabel parameter_4_name;
+	private JLabel parameter_5_name;
+	private JLabel parameter_6_name;
+	
+	private JLabel discountLabel;
+	private JComboBox discountComboboxSelection;
+	
+	private ButtonGroup cugButtonGroup;
+	
+	private BsoResponseGridManagmentInterface gridManager;
+	
+	public void getResponse() {	
+		saveSessionInfo();
+		ActionCommandBSOInterface actionBso = new ActionCommandBSO();
+		actionBso.setComponents(components);
+		
+		String response_mpm = actionBso.executeBsoCommand(createBean());
+		
+		gridManager.setResponseGridAssurance(response_mpm);
+		textArea.setText(response_mpm);
+		
+	    btnExecute.setEnabled(true);
+	    
+	    if(response_mpm.equals(components.getErrorMessages().get_NOT_LOGGED_WARN()) ||
+	       response_mpm.equals(components.getErrorMessages().get_MPM_CONNECTION_WARN())){
+	    
+			if(response_mpm.equals(components.getErrorMessages().get_NOT_LOGGED_WARN())){
+				btnExecute.setText("Reconnect");
+				btnExecute.setActionCommand("reconnect");
+			}
+			else if(response_mpm.equals(components.getErrorMessages().get_MPM_CONNECTION_WARN())){
+				btnExecute.setText("Home");
+				btnExecute.setActionCommand("home");
+			}
+		}
+	}
+	
+	private CommandBSOInterface createBean(){
+		components.getLogger().info("CREATING NEW CommandBSO");
+		CommandBSOInterface bso = new CommandBSO();
+		
+		bso.setMsisdn(msisdnField.getText());
+		bso.setService(technicalOptionManagment((String) optionComboboxSelection.getSelectedItem()));
+		bso.setMarket(marketButtonGroup.getSelection().getActionCommand());
+		bso.setCtype(ctypeButtonGroup.getSelection().getActionCommand());
+		bso.setAction(actionButtonGroup.getSelection().getActionCommand());
+		bso.setTrans_id(components.getTRANSID().generateTransID());
+		bso.setParameter_1_name(parameter_1_name.getText());
+		bso.setParameter_1_value(parameter_1_value.getText());
+		bso.setParameter_2_name(parameter_2_name.getText());
+		bso.setParameter_2_value(parameter_2_value.getText());
+		bso.setParameter_3_name(parameter_3_name.getText());
+		bso.setParameter_3_value(parameter_3_value.getText());
+		bso.setParameter_4_name(parameter_4_name.getText());
+		bso.setParameter_4_value(parameter_4_value.getText());
+		bso.setParameter_5_name(parameter_5_name.getText());
+		bso.setParameter_5_value(parameter_5_value.getText());
+		bso.setParameter_6_name(parameter_6_name.getText());
+		bso.setParameter_6_value(parameter_6_value.getText());
+		
+		if(discountLabel.isVisible() && !discountLabel.getText().equals("") && !discountComboboxSelection.getSelectedItem().equals(PROVISIONINGActions.PROVISIONING_ACTION_DEFAULT)){
+			bso.setDiscount_name(discountLabel.getText());
+			bso.setDiscount_value((String) discountComboboxSelection.getSelectedItem());
+		}
+		
+		if(cugButtonGroup.getSelection()!=null){
+			bso.setCug_action(cugButtonGroup.getSelection().getActionCommand());
+		}
+		return bso;
+	}
+	
+	private String technicalOptionManagment(String service){
+		if(service.startsWith("SET")){
+			return service.replaceFirst("SET-", "");
+		}
+		else if(service.startsWith("GET")){
+			return service.replaceFirst("GET-", "");
+		}
+		else{
+			return service;
+		}
+	}
+	
+	private void saveSessionInfo(){
+		components.getLogger().info("SAVING SESSION");
+		if (!components.getConnectionManagerStandard().getSession().getCurrent_msisdn().equals(msisdnField.getText())) {
+			components.getConnectionManagerStandard().getSession().setCurrent_msisdn(msisdnField.getText());
+			components.getMsisdnCompleter().store(msisdnField.getText());
+		}
+		if(!components.getConnectionManagerStandard().getSession().getCurrent_market().equals(marketButtonGroup.getSelection().getActionCommand())){
+			components.getConnectionManagerStandard().getSession().setCurrent_market(marketButtonGroup.getSelection().getActionCommand());
+		}
+		if(!components.getConnectionManagerStandard().getSession().getCurrent_ctype().equals(ctypeButtonGroup.getSelection().getActionCommand())){
+			components.getConnectionManagerStandard().getSession().setCurrent_ctype(ctypeButtonGroup.getSelection().getActionCommand());
+		}
+		components.getLogger().info("SESSION SAVED");
+	}
+
+	public void setComponents(DAPBeanInterface components) {
+		this.components = components;
+	}
+
+	@Override
+	public void setTextArea(JTextArea textArea) {
+		this.textArea = textArea;
+	}
+
+	@Override
+	public void setBtnExecute(JButton btnExecute) {
+		this.btnExecute = btnExecute;
+	}
+
+	@Override
+	public void setGridManager(BsoResponseGridManagmentInterface gridManager) {
+		this.gridManager = gridManager;
+	}
+
+	@Override
+	public void setMsisdnField(JTextField msisdnField) {
+		this.msisdnField = msisdnField;
+	}
+
+	@Override
+	public void setActionButtonGroup(ButtonGroup actionButtonGroup) {
+		this.actionButtonGroup = actionButtonGroup;
+	}
+
+	@Override
+	public void setMarketButtonGroup(ButtonGroup marketButtonGroup) {
+		this.marketButtonGroup = marketButtonGroup;
+	}
+
+	@Override
+	public void setCtypeButtonGroup(ButtonGroup ctypeButtonGroup) {
+		this.ctypeButtonGroup = ctypeButtonGroup;
+	}
+
+	@Override
+	public void setOptionComboboxSelection(JComboBox optionComboboxSelection) {
+		this.optionComboboxSelection = optionComboboxSelection;
+	}
+
+	@Override
+	public void setParameter_1_value(JTextField parameter_1_value) {
+		this.parameter_1_value = parameter_1_value;
+	}
+
+	@Override
+	public void setParameter_2_value(JTextField parameter_2_value) {
+		this.parameter_2_value = parameter_2_value;
+	}
+
+	@Override
+	public void setParameter_3_value(JTextField parameter_3_value) {
+		this.parameter_3_value = parameter_3_value;
+	}
+
+	@Override
+	public void setParameter_4_value(JTextField parameter_4_value) {
+		this.parameter_4_value = parameter_4_value;
+	}
+
+	@Override
+	public void setParameter_5_value(JTextField parameter_5_value) {
+		this.parameter_5_value = parameter_5_value;
+	}
+
+	@Override
+	public void setParameter_6_value(JTextField parameter_6_value) {
+		this.parameter_6_value = parameter_6_value;
+	}
+
+	@Override
+	public void setParameter_1_name(JLabel parameter_1_name) {
+		this.parameter_1_name = parameter_1_name;
+	}
+
+	@Override
+	public void setParameter_2_name(JLabel parameter_2_name) {
+		this.parameter_2_name = parameter_2_name;
+	}
+
+	@Override
+	public void setParameter_3_name(JLabel parameter_3_name) {
+		this.parameter_3_name = parameter_3_name;
+	}
+
+	@Override
+	public void setParameter_4_name(JLabel parameter_4_name) {
+		this.parameter_4_name = parameter_4_name;
+	}
+
+	@Override
+	public void setParameter_5_name(JLabel parameter_5_name) {
+		this.parameter_5_name = parameter_5_name;
+	}
+
+	@Override
+	public void setParameter_6_name(JLabel parameter_6_name) {
+		this.parameter_6_name = parameter_6_name;
+	}
+
+	@Override
+	public void setDiscountLabel(JLabel discountLabel) {
+		this.discountLabel = discountLabel;
+	}
+
+	@Override
+	public void setDiscountComboboxSelection(JComboBox discountComboboxSelection) {
+		this.discountComboboxSelection = discountComboboxSelection;
+	}
+
+	@Override
+	public void setCugButtonGroup(ButtonGroup cugButtonGroup) {
+		this.cugButtonGroup = cugButtonGroup;
+	}
+}

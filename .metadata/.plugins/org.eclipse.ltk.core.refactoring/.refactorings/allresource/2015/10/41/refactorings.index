@@ -1,0 +1,11 @@
+1444059870565	Extract interface 'AllResourceNotificationConnectionWarningInterface'
+1444059894943	Move compilation unit
+1444122436857	Extract interface 'AllResourceResponseSplitterInterface'
+1444122445591	Move compilation unit
+1444124313630	Extract interface 'XmlOptionReaderInterface'
+1444124317933	Move compilation unit
+1444124401085	Extract interface 'XmlServiceCodeReaderInterface'
+1444124405483	Move compilation unit
+1444124980145	Delete element
+1444125049937	Delete element
+1444125055214	Delete element

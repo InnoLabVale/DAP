@@ -1,0 +1,50 @@
+package com.innovery.mpm.provisioning.implementations.gui.util.options;
+
+import javax.swing.JRadioButton;
+
+import com.innovery.mpm.connection.interfaces.component.DAPBeanInterface;
+import com.innovery.mpm.provisioning.interfaces.gui.BsoResourceInterface;
+import com.innovery.mpm.provisioning.interfaces.gui.util.options.ProvisioningPostponeInterface;
+
+public class ProvisioningPostpone implements ProvisioningPostponeInterface {
+	
+	private DAPBeanInterface components;
+	
+	private JRadioButton rdbtnIn;
+	private JRadioButton rdbtnOut;
+	private JRadioButton rdbtnBookOut;
+	private JRadioButton rdbtnChange;
+	private JRadioButton rdbtnGet;
+
+	public void enable(){
+		if(components.getConnectionManagerStandard().getSession().getUser_level()!=components.getUserLevels().getGuest()){
+			showCompleteActions();
+		}
+		else if(components.getConnectionManagerStandard().getSession().getUser_level()==components.getUserLevels().getGuest()){
+			showRestrictedActions();
+		}
+	}
+	
+	private void showCompleteActions(){
+		rdbtnIn.setEnabled(true);
+		rdbtnOut.setEnabled(false);
+		rdbtnBookOut.setEnabled(false);
+		rdbtnChange.setEnabled(false);
+		rdbtnGet.setEnabled(false);
+	}
+	
+	private void showRestrictedActions(){
+		rdbtnOut.setEnabled(false);
+		rdbtnBookOut.setEnabled(false);
+		rdbtnChange.setEnabled(false);
+		rdbtnGet.setEnabled(false);
+	}
+
+	public void setReference(BsoResourceInterface reference) {
+		this.reference = reference;
+	}
+
+	public void setComponents(DAPBeanInterface components) {
+		this.components = components;
+	}
+}

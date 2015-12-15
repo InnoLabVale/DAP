@@ -1,0 +1,21 @@
+package com.innovery.mpm.resource.interfaces.gui;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JFrame;
+
+import com.innovery.mpm.connection.interfaces.component.DAPBeanInterface;
+
+public interface AirResponseGridManagmentInterface {
+
+	void setResponseGridAssurance(String response_mpm);
+
+	void resetResponseGrid();
+
+	void setReference(AirResourceInterface reference);
+
+	public void setComponents(DAPBeanInterface components);
+
+	void setFrame(JFrame frame);
+
+	void setActionButtonGroup(ButtonGroup actionButtonGroup);
+}

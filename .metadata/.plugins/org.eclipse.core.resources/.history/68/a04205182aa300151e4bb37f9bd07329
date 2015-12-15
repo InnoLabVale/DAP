@@ -1,0 +1,41 @@
+package com.innovery.mpm.provisioning.interfaces.gui;
+
+import java.util.List;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
+import com.innovery.mpm.connection.implementations.util.gui.GUICommonInterface;
+import com.innovery.mpm.connection.interfaces.standard.ConnectionManagmentStandardInterface;
+import com.innovery.mpm.connection.interfaces.standard.session.SessionStandardInterface;
+import com.innovery.mpm.connection.interfaces.util.ErrorMessagesInterface;
+import com.innovery.mpm.connection.interfaces.util.NotificationInterface;
+import com.innovery.mpm.connection.interfaces.util.TransIdGeneratorInterface;
+import com.innovery.mpm.connection.interfaces.util.UserLevelsInterface;
+import com.innovery.mpm.provisioning.interfaces.gui.util.ProvisioningUtilInterface;
+import com.innovery.mpm.provisioning.interfaces.gui.verification.BsoResourcesVerifyInterface;
+import com.innovery.mpm.provisioning.interfaces.gui.util.ProvisioningResponseManagmentInterface;
+
+public interface BsoResourceInterface {
+	
+	public void initialize();
+
+	public JFrame getFrame();
+
+	public JButton getBtnExecute();
+
+	public void setResponseManager(ProvisioningResponseManagmentInterface responseManagment);
+
+	public void setInputVerifier(BsoResourcesVerifyInterface inputVerifier);
+
+	public void setUtil(ProvisioningUtilInterface util);
+
+	public void setResponseGridManager(BsoResponseGridManagmentInterface grid_managment);
+}

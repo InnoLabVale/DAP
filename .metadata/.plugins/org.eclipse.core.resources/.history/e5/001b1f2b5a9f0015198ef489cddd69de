@@ -1,0 +1,216 @@
+package com.innovery.mpm.resource.implementations.gui.bean;
+
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+
+import javax.swing.JLabel;
+import javax.swing.JRadioButton;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+
+import com.innovery.mpm.connection.interfaces.component.DAPBeanInterface;
+import com.innovery.mpm.resource.interfaces.gui.AirResourceInterface;
+import com.innovery.mpm.resource.implementations.util.AIRActions;
+
+public class GuiServiceOfferingsPanel extends GuiResourcePanelInterface{
+
+	private static final long serialVersionUID = 1L;
+	
+	private DAPBeanInterface components;
+	
+	private JRadioButton rdbtnCreate;
+	private JRadioButton rdbtnDelete;
+	private JRadioButton rdbtnGet;
+	
+	private JLabel so_label;
+	private JLabel so_dec_label;
+	private JTextField so_text;
+	private JTextField so_dec_text;
+	
+	public GuiServiceOfferingsPanel(AirResourceInterface reference, DAPBeanInterface components){
+		this.reference = reference;
+		this.components = components;
+		initialize();
+	}
+	
+	private void setPanelDimension() {
+		setSize(711, 450);
+		GridBagLayout gbl_resources_panel = new GridBagLayout();
+		gbl_resources_panel.columnWidths = new int[] { 260, 278, 0};
+		gbl_resources_panel.columnWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
+		gbl_resources_panel.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+		gbl_resources_panel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0,	0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		setLayout(gbl_resources_panel);
+	}
+	
+	private void initialize() {
+		setPanelDimension();
+		setServiceOfferingsLabel();
+		setServiceOfferingsText();
+		setServiceOfferingsDecimalLabel();
+		setServiceOfferingsDecimalText();
+		setAction(reference);
+	}
+	
+	private void setAction(AirResourceInterface reference){
+		rdbtnCreate.setEnabled(true);
+		rdbtnDelete.setEnabled(true);
+		rdbtnGet.setEnabled(true);
+	}
+	
+	private void setServiceOfferingsLabel(){
+		so_label = new JLabel("Service offering (bit)");
+		so_label.setHorizontalAlignment(SwingConstants.RIGHT);
+		so_label.setVisible(false);
+		add(so_label, components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 8, 5, 0, 5, 0, 0));
+	}
+	
+	private void setServiceOfferingsText(){
+		so_text = new JTextField();
+		so_text.setColumns(10);
+		so_text.setVisible(false);
+		add(so_text, components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 8, 0, 0, 0, 1, 0));
+	}
+	
+	private void setServiceOfferingsDecimalLabel(){
+		so_dec_label = new JLabel("Service offering (decimal)");
+		so_dec_label.setHorizontalAlignment(SwingConstants.RIGHT);
+		so_dec_label.setVisible(false);
+		add(so_dec_label, components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 8, 5, 0, 5, 0, 1));
+	}
+	
+	private void setServiceOfferingsDecimalText(){
+		so_dec_text = new JTextField();
+		so_dec_text.setColumns(10);
+		so_dec_text.setVisible(false);
+		add(so_dec_text, components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 8, 0, 0, 0, 1, 1));
+	}
+	
+	public JTextField getSoText(){
+		return so_text;
+	}
+
+	public JTextField getSo_dec_text() {
+		return so_dec_text;
+	}
+
+	public void setPanelAction(String action){
+		if(action.equals(AIRActions.AIR_ACTION_CREATE)){
+			this.actionCreate();
+		}
+		
+		else if(action.equals(AIRActions.AIR_ACTION_DELETE)){
+			this.actionDelete();
+		}
+		
+		else if(action.equals(AIRActions.AIR_ACTION_GET)){
+			this.actionGet();
+		}
+		
+		else if(action.equals(AIRActions.AIR_ACTION_SET)){
+		}
+	}
+	
+	private void actionCreate(){
+		so_label.setText("Service offering (bit)*");
+		so_dec_label.setText("Service offering (decimal)*");
+		
+		so_label.setVisible(true);
+		so_dec_label.setVisible(true);
+		
+		reset();
+		
+		so_text.setVisible(true);
+		so_dec_text.setVisible(true);
+		
+		
+		so_text.addKeyListener(new KeyAdapter() {
+			public void keyReleased(KeyEvent e) {
+				bitAction();
+			}
+		});
+		
+		so_dec_text.addKeyListener(new KeyAdapter() {
+			public void keyReleased(KeyEvent e) {
+				decimalAction();
+			}
+		});
+	}
+	
+	private void actionDelete(){
+		so_label.setText("Service offering (bit)*");
+		so_dec_label.setText("Service offering (decimal)*");
+		
+		so_label.setVisible(true);
+		so_dec_label.setVisible(true);
+		
+		reset();
+		
+		so_text.setVisible(true);
+		so_dec_text.setVisible(true);
+		
+		
+		so_text.addKeyListener(new KeyAdapter() {
+			public void keyReleased(KeyEvent e) {
+				bitAction();
+			}
+		});
+		
+		so_dec_text.addKeyListener(new KeyAdapter() {
+			public void keyReleased(KeyEvent e) {
+				decimalAction();
+			}
+		});
+	}
+	
+	private void actionGet(){
+		so_label.setText("Service offering (bit)");
+		so_dec_label.setText("Service offering (decimal)");
+		
+		so_label.setVisible(false);
+		so_dec_label.setVisible(false);
+		
+		reset();
+		
+		so_text.setVisible(false);
+		so_dec_text.setVisible(false);
+		
+	}
+	
+	private void bitAction(){
+		if(so_text.getText().length()>0){
+			so_dec_label.setText("Service offering (decimal)");
+			so_dec_label.setVisible(false);
+			so_dec_text.setText("");
+			so_dec_text.setVisible(false);
+		}
+		else {
+			so_dec_label.setText("Service offering (decimal)*");
+			so_dec_label.setVisible(true);
+			so_dec_text.setText("");
+			so_dec_text.setVisible(true);
+		}
+	}
+	
+	private void decimalAction(){
+		if(so_dec_text.getText().length()>0){
+			so_label.setText("Service offering (bit)");
+			so_label.setVisible(false);
+			so_text.setText("");
+			so_text.setVisible(false);
+		}
+		else {
+			so_label.setText("Service offering (bit)*");
+			so_label.setVisible(true);
+			so_text.setText("");
+			so_text.setVisible(true);
+		}
+	}
+	
+	private void reset(){
+		so_text.setText("");
+		so_dec_text.setText("");
+	}
+}

@@ -1,0 +1,210 @@
+package com.innovery.mpm.resource.implementations.gui.bean;
+
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+
+import javax.swing.JLabel;
+import javax.swing.JRadioButton;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+
+import com.innovery.mpm.connection.interfaces.component.DAPBeanInterface;
+import com.innovery.mpm.resource.interfaces.gui.AirResourceInterface;
+import com.innovery.mpm.resource.implementations.util.AIRActions;
+
+public class GuiPromotionPlanPanel extends GuiResourcePanelInterface{
+	
+	private DAPBeanInterface components;
+	
+	private JRadioButton rdbtnCreate;
+	private JRadioButton rdbtnDelete;
+	private JRadioButton rdbtnGet;
+	
+	private JLabel pplan_label;
+	private JTextField pplan_text;
+	
+	private JLabel pplan_start_label;
+	private JTextField pplan_start_text;
+	
+	private JLabel pplan_end_label;
+	private JTextField pplan_end_text;
+	
+
+	public GuiPromotionPlanPanel(DAPBeanInterface components, JRadioButton rdbrnCreate, JRadioButton rdbtnDelete, JRadioButton rdbtnGet){
+		this.components = components;
+		this.rdbtnCreate = rdbrnCreate;
+		this.rdbtnDelete = rdbtnDelete;
+		this.rdbtnGet = rdbtnGet;
+		initialize();
+	}
+	
+	private void setPanelDimension() {
+		setSize(711, 450);
+		GridBagLayout gbl_resources_panel = new GridBagLayout();
+		gbl_resources_panel.columnWidths = new int[] { 260, 278, 0};
+		gbl_resources_panel.columnWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
+		gbl_resources_panel.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+		gbl_resources_panel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0,	0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		setLayout(gbl_resources_panel);
+	}
+	
+	private void initialize() {
+		setPanelDimension();
+		setPromotionPlanLabel();
+		setPromotionPlanText();
+		setPromotionPlanStartDateLabel();
+		setPromotionPlanStartDateText();
+		setPromotionPlanEndDateLabel();
+		setPromotionPlanEndDateText();
+		setAction();
+	}
+	
+	private void setAction(){
+		rdbtnCreate.setEnabled(true);
+		rdbtnDelete.setEnabled(true);
+		rdbtnGet.setEnabled(true);
+	}
+	
+	private void setPromotionPlanLabel(){
+		pplan_label = new JLabel("Promotion plan");
+		pplan_label.setHorizontalAlignment(SwingConstants.RIGHT);
+		pplan_label.setVisible(false);
+		add(pplan_label, components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 8, 5, 0, 5, 0, 0));
+	}
+	
+	private void setPromotionPlanText(){
+		pplan_text = new JTextField();
+		pplan_text.setColumns(10);
+		pplan_text.setVisible(false);
+		add(pplan_text, components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 8, 0, 0, 0, 1, 0));
+	}
+	
+	private void setPromotionPlanStartDateLabel(){
+		pplan_start_label = new JLabel("Promotion plan start date (YYYY-MM-DD)");
+		pplan_start_label.setHorizontalAlignment(SwingConstants.RIGHT);
+		pplan_start_label.setVisible(false);
+		add(pplan_start_label, components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 8, 5, 0, 5, 0, 1));
+	}
+	
+	private void setPromotionPlanStartDateText(){
+		pplan_start_text = new JTextField();
+		pplan_start_text.addKeyListener(new KeyAdapter() {
+			public void keyReleased(KeyEvent e) {
+				pplan_start_text.setText(components.getDateCompleter().complete(pplan_start_text.getText()));
+			}
+		});
+		pplan_start_text.setColumns(10);
+		pplan_start_text.setVisible(false);
+		add(pplan_start_text, components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 8, 0, 0, 0, 1, 1));
+	}
+	
+	private void setPromotionPlanEndDateLabel(){
+		pplan_end_label = new JLabel("Promotion plan end date (YYYY-MM-DD)");
+		pplan_end_label.setHorizontalAlignment(SwingConstants.RIGHT);
+		pplan_end_label.setVisible(false);
+		add(pplan_end_label, components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 8, 5, 0, 5, 0, 2));
+	}
+	
+	private void setPromotionPlanEndDateText(){
+		pplan_end_text = new JTextField();
+		pplan_end_text.addKeyListener(new KeyAdapter() {
+			public void keyReleased(KeyEvent e) {
+				pplan_end_text.setText(components.getDateCompleter().complete(pplan_end_text.getText()));
+			}
+		});
+		pplan_end_text.setColumns(10);
+		pplan_end_text.setVisible(false);
+		add(pplan_end_text, components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 8, 0, 0, 0, 1, 2));
+	}
+
+	public JTextField getIdText(){
+		return pplan_text;
+	}
+
+	public JTextField getStartDateText(){
+		return pplan_start_text;
+	}
+
+	public JTextField getEndDateText(){
+		return pplan_end_text;
+	}
+	
+	public void setPanelAction(String action){
+		if(action.equals(AIRActions.AIR_ACTION_CREATE)){
+			this.actionCreate();
+		}
+		
+		else if(action.equals(AIRActions.AIR_ACTION_DELETE)){
+			this.actionDelete();
+		}
+		
+		else if(action.equals(AIRActions.AIR_ACTION_GET)){
+			this.actionGet();
+		}
+		
+		else if(action.equals(AIRActions.AIR_ACTION_SET)){
+			this.actionUpdate();
+		}
+	}
+	
+	private void actionCreate(){
+		pplan_label.setText("Promotion plan*");
+		pplan_start_label.setText("Promotion plan start date (YYYY-MM-DD)*");
+		pplan_end_label.setText("Promotion plan end date (YYYY-MM-DD)*");
+		
+		pplan_label.setVisible(true);
+		pplan_start_label.setVisible(true);
+		pplan_end_label.setVisible(true);
+		
+		this.reset();
+		
+		pplan_text.setVisible(true);
+		pplan_start_text.setVisible(true);
+		pplan_end_text.setVisible(true);
+	}
+	
+	private void actionDelete(){
+		pplan_label.setText("Promotion plan");
+		pplan_start_label.setText("Promotion plan start date (YYYY-MM-DD)*");
+		pplan_end_label.setText("Promotion plan end date (YYYY-MM-DD)*");
+		
+		pplan_label.setVisible(false);
+		pplan_start_label.setVisible(true);
+		pplan_end_label.setVisible(true);
+		
+		this.reset();
+		
+		pplan_text.setVisible(false);
+		pplan_start_text.setVisible(true);
+		pplan_end_text.setVisible(true);
+
+	}
+	
+	private void actionGet(){
+		pplan_label.setText("Promotion plan");
+		pplan_start_label.setText("Promotion plan start date (YYYY-MM-DD)");
+		pplan_end_label.setText("Promotion plan end date (YYYY-MM-DD)");
+		
+		pplan_label.setVisible(false);
+		pplan_start_label.setVisible(false);
+		pplan_end_label.setVisible(false);
+		
+		this.reset();
+		
+		pplan_text.setVisible(false);
+		pplan_start_text.setVisible(false);
+		pplan_end_text.setVisible(false);
+	}
+	
+	private void actionUpdate(){
+		/* No action */
+	}
+	
+	private void reset(){
+		pplan_text.setText("");
+		pplan_start_text.setText("");
+		pplan_end_text.setText("");
+	}
+}

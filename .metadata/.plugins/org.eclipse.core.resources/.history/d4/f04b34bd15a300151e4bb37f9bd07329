@@ -1,0 +1,125 @@
+package com.innovery.mpm.provisioning.implementations.gui;
+
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+import com.innovery.mpm.connection.interfaces.component.DAPBeanInterface;
+import com.innovery.mpm.provisioning.implementations.util.PROVISIONINGActions;
+import com.innovery.mpm.provisioning.interfaces.gui.BsoResourceInterface;
+import com.innovery.mpm.provisioning.interfaces.gui.BsoResponseGridManagmentInterface;
+
+public class BsoResponseGridManagment implements BsoResponseGridManagmentInterface {
+	
+//	private BsoResourceInterface reference;
+	private DAPBeanInterface components;
+	
+	private JPanel responseField;
+	private JPanel responseGridField;
+	
+	private JFrame frame;
+
+	public void setResponseGridAssurance(String response_mpm){
+		
+		if(response_mpm.equals(components.getErrorMessages().get_USER_NOT_FOUND()) ||
+		   response_mpm.equals(components.getErrorMessages().get_NOT_LOGGED_WARN()) ||
+		   response_mpm.equals(components.getErrorMessages().get_MPM_CONNECTION_WARN()) ||
+		   response_mpm.equals(components.getErrorMessages().get_RELOGGED()) ||
+		   response_mpm.equals(components.getErrorMessages().get_NOT_LOGGED_ERROR())){
+
+			responseGridField.add(new JLabel(response_mpm), components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 5, 20, 0, 0, 0, 0));
+		}
+		
+		else {
+			String[] responsePlitted = response_mpm.trim().replace(";", "").split("\\:");
+			
+			if(!responsePlitted[2].equals("0")){
+				JLabel generic_response_msg = new JLabel(readErrorDescription(responsePlitted[2]));
+				responseGridField.add(generic_response_msg, components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 5, 20, 0, 0, 0, 0));
+			}
+			
+			else if(responsePlitted[2].equals("0")){
+				if(reference.getRadioGroupAction().getSelection().getActionCommand().equals(PROVISIONINGActions.PROVISIONING_ACTION_GET)){
+					setResponseGridAssuranceProvisioning(response_mpm);
+				}
+				
+				else{
+					JLabel generic_response_msg = new JLabel("DONE!");
+					generic_response_msg.setFont(new Font(generic_response_msg.getFont().getName(), Font.BOLD, generic_response_msg.getFont().getSize()));
+					responseGridField.add(generic_response_msg, components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 5, 20, 0, 0, 0, 0));
+				}
+			}
+		}
+		setGridElementsVisibility();
+	}
+
+	private void setResponseGridAssuranceProvisioning(String response_mpm){
+		String[] responsePlitted = response_mpm.trim().replace(";", "").split("\\:");
+		
+		int y = 0;
+		
+		for(int i=3; i<responsePlitted.length; i++){
+			
+			String[] parameter = responsePlitted[i].split(",");
+			String parameter_column_0 = parameter[0];
+			JLabel parameter_column_0_label = new JLabel(parameter_column_0+":");
+			parameter_column_0_label.setFont(new Font(parameter_column_0_label.getFont().getName(), Font.BOLD, parameter_column_0_label.getFont().getSize()));
+			
+			if(parameter.length==2){
+				responseGridField.add(parameter_column_0_label, components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.EAST, 5, 30, 0, 0, 0, y));
+				responseGridField.add(new JLabel(parameter[1]), components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 5, 20, 0, 0, 1, y));
+			}
+			
+			else if(parameter.length>=3){
+				responseGridField.add(parameter_column_0_label, components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.EAST, 5, 30, 0, 0, 0, y));
+				
+				for(int j=1; j<parameter.length; j++){
+					responseGridField.add(new JLabel(parameter[j]), components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 5, 20, 0, 0, 1, y));
+					responseGridField.add(new JLabel(parameter[j+1]), components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 5, 20, 0, 0, 2, y));
+					j=j+1;
+					if(j<parameter.length-2){
+						y = y+1;
+					}
+				}
+			}
+			y = y+1;
+		}
+	}
+	
+	
+	private void setGridElementsVisibility(){
+		for(int i = 0; i<responseGridField.getComponents().length; i++){
+			responseGridField.getComponent(i).setVisible(true);
+		}
+		responseGridField.setVisible(true);
+		frame.repaint();
+		frame.validate();
+	}
+	
+	private String readErrorDescription(String response_mpm){
+		try {
+			String error_message;
+			if(response_mpm.length()==4){
+				error_message = components.getConnectionManagerStandard().getRb_errorCode().getString(response_mpm);
+			}
+			
+			else {
+				error_message = components.getConnectionManagerStandard().getRb_errorCode().getString(response_mpm.substring(0,3));
+			}
+			return error_message;
+		} catch (Exception e) {
+			return response_mpm;
+		}
+	}
+
+//	public void setReference(BsoResourceInterface reference) {
+//		this.reference = reference;
+//	}
+
+	public void setComponents(DAPBeanInterface components) {
+		this.components = components;
+	}
+}

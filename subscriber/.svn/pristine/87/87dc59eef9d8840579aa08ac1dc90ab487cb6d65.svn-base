@@ -1,0 +1,333 @@
+package com.innovery.mpm.subscriber.implementations.gui.util;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
+import com.innovery.mpm.connection.interfaces.component.DAPBeanInterface;
+import com.innovery.mpm.subscriber.implementations.bean.SubscriberBean;
+import com.innovery.mpm.subscriber.implementations.util.SUBSCRIBERActions;
+import com.innovery.mpm.subscriber.interfaces.action.ActionSubscriberInterface;
+import com.innovery.mpm.subscriber.interfaces.bean.SubscriberBeanInterface;
+import com.innovery.mpm.subscriber.interfaces.gui.SubscriberResponseGridManagerInterface;
+import com.innovery.mpm.subscriber.interfaces.gui.util.SubscriberResponseManagerInterface;
+
+public class SubscriberResponseManager implements SubscriberResponseManagerInterface {
+	
+	private DAPBeanInterface components;
+	private ButtonGroup actionButtonGroup;
+	private ButtonGroup marketButtonGroup;
+	private ButtonGroup ctypeButtonGroup;
+	private JTextField msisdnField;
+	private JTextField amountIdField;
+	private JTextField msisdnNewField;
+	private JTextField msisdnNewRefillField;
+	private JTextField expiryDateField;
+	private JTextField amountField;
+	private ButtonGroup saveBalanceButtonGroup;
+	private JComboBox tariffPlanComboboxSelection;
+	private JComboBox refillTypeComboboxSelection;
+	private ButtonGroup lineStateButtonGroup;
+	private JTextField feediscountField;
+	private JTextField feedelayField;
+	private JTextField dataServicesField;
+	private JTextField dayField;
+	private JTextField monthField;
+	private JTextField preferentialList;
+	private JTextField nationalField;
+	private JTextField internationalField;
+	private ButtonGroup nationalButtonGroup;
+	private ButtonGroup internationalButtonGroup;
+	private JComboBox channelComboboxSelection;
+	private JButton btnExecute;
+	private JTextArea textArea;
+	
+	private ActionSubscriberInterface actionCommandSubscriber;
+	private SubscriberResponseGridManagerInterface responseGridManager;
+	
+	private JPanel responseFieldsetPanel;
+	private JPanel responseFieldsetGridPanel;
+	private JFrame frame;
+	
+	
+	public void getResponse() {
+		responseGridManager.setResponseFieldset(responseFieldsetPanel);
+		responseGridManager.setResponseFieldsetGrid(responseFieldsetGridPanel);
+		responseGridManager.setActionButtonGroup(actionButtonGroup);
+		responseGridManager.setCtypeButtonGroup(ctypeButtonGroup);
+		responseGridManager.setFrame(frame);
+		
+		saveSessionInfo();
+		String response_mpm = actionCommandSubscriber.executeBsoSubscriberCommand(createBean());
+		
+		responseGridManager.setResponseGridAssurance(response_mpm);
+		textArea.setText(response_mpm.trim());
+	    
+	    btnExecute.setEnabled(true);
+		
+		if(response_mpm.equals(components.getErrorMessages().get_NOT_LOGGED_WARN()) || 
+		   response_mpm.equals(components.getErrorMessages().get_MPM_CONNECTION_WARN())){
+			if(response_mpm.equals(components.getErrorMessages().get_NOT_LOGGED_WARN())){
+				btnExecute.setText(SUBSCRIBERActions.SUBSCRIBER_ACTION_RECONNECT);
+				btnExecute.setActionCommand(SUBSCRIBERActions.SUBSCRIBER_ACTION_RECONNECT);
+			}
+			else if(response_mpm.equals(components.getErrorMessages().get_MPM_CONNECTION_WARN())){
+				btnExecute.setText(SUBSCRIBERActions.SUBSCRIBER_ACTION_HOME);
+				btnExecute.setActionCommand(SUBSCRIBERActions.SUBSCRIBER_ACTION_HOME);
+			}
+		}
+	}
+	
+	private SubscriberBeanInterface createBean(){
+		SubscriberBeanInterface subscriber = new SubscriberBean();
+		
+		subscriber.setMsisdn(msisdnField.getText());
+		subscriber.setAction(actionButtonGroup.getSelection().getActionCommand());
+		subscriber.setMarket(marketButtonGroup.getSelection().getActionCommand());
+		subscriber.setCtype(ctypeButtonGroup.getSelection().getActionCommand());
+		subscriber.setRefill_type((String) refillTypeComboboxSelection.getSelectedItem());
+		subscriber.setTariff_plan((String) tariffPlanComboboxSelection.getSelectedItem());
+		subscriber.setDay(dayField.getText());
+		subscriber.setMonth(monthField.getText());
+		subscriber.setAmount(amountField.getText());
+		subscriber.setAmount_ids(amountIdField.getText());
+		subscriber.setData_services(dataServicesField.getText());
+		subscriber.setNational(nationaCostControlManagment());
+		subscriber.setInternational(internationaCostControlManagment());
+		subscriber.setLine_state(lineStateManagment());
+		subscriber.setSave_balance(saveBalanceManager());
+		subscriber.setExpiry_date(expiryDateField.getText());
+		subscriber.setFeediscount(feediscountField.getText());
+		subscriber.setFeedelay(feedelayField.getText());
+		subscriber.setMsisdn_new(msisdnNewField.getText());
+		subscriber.setMsisdn_new_refill(msisdnNewRefillField.getText());
+		subscriber.setChannel((String) channelComboboxSelection.getSelectedItem());
+		subscriber.setCommunityId(preferentialList.getText());
+		return subscriber;
+	}
+	
+	private String saveBalanceManager(){
+		String local_save_balance = "";
+		if(saveBalanceButtonGroup.getSelection()!=null){
+			local_save_balance = saveBalanceButtonGroup.getSelection().getActionCommand();
+		}
+		return local_save_balance;
+	}
+	
+	private String lineStateManagment(){
+		String local_line_state = "";
+		if(lineStateButtonGroup.getSelection()!=null){
+			local_line_state = lineStateButtonGroup.getSelection().getActionCommand();
+		}
+		return local_line_state;
+	}
+	
+	private String nationaCostControlManagment(){
+		String tmp_national = "";
+		if(nationalButtonGroup.getSelection()!=null && (actionButtonGroup.getSelection().getActionCommand().equals(SUBSCRIBERActions.SUBSCRIBER_ACTION_CC_UNBLOCK) || 
+														actionButtonGroup.getSelection().getActionCommand().equals(SUBSCRIBERActions.SUBSCRIBER_ACTION_CC_UNBLOCK_NIS))){
+			
+			tmp_national = nationalButtonGroup.getSelection().getActionCommand();
+		}
+		else if(actionButtonGroup.getSelection().getActionCommand().equals(SUBSCRIBERActions.SUBSCRIBER_ACTION_CREATE) || 
+				actionButtonGroup.getSelection().getActionCommand().equals(SUBSCRIBERActions.SUBSCRIBER_ACTION_CHG_CC)){
+			tmp_national = nationalField.getText();
+		}
+		return tmp_national;
+	}
+	
+	private String internationaCostControlManagment(){
+		String tmp_international = "";
+		if(internationalButtonGroup.getSelection()!=null && (actionButtonGroup.getSelection().getActionCommand().equals(SUBSCRIBERActions.SUBSCRIBER_ACTION_CC_UNBLOCK) || 
+															 actionButtonGroup.getSelection().getActionCommand().equals(SUBSCRIBERActions.SUBSCRIBER_ACTION_CC_UNBLOCK_CRM) || 
+															 actionButtonGroup.getSelection().getActionCommand().equals(SUBSCRIBERActions.SUBSCRIBER_ACTION_CC_UNBLOCK_NIS))){
+			
+			tmp_international = internationalButtonGroup.getSelection().getActionCommand();
+		}
+		
+		else if(actionButtonGroup.getSelection().getActionCommand().equals(SUBSCRIBERActions.SUBSCRIBER_ACTION_CREATE) || 
+				actionButtonGroup.getSelection().getActionCommand().equals(SUBSCRIBERActions.SUBSCRIBER_ACTION_CHG_CC)){
+			
+			tmp_international = internationalField.getText();
+		}
+		return tmp_international;
+	}
+	
+	private void saveSessionInfo(){
+		components.getLogger().info("SAVING SESSION");
+		if (!components.getConnectionManagerStandard().getSession().getCurrent_msisdn().equals(msisdnField.getText())) {
+			components.getConnectionManagerStandard().getSession().setCurrent_msisdn(msisdnField.getText());
+			components.getMsisdnCompleter().store(msisdnField.getText());
+		}
+		if(!components.getConnectionManagerStandard().getSession().getCurrent_market().equals(marketButtonGroup.getSelection().getActionCommand())){
+			components.getConnectionManagerStandard().getSession().setCurrent_market(marketButtonGroup.getSelection().getActionCommand());
+		}
+		if(!components.getConnectionManagerStandard().getSession().getCurrent_ctype().equals(ctypeButtonGroup.getSelection().getActionCommand())){
+			components.getConnectionManagerStandard().getSession().setCurrent_ctype(ctypeButtonGroup.getSelection().getActionCommand());
+		}
+		components.getLogger().info("SESSION SAVED");
+	}
+
+	public void setComponents(DAPBeanInterface components) {
+		this.components = components;
+	}
+
+	@Override
+	public void setActionButtonGroup(ButtonGroup actionButtonGroup) {
+		this.actionButtonGroup = actionButtonGroup;
+	}
+
+	@Override
+	public void setMarketButtonGroup(ButtonGroup marketButtonGroup) {
+		this.marketButtonGroup = marketButtonGroup;
+	}
+
+	@Override
+	public void setCtypeButtonGroup(ButtonGroup ctypeButtonGroup) {
+		this.ctypeButtonGroup = ctypeButtonGroup;
+	}
+
+	@Override
+	public void setMsisdnField(JTextField msisdnField) {
+		this.msisdnField = msisdnField;
+	}
+
+	@Override
+	public void setAmountIdField(JTextField amountIdField) {
+		this.amountIdField = amountIdField;
+	}
+
+	@Override
+	public void setMsisdnNewField(JTextField msisdnNewField) {
+		this.msisdnNewField = msisdnNewField;
+	}
+
+	@Override
+	public void setMsisdnNewRefillField(JTextField msisdnNewRefillField) {
+		this.msisdnNewRefillField = msisdnNewRefillField;
+	}
+
+	@Override
+	public void setExpiryDateField(JTextField expiryDateField) {
+		this.expiryDateField = expiryDateField;
+	}
+
+	@Override
+	public void setAmountField(JTextField amountField) {
+		this.amountField = amountField;
+	}
+
+	@Override
+	public void setSaveBalanceButtonGroup(ButtonGroup saveBalanceButtonGroup) {
+		this.saveBalanceButtonGroup = saveBalanceButtonGroup;
+	}
+
+	@Override
+	public void setTariffPlanComboboxSelection(JComboBox tariffPlanComboboxSelection) {
+		this.tariffPlanComboboxSelection = tariffPlanComboboxSelection;
+	}
+
+	@Override
+	public void setRefillTypeComboboxSelection(JComboBox refillTypeComboboxSelection) {
+		this.refillTypeComboboxSelection = refillTypeComboboxSelection;
+	}
+
+	@Override
+	public void setLineStateButtonGroup(ButtonGroup lineStateButtonGroup) {
+		this.lineStateButtonGroup = lineStateButtonGroup;
+	}
+
+	@Override
+	public void setFeediscountField(JTextField feediscountField) {
+		this.feediscountField = feediscountField;
+	}
+
+	@Override
+	public void setFeedelayField(JTextField feedelayField) {
+		this.feedelayField = feedelayField;
+	}
+
+	@Override
+	public void setDataServicesField(JTextField dataServicesField) {
+		this.dataServicesField = dataServicesField;
+	}
+
+	@Override
+	public void setDayField(JTextField dayField) {
+		this.dayField = dayField;
+	}
+
+	@Override
+	public void setMonthField(JTextField monthField) {
+		this.monthField = monthField;
+	}
+
+	@Override
+	public void setPreferentialList(JTextField preferentialList) {
+		this.preferentialList = preferentialList;
+	}
+
+	@Override
+	public void setNationalField(JTextField nationalField) {
+		this.nationalField = nationalField;
+	}
+
+	@Override
+	public void setInternationalField(JTextField internationalField) {
+		this.internationalField = internationalField;
+	}
+
+	@Override
+	public void setNationalButtonGroup(ButtonGroup nationalButtonGroup) {
+		this.nationalButtonGroup = nationalButtonGroup;
+	}
+
+	@Override
+	public void setInternationalButtonGroup(ButtonGroup internationalButtonGroup) {
+		this.internationalButtonGroup = internationalButtonGroup;
+	}
+
+	@Override
+	public void setChannelComboboxSelection(JComboBox channelComboboxSelection) {
+		this.channelComboboxSelection = channelComboboxSelection;
+	}
+
+	@Override
+	public void setBtnExecute(JButton btnExecute) {
+		this.btnExecute = btnExecute;
+	}
+
+	@Override
+	public void setActionCommandSubscriber(ActionSubscriberInterface actionCommandSubscriber) {
+		this.actionCommandSubscriber = actionCommandSubscriber;
+	}
+
+	@Override
+	public void setResponseGridManager(SubscriberResponseGridManagerInterface responseGridManager) {
+		this.responseGridManager = responseGridManager;
+	}
+
+	@Override
+	public void setTextArea(JTextArea textArea) {
+		this.textArea = textArea;
+	}
+
+	@Override
+	public void setResponseFieldsetPanel(JPanel responseFieldsetPanel) {
+		this.responseFieldsetPanel = responseFieldsetPanel;
+	}
+
+	@Override
+	public void setResponseFieldsetGridPanel(JPanel responseFieldsetGridPanel) {
+		this.responseFieldsetGridPanel = responseFieldsetGridPanel;
+	}
+
+	@Override
+	public void setFrame(JFrame frame) {
+		this.frame = frame;
+	}
+}

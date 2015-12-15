@@ -1,0 +1,35 @@
+package com.innovery.mpm.resource.interfaces.gui;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+
+import com.innovery.mpm.resource.interfaces.gui.util.AirResourceResponseManagerInterface;
+import com.innovery.mpm.resource.interfaces.gui.util.AirResourceUtilInterface;
+import com.innovery.mpm.connection.implementations.util.gui.GUICommonInterface;
+import com.innovery.mpm.connection.interfaces.standard.session.SessionStandardInterface;
+import com.innovery.mpm.connection.interfaces.util.AutoCompleteMsisdnInterface;
+import com.innovery.mpm.resource.interfaces.gui.util.AirResourceResponseGridManagerInterface;
+import com.innovery.mpm.resource.interfaces.gui.verification.AirResourceVerifyInterface;
+
+public interface AirResourceInterface {
+
+	void setCommonGUI(GUICommonInterface commonGUI);
+
+	void setAutocompleteMsisdn(AutoCompleteMsisdnInterface autocompleteMsisdn);
+
+	void setSessionStandard(SessionStandardInterface sessionStandard);
+
+	void setResourceVerifier(AirResourceVerifyInterface resourceVerifier);
+
+	void setResponseGridManager(AirResourceResponseGridManagerInterface responseGridManager);
+
+	void setResponseManager(AirResourceResponseManagerInterface responseManager);
+
+	void setUtil(AirResourceUtilInterface util);
+
+	JButton getBtnExecute();
+
+	JFrame getFrame();
+	
+	
+}

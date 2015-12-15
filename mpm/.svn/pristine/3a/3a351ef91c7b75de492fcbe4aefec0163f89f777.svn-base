@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ropz code="ROPZ762">
+	<action value="in">
+		<parameter name="ACCOUNTB" value="[0-9]{1,28}"/>
+		<parameter name="CTYPEB" value="fixed|prepaid"/>
+	</action>
+	<action value="out">
+		<parameter name="ACCOUNTB" value="[0-9]{1,28}"/>
+		<parameter name="CTYPEB" value="fixed|prepaid"/>
+	</action>
+	<action value="book_out"/>
+	<action value="chg">
+		<parameter name="ACCOUNTB" value="[0-9]{1,28}"/>
+		<parameter name="CTYPEB" value="fixed|prepaid"/>
+		<parameter name="ACCOUNTC" value="[0-9]{1,28}"/>
+		<parameter name="CTYPEC" value="fixed|prepaid"/>
+	</action>
+	<action value="get">
+		<parameter name="ACCOUNTB" value="[0-9]{1,28}"/>
+		<parameter name="CTYPEB" value="fixed|prepaid"/>
+	</action>
+</ropz>

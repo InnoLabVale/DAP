@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opt code="OPTBE0035">
+	<action value="get">
+		<parameter name="RETURNDATA" value="ALL"/>
+	</action>
+</opt>

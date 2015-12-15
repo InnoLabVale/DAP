@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ropz code="ROPZ1105">
+	<action value="in">
+		<parameter name="FEEDISCOUNT" value="NULL|ROPZ1225|ROPZ1280|ROPZ1281|ROPZ4059|ROPZ4096|ROPZ4105|ROPZ4119|ROPZ4157|ROPZ4182|ROPZ4183|ROPZ4184|ROPZ4194|ROPZ4256|ROPZ4265|ROPZ4282"/>
+		<parameter name="FEEDELAY" value="[0-9]{1,16}"/>
+	</action>
+	<action value="out"/>
+	<action value="book_out"/>
+	<action value="chg">
+		<parameter name="FEEDISCOUNT" value="NULL|ROPZ1225|ROPZ1280|ROPZ1281|ROPZ4059|ROPZ4096|ROPZ4105|ROPZ4119|ROPZ4157|ROPZ4182|ROPZ4183|ROPZ4184|ROPZ4194|ROPZ4256|ROPZ4265|ROPZ4282"/>
+		<parameter name="FEEDELAY" value="[0-9]{1,16}"/>
+	</action>
+	<action value="get"/>
+</ropz>

@@ -1,0 +1,113 @@
+package com.innovery.mpm.subscriber.implementations;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+
+import com.innovery.mpm.connection.interfaces.component.DAPBeanInterface;
+import com.innovery.mpm.subscriber.implementations.action.ActionSubscriber;
+import com.innovery.mpm.subscriber.implementations.gui.Subscriber;
+import com.innovery.mpm.subscriber.implementations.gui.SubscriberResponseGridManagment;
+import com.innovery.mpm.subscriber.implementations.gui.util.SubscriberAssurance;
+import com.innovery.mpm.subscriber.implementations.gui.util.SubscriberChange;
+import com.innovery.mpm.subscriber.implementations.gui.util.SubscriberCreate;
+import com.innovery.mpm.subscriber.implementations.gui.util.SubscriberDataServiceVerification;
+import com.innovery.mpm.subscriber.implementations.gui.util.SubscriberFeeDiscountVerification;
+import com.innovery.mpm.subscriber.implementations.gui.util.SubscriberResponseManagment;
+import com.innovery.mpm.subscriber.implementations.gui.util.SubscriberTariffPlan;
+import com.innovery.mpm.subscriber.implementations.gui.util.SubscriberType;
+import com.innovery.mpm.subscriber.implementations.gui.util.SubscriberUtil;
+import com.innovery.mpm.subscriber.implementations.gui.util.SubscriberUtilCommon;
+import com.innovery.mpm.subscriber.implementations.gui.verification.SubscriberVerify;
+import com.innovery.mpm.subscriber.interfaces.SubscriberInitializationInterface;
+import com.innovery.mpm.subscriber.interfaces.action.ActionSubscriberInterface;
+import com.innovery.mpm.subscriber.interfaces.gui.SubscriberInterface;
+import com.innovery.mpm.subscriber.interfaces.gui.SubscriberResponseGridManagmentInterface;
+import com.innovery.mpm.subscriber.interfaces.gui.util.SubscriberAssuranceInterface;
+import com.innovery.mpm.subscriber.interfaces.gui.util.SubscriberChangeInterface;
+import com.innovery.mpm.subscriber.interfaces.gui.util.SubscriberCreateInterface;
+import com.innovery.mpm.subscriber.interfaces.gui.util.SubscriberDataServiceVerificationInterface;
+import com.innovery.mpm.subscriber.interfaces.gui.util.SubscriberFeeDiscountVerificationInterface;
+import com.innovery.mpm.subscriber.interfaces.gui.util.SubscriberResponseManagmentInterface;
+import com.innovery.mpm.subscriber.interfaces.gui.util.SubscriberTariffPlanInterface;
+import com.innovery.mpm.subscriber.interfaces.gui.util.SubscriberTypeInterface;
+import com.innovery.mpm.subscriber.interfaces.gui.util.SubscriberUtilCommonInterface;
+import com.innovery.mpm.subscriber.interfaces.gui.util.SubscriberUtilInterface;
+import com.innovery.mpm.subscriber.interfaces.gui.verification.SubscriberVerifyInterface;
+
+public class SubscriberInitialization implements SubscriberInitializationInterface {
+	
+	private SubscriberInterface subscriber;
+
+	public SubscriberInitialization(DAPBeanInterface components){
+		SubscriberUtilCommonInterface common = new SubscriberUtilCommon();
+		SubscriberTariffPlanInterface tariffPlan = new SubscriberTariffPlan();
+		SubscriberCreateInterface create = new SubscriberCreate();
+		SubscriberAssuranceInterface assurance = new SubscriberAssurance();
+		SubscriberChangeInterface change = new SubscriberChange();
+		SubscriberTypeInterface type = new SubscriberType();
+		SubscriberUtilInterface util = new SubscriberUtil();
+		SubscriberFeeDiscountVerificationInterface feeDiscount = new SubscriberFeeDiscountVerification();
+		SubscriberDataServiceVerificationInterface dataService = new SubscriberDataServiceVerification();
+		SubscriberResponseManagmentInterface responseManager = new SubscriberResponseManagment();
+		SubscriberResponseGridManagmentInterface grid_managment = new SubscriberResponseGridManagment();
+		SubscriberVerifyInterface subscriberVerifier = new SubscriberVerify();
+		ActionSubscriberInterface action_subscriber_bso_interface = new ActionSubscriber();
+		subscriber = new Subscriber(components);
+		
+//		common.setReference(subscriber);
+		
+		tariffPlan.setReference(subscriber);
+		tariffPlan.setComponents(components);
+
+		create.setReference(subscriber);
+		create.setComponents(components);
+		
+		assurance.setReference(subscriber);
+		
+		change.setReference(subscriber);
+		change.setComponents(components);
+		
+		type.setReference(subscriber);
+		
+		util.setReference(subscriber);
+		util.setComponents(components);
+		
+		feeDiscount.setReference(subscriber);
+		
+		dataService.setReference(subscriber);
+		
+		responseManager.setComponents(components);
+		
+		grid_managment.setComponents(components);
+		
+		subscriberVerifier.setComponents(components);
+		
+		action_subscriber_bso_interface.setComponents(components);
+		
+		subscriber.setCommon(common);
+		subscriber.setTariffPlan(tariffPlan);
+		subscriber.setCreate(create);
+		subscriber.setAssurance(assurance);
+		subscriber.setChange(change);
+		subscriber.setType(type);
+		subscriber.setUtil(util);
+		subscriber.setFeeDiscount(feeDiscount);
+		subscriber.setDataService(dataService);
+		subscriber.setResponseManager(responseManager);
+		subscriber.setGrid_managment(grid_managment);
+		subscriber.setSubscriberVerifier(subscriberVerifier);
+		subscriber.setAction_subscriber_bso_interface(action_subscriber_bso_interface);
+	}
+	
+	public void initialize(){
+		subscriber.initialize();
+	}
+	
+	public JFrame getFrame(){
+		return subscriber.getFrame();
+	}
+	
+	public JButton getBtnExecute(){
+		return subscriber.getBtnExecute();
+	}
+}

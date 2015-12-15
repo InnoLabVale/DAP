@@ -1,0 +1,109 @@
+package com.innovery.mpm.af.implementations.gui.util;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
+import com.innovery.mpm.af.implementations.action.ActionAccountFinder;
+import com.innovery.mpm.af.implementations.bean.AFinder;
+import com.innovery.mpm.af.implementations.util.AFActions;
+import com.innovery.mpm.af.interfaces.action.ActionAccountFinderInterface;
+import com.innovery.mpm.af.interfaces.bean.AFinderInterface;
+import com.innovery.mpm.af.interfaces.gui.util.AccountFinderResponseGridManagerInterface;
+import com.innovery.mpm.af.interfaces.gui.util.AccountFinderResponseManagerInterface;
+import com.innovery.mpm.connection.interfaces.component.DAPBeanInterface;
+
+public class AccountFinderResponseManager implements AccountFinderResponseManagerInterface{
+	
+	private DAPBeanInterface components;
+	
+	private AccountFinderResponseGridManagerInterface gridManager;
+	private JTextArea textArea;
+	private JButton btnExecute;
+	private JTextField msisdnField;
+	private ButtonGroup actionButtonGroup;
+	private ButtonGroup marketButtonGroup;
+	private JComboBox sdpComboboxSelection;
+	
+	public void getResponse(){
+		saveSessionInfo();
+		ActionAccountFinderInterface afi = new ActionAccountFinder();
+		afi.setComponents(components);
+		
+	    String response_mpm = afi.executeAfCommand(createBean());
+	    
+	    gridManager.setResponseGridAssurance(response_mpm);
+	    textArea.setText(response_mpm);
+	    
+	    btnExecute.setEnabled(true);
+	    
+	    if(response_mpm.equals(components.getErrorMessages().get_NOT_LOGGED_WARN()) || 
+	       response_mpm.equals(components.getErrorMessages().get_MPM_CONNECTION_WARN())){
+			if(response_mpm.equals(components.getErrorMessages().get_NOT_LOGGED_WARN())){
+				btnExecute.setText(AFActions.AF_ACTION_RECONNECT);
+				btnExecute.setActionCommand(AFActions.AF_ACTION_RECONNECT);
+			}
+			else if(response_mpm.equals(components.getErrorMessages().get_MPM_CONNECTION_WARN())){
+				btnExecute.setText(AFActions.AF_ACTION_HOME);
+				btnExecute.setActionCommand(AFActions.AF_ACTION_HOME);
+			}
+		}
+	}
+	
+	private AFinderInterface createBean(){
+		AFinderInterface af = new AFinder();
+		af.setMarket(marketButtonGroup.getSelection().getActionCommand());
+		af.setAction(actionButtonGroup.getSelection().getActionCommand());
+		af.setMsisdn(msisdnField.getText());
+		af.setSdp_host_name((String) sdpComboboxSelection.getSelectedItem());
+		return af;
+	}
+	
+	private void saveSessionInfo(){
+		components.getLogger().info("SAVING SESSION");
+		if (!components.getConnectionManagerStandard().getSession().getCurrent_msisdn().equals(msisdnField.getText())) {
+			components.getLogger().info("MSISDN SAVED IN SESSION");
+			components.getConnectionManagerStandard().getSession().setCurrent_msisdn(msisdnField.getText());
+			components.getMsisdnCompleter().store(msisdnField.getText());
+		}
+		if(!components.getConnectionManagerStandard().getSession().getCurrent_market().equals(marketButtonGroup.getSelection().getActionCommand())){
+			components.getLogger().info("MARKET SAVED IN SESSION");
+			components.getConnectionManagerStandard().getSession().setCurrent_market(marketButtonGroup.getSelection().getActionCommand());
+		}
+		components.getLogger().info("SESSION SAVED");
+	}
+
+	public void setComponents(DAPBeanInterface components) {
+		this.components = components;
+	}
+
+	public void setGridManager(AccountFinderResponseGridManagerInterface gridManager) {
+		this.gridManager = gridManager;
+	}
+
+	public void setTextArea(JTextArea textArea) {
+		this.textArea = textArea;
+	}
+
+	public void setBtnExecute(JButton btnExecute) {
+		this.btnExecute = btnExecute;
+	}
+
+	public void setMsisdnField(JTextField msisdnField) {
+		this.msisdnField = msisdnField;
+	}
+
+	public void setActionButtonGroup(ButtonGroup actionButtonGroup) {
+		this.actionButtonGroup = actionButtonGroup;
+	}
+
+	public void setMarketButtonGroup(ButtonGroup marketButtonGroup) {
+		this.marketButtonGroup = marketButtonGroup;
+	}
+
+	public void setSdpComboboxSelection(JComboBox sdpComboboxSelection) {
+		this.sdpComboboxSelection = sdpComboboxSelection;
+	}
+}

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
+		<item value="492" key="DIALOG_WIDTH"/>
+		<item value="268" key="DIALOG_Y_ORIGIN"/>
+		<item value="854" key="DIALOG_X_ORIGIN"/>
+		<item value="446" key="DIALOG_HEIGHT"/>
+		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
+	</section>
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
+		<item value="true" key="wrap"/>
+		<item value="false" key="casesensitive"/>
+		<item value="false" key="isRegEx"/>
+		<item value="false" key="incremental"/>
+		<item value="false" key="wholeword"/>
+		<item value="generic_response_msg" key="selection"/>
+		<list key="findhistory">
+			<item value="generic_response_msg"/>
+			<item value="reference.getParameter_"/>
+			<item value="reference.getTextArea()."/>
+			<item value="reference.getFrame()."/>
+			<item value="reference.getBtnExecute()."/>
+			<item value="reference.getParametersList()"/>
+			<item value="reference.getRadioGroupAction()."/>
+			<item value="reference.getSelectOptionCombo()."/>
+		</list>
+		<list key="replacehistory">
+			<item value="parameter_"/>
+			<item value="textArea."/>
+			<item value="frame."/>
+			<item value="btnExecute."/>
+			<item value="parametersList"/>
+			<item value="actionButtonGroup."/>
+			<item value="optionComboboxSelection."/>
+			<item value="ctypeButtonGroup."/>
+		</list>
+	</section>
+</section>

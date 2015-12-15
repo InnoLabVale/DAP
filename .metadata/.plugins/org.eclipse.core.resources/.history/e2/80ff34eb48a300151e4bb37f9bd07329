@@ -1,0 +1,7 @@
+package com.innovery.mpm.option.interfaces.gui;
+
+import com.innovery.mpm.connection.interfaces.component.DAPBeanInterface;
+
+public interface OptionManagerInitializationInterface {
+
+}

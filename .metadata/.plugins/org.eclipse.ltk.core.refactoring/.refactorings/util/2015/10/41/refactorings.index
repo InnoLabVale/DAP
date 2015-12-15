@@ -1,0 +1,169 @@
+1444227903955	Rename package 'com.innovery.mpm.util.application'
+1444227950836	Move compilation unit
+1444227959623	Move compilation units
+1444227993079	Move compilation unit
+1444227997947	Move compilation unit
+1444228001953	Delete elements
+1444228025093	Move compilation unit
+1444228045279	Move compilation unit
+1444228052004	Delete elements
+1444228092986	Rename package 'com.innovery.mpm.util.implementations.init'
+1444228110082	Rename package 'com.innovery.mpm.util.interfaces.init'
+1444228130639	Rename package 'com.innovery.mpm.util.interfaces.cai'
+1444228151944	Rename package 'com.innovery.mpm.util.interfaces.common'
+1444228162868	Rename package 'com.innovery.mpm.util.interfaces.market'
+1444228171554	Rename package 'com.innovery.mpm.util.interfaces.ctype'
+1444228195281	Rename package 'com.innovery.mpm.util.interfaces.complete.msisdn'
+1444228205993	Rename package 'com.innovery.mpm.util.interfaces.complete.date'
+1444228235182	Rename package 'com.innovery.mpm.util.implementations.application'
+1444228270150	Rename package 'com.innovery.mpm.util.implementations.function.ssh'
+1444228390125	Rename type 'Action'
+1444228401205	Rename type 'Ssh'
+1444228412237	Rename type 'sshActions'
+1444228420976	Rename type 'sshCommands'
+1444228454444	Rename type 'ActionInterface'
+1444228464307	Rename type 'SshInterface'
+1444228528704	Rename type 'Action'
+1444228537969	Rename type 'Af'
+1444228566490	Rename type 'ActionInterface'
+1444228578803	Rename type 'AfInterface'
+1444228663084	Move compilation unit
+1444228669020	Move compilation unit
+1444228675816	Move compilation unit
+1444228684195	Move compilation unit
+1444228690855	Delete element
+1444228694557	Delete element
+1444228734108	Move compilation unit
+1444228752177	Move compilation unit
+1444228755551	Delete element
+1444228770544	Move compilation unit
+1444228774702	Move compilation unit
+1444228777854	Delete element
+1444228954116	Rename type 'SubscriberActions'
+1444229049045	Move compilation unit
+1444229060067	Rename type 'AirActions'
+1444229079877	Rename type 'AirCommand'
+1444229138923	Rename type 'AirCommandInterface'
+1444229148014	Rename type 'AirActionsInterface'
+1444229415248	Delete element
+1444229466913	Delete element
+1444229522904	Rename type 'PROVISIONING_ACTION'
+1444230366529	Rename field 'AF_CREATE'
+1444230396069	Rename field 'AF_DELETE'
+1444230401714	Rename field 'AF_GET'
+1444230415996	Rename field 'AIR_SET'
+1444230429404	Rename field 'AIR_DEL'
+1444230435798	Rename field 'AIR_GET'
+1444230458210	Rename field 'commonCommandSET'
+1444230466261	Rename field 'commonCommandGET'
+1444230492140	Rename field 'SSH_CREATE'
+1444230498624	Rename field 'SSH_SET'
+1444230508304	Rename field 'SSH_DELETE'
+1444230514024	Rename field 'SSH_GET'
+1444230555303	Rename field 'CREATE'
+1444230562143	Rename field 'DELETE'
+1444230569704	Rename field 'GET'
+1444230576219	Rename field 'CHG'
+1444230581225	Rename field 'SET'
+1444230600162	Rename field 'GET_AMOUNT'
+1444230606816	Rename field 'GET_PROFILE'
+1444230613391	Rename field 'GET_DATASERVICES'
+1444230619177	Rename field 'GET_TARIFF_PLAN'
+1444230624633	Rename field 'GET_BILL_CYCLE'
+1444230630307	Rename field 'CHG_MSISDN'
+1444230648378	Rename field 'CHG_TARIFF_PLAN'
+1444230695762	Rename field 'CHG_BILL_CYCLE'
+1444230710946	Rename field 'CHG_PREFERENTIAL_LIST'
+1444230717342	Rename field 'CHG_CC'
+1444230742186	Rename field 'CC_UNBLOCK'
+1444230750519	Rename field 'CC_UNBLOCK_CRM'
+1444230754606	Rename field 'CC_UNBLOCK_NIS'
+1444230759894	Rename field 'ADD_BILL_CYCLE'
+1444230765676	Rename field 'SET_BILL_CYCLE'
+1444230769694	Rename field 'DEL_BILL_CYCLE'
+1444230774015	Rename field 'SET_DISCOUNT'
+1444230777979	Rename field 'DEL_DISCOUNT'
+1444230781841	Rename field 'SET_DATA_SERVICE'
+1444230785830	Rename field 'ADD_DATA_SERVICE'
+1444230790259	Rename field 'DEL_DATA_SERVICE'
+1444230796753	Rename field 'GET_OPTION_LIST'
+1444230803051	Rename field 'CHG_OPTION_LIST'
+1444303212057	Rename field 'CREATE'
+1444303223661	Rename field 'DELETE'
+1444303227457	Rename field 'GET'
+1444303239602	Rename field 'CREATE'
+1444303244297	Rename field 'DELETE'
+1444303251074	Rename field 'GET'
+1444303254494	Rename field 'SET'
+1444303257639	Rename field 'RUN'
+1444303278439	Rename field 'OUT'
+1444303283188	Rename field 'BOOK'
+1444303288680	Rename field 'CHG'
+1444303293097	Rename field 'GET'
+1444303298079	Rename field 'ADD_CUG'
+1444303314331	Rename field 'DEL_CUG'
+1444303438197	Rename field 'CREATE'
+1444303440957	Rename field 'DELETE'
+1444303443518	Rename field 'GET'
+1444303467688	Rename field 'SSH_CREATE'
+1444303470397	Rename field 'SSH_DELETE'
+1444303472919	Rename field 'SSH_GET'
+1444303479649	Rename field 'PROVISIONING_IN'
+1444303487804	Rename field 'PROVISIONING_OUT'
+1444303493450	Rename field 'PROVISIONING_BOOK'
+1444303497404	Rename field 'PROVISIONING_CHG'
+1444303499809	Rename field 'PROVISIONING_GET'
+1444303504257	Rename field 'PROVISIONING_ADD_CUG'
+1444303507124	Rename field 'PROVISIONING_DEL_CUG'
+1444303513004	Rename field 'AIR_CREATE'
+1444303515836	Rename field 'AIR_DELETE'
+1444303518541	Rename field 'AIR_GET'
+1444303541766	Rename field 'AIR_SET'
+1444303544219	Rename field 'AIR_RUN'
+1444303549475	Rename field 'AF_CREATE'
+1444303552098	Rename field 'AF_DELETE'
+1444303554791	Rename field 'AF_GET'
+1444309085914	Delete element
+1444309088800	Delete element
+1444309129294	Rename package 'com.innovery.mpm.util.implementations.function.cai'
+1444309163592	Delete element
+1444309183832	Rename type 'CsChain'
+1444309190685	Rename type 'Ctype'
+1444309198918	Rename type 'Market'
+1444391938372	Move compilation unit
+1444391974242	Move compilation unit
+1444391978329	Move compilation unit
+1444392015635	Move compilation unit
+1444392214019	Delete element
+1444392578387	Extract interface 'DAPComponentInterface'
+1444392592976	Move compilation unit
+1444392727490	Rename type 'DAPComponentInterface'
+1444392734840	Rename type 'DAPComponent'
+1444399038383	Move compilation units
+1444399073036	Move compilation units
+1444399205591	Move compilation unit
+1444399219016	Move compilation unit
+1444399224869	Delete elements
+1444399603682	Move compilation unit
+1444399635287	Move compilation unit
+1444399640818	Delete elements
+1444399696533	Move compilation units
+1444399715000	Move compilation units
+1444399768382	Move compilation units
+1444399838314	Move compilation unit
+1444399891756	Move compilation unit
+1444399961902	Move compilation unit
+1444399982775	Move compilation unit
+1444399988284	Delete elements
+1444400088597	Move compilation unit
+1444400096935	Move compilation unit
+1444400135670	Delete elements
+1444400185821	Rename package 'com.innovery.mpm.util.implementations.function.actions'
+1444400199811	Rename package 'com.innovery.mpm.util.function.actions'
+1444400210919	Rename package 'com.innovery.mpm.util.implementations.function.chains'
+1444400219381	Rename package 'com.innovery.mpm.util.implementations.function.commands'
+1444400228747	Rename package 'com.innovery.mpm.util.implementations.function.ctype'
+1444400236162	Rename package 'com.innovery.mpm.util.implementations.function.gui'
+1444400246414	Rename package 'com.innovery.mpm.util.implementations.function.market'
+1444400292254	Move compilation unit
+1444400295905	Delete element

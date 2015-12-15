@@ -1,0 +1,82 @@
+package com.innovery.mpm.provisioning.implementations.gui.util.parameters;
+
+import java.util.List;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+
+import com.innovery.mpm.connection.interfaces.component.DAPBeanInterface;
+import com.innovery.mpm.provisioning.implementations.util.OPTION_FAMILY;
+import com.innovery.mpm.provisioning.implementations.util.PROVISIONINGActions;
+import com.innovery.mpm.provisioning.interfaces.gui.BsoResourceInterface;
+import com.innovery.mpm.provisioning.interfaces.gui.util.parameters.ProvisioningParametersInterface;
+
+public class ProvisioningParameters implements ProvisioningParametersInterface {
+
+//	private BsoResourceInterface reference;
+	
+	private JComboBox optionComboboxSelection;
+	
+	private ButtonGroup ctypeButtonGroup;
+	
+	private JLabel discountLabelList;
+	private JComboBox discountComboboxSelection;
+	
+	private List<JLabel> labelList;
+	private List<JTextField> fieldList;
+	private List<String> inputRegexList;
+	
+	
+	
+	public void enableParameterDiscount(int i){
+		discountLabelList.setVisible(true);
+		discountComboboxSelection.setVisible(true);
+		
+		discountLabelList.setText(labelList.get(i).getText());
+		
+		String discount_list[] = inputRegexList.get(i).split("\\|");
+		discountComboboxSelection.removeAllItems();
+		
+		if(((String) optionComboboxSelection.getSelectedItem()).equals(discount_list[0])){
+			discountComboboxSelection.addItem(discount_list[0]);
+		} else {
+			discountComboboxSelection.addItem(PROVISIONINGActions.PROVISIONING_ACTION_DEFAULT);
+			for(int k=0; k<discount_list.length; k++){
+				discountComboboxSelection.addItem(discount_list[k]);
+			}
+		}
+	}
+	
+	public void enableOtherParameters(int i){
+		if(labelList.get(i).getText().contains("FEEDELAY")){
+			reference.getFieldList().get(i).setText("0");
+			if(ctypeButtonGroup.getSelection().getActionCommand().equals(DAPBeanInterface.POSTPAID)){
+				reference.getFieldList().get(i).setEditable(false);
+			}
+			else if(ctypeButtonGroup.getSelection().getActionCommand().equals(DAPBeanInterface.PREPAID)){
+				reference.getFieldList().get(i).setEditable(true);
+			}
+		}
+		
+		labelList.get(i).setVisible(true);
+		reference.getFieldList().get(i).setVisible(true);
+	}
+	
+	public void enableTechnicalOptionParameters(){
+		if(optionComboboxSelection.getSelectedItem().equals(OPTION_FAMILY.CUG)){
+			if(reference.getRadioGroupAction().getSelection().getActionCommand().equals(PROVISIONINGActions.PROVISIONING_ACTION_CHG)){
+				reference.getCug_action_label().setVisible(true); 
+				reference.getRadioGroupChangeCug_panel().setVisible(true);
+				reference.getParameter_1_field().setVisible(true);
+				reference.getParameter_1_label().setVisible(true);
+				reference.getParameter_1_label().setText("ACCOUNTS");
+			}
+		}
+	}
+
+	public void setReference(BsoResourceInterface reference) {
+		this.reference = reference;
+	}
+}

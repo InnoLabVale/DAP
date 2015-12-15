@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ropz code="ROPZ620">
+	<action value="in">
+		<parameter name="SAVEBALANCE" value="on|off"/>
+		<parameter name="EXPIRYDATE" value="[0-9]{8}"/>
+	</action>
+	<action value="out">
+		<parameter name="[EXPIRYDATE]" value="[0-9]{8}"/>
+	</action>
+	<action value="get"/>
+</ropz>

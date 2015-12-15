@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ropz code="ROPZ4371">
+	<action value="in"/>
+	<action value="out"/>
+	<action value="chg"/>
+	<action value="get"/>
+</ropz>

@@ -1,0 +1,471 @@
+package com.innovery.mpm.resource.implementations.gui.bean;
+
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JRadioButton;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+
+import com.innovery.mpm.connection.interfaces.component.DAPBeanInterface;
+import com.innovery.mpm.resource.interfaces.gui.AirResourceInterface;
+import com.innovery.mpm.resource.implementations.util.AIRActions;
+
+public class GuiDedicatedAccountPanel extends GuiResourcePanelInterface{
+	
+	private DAPBeanInterface components;
+	
+	private JRadioButton rdbtnCreate;
+	private JRadioButton rdbtnDelete;
+	private JRadioButton rdbtnGet;
+	private JRadioButton rdbtnUpdate;
+	
+	private JLabel ded_id_label;
+	private JTextField ded_id_text;
+	
+	private JLabel ded_unit_label;
+	private JComboBox ded_unit_combo;
+	private String ded_unit_selected;
+	
+	private JLabel ded_value_label;
+	private JTextField ded_value_text;
+	
+	private JLabel ded_value_adj_label;
+	private JTextField ded_value_adj_text;
+	
+	private JLabel ded_exp_label;
+	private JTextField ded_exp_text;
+	
+	private JLabel ded_exp_adj_label;
+	private JTextField ded_exp_adj_text; 
+	
+	public final static String DEFAULT = "Select unit";
+	public final static String TIME = "Time";
+	public final static String MONEY = "Money";
+	public final static String VOLUME = "Volume";
+	public final static String SSU = "SSU";
+	private String[] ded_unit_list = {DEFAULT, TIME, MONEY, VOLUME, SSU};
+	
+	private String local_action;
+	
+	public GuiDedicatedAccountPanel(DAPBeanInterface components, JRadioButton rdbtnCreate, JRadioButton rdbtnDelete, JRadioButton rdbtnGet, JRadioButton rdbtnUpdate){
+		this.components = components;
+		this.rdbtnCreate = rdbtnCreate;
+		this.rdbtnDelete = rdbtnDelete;
+		this.rdbtnGet = rdbtnGet;
+		this.rdbtnUpdate = rdbtnUpdate;
+		initialize();
+		
+	}
+	
+	private void setPanelDimension() {
+		setSize(711, 450);
+		GridBagLayout gbl_resources_panel = new GridBagLayout();
+		gbl_resources_panel.columnWidths = new int[] { 260, 278, 0};
+		gbl_resources_panel.columnWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
+		gbl_resources_panel.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+		gbl_resources_panel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0,	0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		setLayout(gbl_resources_panel);
+	}
+	
+	private void initialize() {
+		setPanelDimension();
+		setDedicatedAccountIdIdLabel();
+		setDedicatedAccountIdText();
+		DedicatedAccountUnitLabel();
+		DedicatedAccountUnitCombo();
+		
+		ded_unit_combo.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				ded_unit_selected = (String) ((JComboBox)e.getSource()).getSelectedItem();
+				if(ded_unit_selected.equals(DEFAULT)){
+					ded_value_label.setText("Dedicated account value");
+				}
+				else if(ded_unit_selected.equals(MONEY)){
+					ded_value_label.setText("Dedicated account value (€ cent.)");
+				}
+				else if(ded_unit_selected.equals(VOLUME)){
+					ded_value_label.setText("Dedicated account value (byte)");
+				}
+				else if(ded_unit_selected.equals(TIME)){
+					ded_value_label.setText("Dedicated account value (sec.)");
+				}
+				else if(ded_unit_selected.equals(SSU)){
+					ded_value_label.setText("Dedicated account value");
+				}
+				resetOnUnitChange();
+			}
+		});
+
+		setDedicatedAccountValueLabel();
+		setDedicatedAccountValueText();
+		setDedicatedAccountValueAdjLabel();
+		setDedicatedAccountValueAdjText();
+		setDedicatedAccountExpDateLabel();
+		setDedicatedAccountExpDateText();
+		setDedicatedAccountExpDateAdjLabel();
+		setDedicatedAccountExpDateAdjText();
+		setAction();
+	}
+	
+	private void setAction(){
+		rdbtnCreate.setEnabled(true);
+		rdbtnDelete.setEnabled(true);
+		rdbtnGet.setEnabled(true);
+		rdbtnUpdate.setEnabled(true);
+	}
+	
+	private void setDedicatedAccountIdIdLabel(){
+		ded_id_label = new JLabel("Dedicated account id");
+		ded_id_label.setHorizontalAlignment(SwingConstants.RIGHT);
+		ded_id_label.setVisible(false);
+		add(ded_id_label, components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 8, 5, 0, 5, 0, 0));
+	}
+	
+	private void setDedicatedAccountIdText(){
+		ded_id_text = new JTextField();
+		ded_id_text.setColumns(10);
+		ded_id_text.setVisible(false);
+		add(ded_id_text, components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 8, 0, 0, 0, 1, 0));
+	}
+	
+	private void DedicatedAccountUnitLabel(){
+		ded_unit_label = new JLabel("Dedicated account unit");
+		ded_unit_label.setHorizontalAlignment(SwingConstants.RIGHT);
+		ded_unit_label.setVisible(false);
+		add(ded_unit_label, components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 8, 5, 0, 5, 0, 1));
+	}
+	
+	private void DedicatedAccountUnitCombo(){
+		ded_unit_combo = new JComboBox(ded_unit_list);
+		ded_unit_combo.setMaximumRowCount(5);
+		ded_unit_combo.setVisible(false);
+		add(ded_unit_combo, components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 8, 0, 0, 0, 1, 1, 16));
+	}
+	
+	private void setDedicatedAccountValueLabel(){
+		ded_value_label = new JLabel("Dedicated account value");
+		ded_value_label.setHorizontalAlignment(SwingConstants.RIGHT);
+		ded_value_label.setVisible(false);
+		add(ded_value_label, components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 8, 5, 0, 5, 0, 2));
+	}
+	
+	private void setDedicatedAccountValueText(){
+		ded_value_text = new JTextField();
+		ded_value_text.setColumns(10);
+		ded_value_text.setVisible(false);
+		add(ded_value_text, components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 8, 0, 0, 0, 1, 2));
+	}
+	
+	private void setDedicatedAccountValueAdjLabel(){
+		ded_value_adj_label = new JLabel("Dedicated account value adjustment");
+		ded_value_adj_label.setHorizontalAlignment(SwingConstants.RIGHT);
+		ded_value_adj_label.setVisible(false);
+		add(ded_value_adj_label, components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 8, 5, 0, 5, 0, 3));
+	}
+	
+	private void setDedicatedAccountValueAdjText(){
+		ded_value_adj_text = new JTextField();
+		ded_value_adj_text.setColumns(10);
+		ded_value_adj_text.setVisible(false);
+		add(ded_value_adj_text, components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 8, 0, 0, 0, 1, 3));
+	}
+	
+	private void setDedicatedAccountExpDateLabel(){
+		ded_exp_label = new JLabel("Dedicated account end date (YYYY-MM-DD)");
+		ded_exp_label.setHorizontalAlignment(SwingConstants.RIGHT);
+		ded_exp_label.setVisible(false);
+		add(ded_exp_label, components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 8, 5, 0, 5, 0, 4));
+	}
+	
+	private void setDedicatedAccountExpDateText(){
+		ded_exp_text = new JTextField();
+		ded_exp_text.setColumns(10);
+		ded_exp_text.setVisible(false);
+		add(ded_exp_text, components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 8, 0, 0, 0, 1, 4));
+	}
+	
+	private void setDedicatedAccountExpDateAdjLabel(){
+		ded_exp_adj_label = new JLabel("Dedicated account end date adjustment");
+		ded_exp_adj_label.setHorizontalAlignment(SwingConstants.RIGHT);
+		ded_exp_adj_label.setVisible(false);
+		add(ded_exp_adj_label, components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 8, 5, 0, 5, 0, 5));
+	}
+	
+	private void setDedicatedAccountExpDateAdjText(){
+		ded_exp_adj_text = new JTextField();
+		ded_exp_adj_text.setColumns(10);
+		ded_exp_adj_text.setVisible(false);
+		add(ded_exp_adj_text, components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 8, 0, 0, 0, 1, 5));
+	}
+	
+	public JTextField getIdText(){
+		return ded_id_text;
+	}
+		
+	public JComboBox getDed_unit_combo() {
+		return ded_unit_combo;
+	}
+
+	public String getUnitSelected(){
+		return ded_unit_selected;
+	}
+
+	public JTextField getValueText(){
+		return ded_value_text;
+	}
+
+	public JTextField getValueAdjText(){
+		return ded_value_adj_text;
+	}
+
+	public JTextField getExpiryText(){
+		return ded_exp_text;
+	}
+
+	public JTextField getExpiryAdjText(){
+		return ded_exp_adj_text;
+	}
+	
+	public void setPanelAction(String action){
+		local_action = action;
+		if(action.equals(AIRActions.AIR_ACTION_CREATE)){
+			actionCreate();
+		}
+		
+		else if(action.equals(AIRActions.AIR_ACTION_DELETE)){
+			actionDelete();
+		}
+		
+		else if(action.equals(AIRActions.AIR_ACTION_GET)){
+			actionGet();
+		}
+		
+		else if(action.equals(AIRActions.AIR_ACTION_SET)){
+			actionUpdate();
+		}
+	}
+	
+	private void actionCreate(){
+		ded_id_label.setText("Dedicated account id*");
+		ded_unit_label.setText("Dedicated account unit*");
+		ded_value_label.setText("Dedicated account value");
+		ded_value_adj_label.setText("Dedicated account value adjustment");
+		ded_exp_label.setText("Dedicated account end date (YYYY-MM-DD)");
+		ded_exp_adj_label.setText("Dedicated account end date adjustment");
+		
+		ded_id_label.setVisible(true);
+		ded_unit_label.setVisible(true);
+		ded_value_label.setVisible(true);
+		ded_value_adj_label.setVisible(false);
+		ded_exp_label.setVisible(true);
+		ded_exp_adj_label.setVisible(false);
+		
+		this.reset();
+		
+		ded_id_text.setVisible(true);
+		ded_unit_combo.setVisible(true);
+		ded_value_text.setVisible(true);
+		ded_value_adj_text.setVisible(false);
+		ded_exp_text.setVisible(true);
+		ded_exp_text.addKeyListener(new KeyAdapter() {
+			public void keyReleased(KeyEvent e) {
+				ded_exp_text.setText(components.getDateCompleter().complete(ded_exp_text.getText()));
+			}
+		});
+		ded_exp_adj_text.setVisible(false);
+	}
+	
+	private void actionDelete(){
+		ded_id_label.setText("Dedicated account id*");
+		ded_unit_label.setText("Dedicated account unit");
+		ded_value_label.setText("Dedicated account value");
+		ded_value_adj_label.setText("Dedicated account value adjustment");
+		ded_exp_label.setText("Dedicated account end date (YYYY-MM-DD)");
+		ded_exp_adj_label.setText("Dedicated account end date adjustment");
+		
+		ded_id_label.setVisible(true);
+		ded_unit_label.setVisible(false);
+		ded_value_label.setVisible(false);
+		ded_value_adj_label.setVisible(false);
+		ded_exp_label.setVisible(true);
+		ded_exp_adj_label.setVisible(false);
+		
+		this.reset();
+		
+		ded_id_text.setVisible(true);
+		ded_unit_combo.setVisible(false);
+		ded_value_text.setVisible(false);
+		ded_value_adj_text.setVisible(false);
+		ded_exp_text.setVisible(true);
+		ded_exp_text.addKeyListener(new KeyAdapter() {
+			public void keyReleased(KeyEvent e) {
+				ded_exp_text.setText(components.getDateCompleter().complete(ded_exp_text.getText()));
+			}
+		});
+		ded_exp_adj_text.setVisible(false);
+	}
+	
+	private void actionGet(){
+		ded_id_label.setText("Dedicated account id");
+		ded_unit_label.setText("Dedicated account unit");
+		ded_value_label.setText("Dedicated account value");
+		ded_value_adj_label.setText("Dedicated account value adjustment");
+		ded_exp_label.setText("Dedicated account end date (YYYY-MM-DD)");
+		ded_exp_adj_label.setText("Dedicated account end date adjustment");
+		
+		ded_id_label.setVisible(false);
+		ded_unit_label.setVisible(false);
+		ded_value_label.setVisible(false);
+		ded_value_adj_label.setVisible(false);
+		ded_exp_label.setVisible(false);
+		ded_exp_adj_label.setVisible(false);
+		
+		this.reset();
+		
+		ded_id_text.setVisible(false);
+		ded_unit_combo.setVisible(false);
+		ded_value_text.setVisible(false);
+		ded_value_adj_text.setVisible(false);
+		ded_exp_text.setVisible(false);
+		ded_exp_adj_text.setVisible(false);
+	}
+	
+	private void actionUpdate(){
+		ded_id_label.setText("Dedicated account id*");
+		ded_unit_label.setText("Dedicated account unit*");
+		ded_value_label.setText("Dedicated account value");
+		ded_value_adj_label.setText("Dedicated account value adjustment");
+		ded_exp_label.setText("Dedicated account end date (YYYY-MM-DD)");
+		ded_exp_adj_label.setText("Dedicated account end date adjustment");
+		
+		ded_id_label.setVisible(true);
+		ded_unit_label.setVisible(true);
+		ded_value_label.setVisible(true);
+		ded_value_adj_label.setVisible(true);
+		ded_exp_label.setVisible(true);
+		ded_exp_adj_label.setVisible(true);
+		
+		this.reset();
+		
+		ded_id_text.setVisible(true);
+		ded_unit_combo.setVisible(true);
+		ded_value_text.setVisible(true);
+		ded_value_adj_text.setVisible(true);
+		ded_exp_text.setVisible(true);
+		
+		ded_exp_text.addKeyListener(new KeyAdapter() {
+			public void keyReleased(KeyEvent e) {
+				ded_exp_text.setText(components.getDateCompleter().complete(ded_exp_text.getText()));
+			}
+		});
+		ded_exp_adj_text.setVisible(true);
+		
+		ded_value_text.addKeyListener(new KeyAdapter() {
+			public void keyReleased(KeyEvent e){
+				verifyUpdateValueAbs();
+			}
+		});
+		
+		ded_value_adj_text.addKeyListener(new KeyAdapter() {
+			public void keyReleased(KeyEvent e){
+				verifyUpdateValueRel();
+			}
+		});
+		
+		ded_exp_text.addKeyListener(new KeyAdapter() {
+			public void keyReleased(KeyEvent e){
+				verifyUpdateDate();
+			}
+		});
+		
+		ded_exp_adj_text.addKeyListener(new KeyAdapter() {
+			public void keyReleased(KeyEvent e){
+				verifyUpdateDateAdj();
+			}
+		});
+	}
+	
+	
+	
+	private void verifyUpdateValueAbs(){
+		if(ded_value_text.getText().length()>0){
+			ded_value_adj_text.setText("");
+			ded_value_adj_label.setVisible(false);
+			ded_value_adj_text.setVisible(false);
+		}
+		else{
+			ded_value_adj_label.setVisible(true);
+			ded_value_adj_text.setVisible(true);
+		}
+	}
+	
+	private void verifyUpdateValueRel(){
+		if(ded_value_adj_text.getText().length()>0){
+			ded_value_text.setText("");
+			ded_value_label.setVisible(false);
+			ded_value_text.setVisible(false);
+		}
+		else{
+			ded_value_label.setVisible(true);
+			ded_value_text.setVisible(true);
+		}
+	}
+	
+	private void verifyUpdateDate(){
+		if(ded_exp_text.getText().length()>0){
+			ded_exp_adj_text.setText("");
+			ded_exp_adj_label.setVisible(false);
+			ded_exp_adj_text.setVisible(false);
+		}
+		else{
+			ded_exp_adj_label.setVisible(true);
+			ded_exp_adj_text.setVisible(true);
+		}
+	}
+	
+	private void verifyUpdateDateAdj(){
+		if(ded_exp_adj_text.getText().length()>0){
+			ded_exp_text.setText("");
+			ded_exp_label.setVisible(false);
+			ded_exp_text.setVisible(false);
+		}
+		else{
+			ded_exp_label.setVisible(true);
+			ded_exp_text.setVisible(true);
+		}
+	}
+	
+	private void resetOnUnitChange(){
+		ded_value_text.setText("");
+		ded_value_adj_text.setText("");
+		ded_exp_text.setText("");
+		ded_exp_adj_text.setText("");
+		if(local_action.equals(AIRActions.AIR_ACTION_SET)){
+			ded_value_label.setVisible(true);
+			ded_value_text.setVisible(true);
+			ded_value_adj_label.setVisible(true);
+			ded_value_adj_text.setVisible(true);
+			ded_exp_label.setVisible(true);
+			ded_exp_text.setVisible(true);
+			ded_exp_adj_label.setVisible(true);
+			ded_exp_adj_text.setVisible(true);
+		}
+	}
+	
+	private void reset(){
+		ded_id_text.setText("");
+		ded_unit_combo.setSelectedIndex(0);
+		ded_value_text.setText("");
+		ded_value_adj_text.setText("");
+		ded_exp_text.setText("");
+		ded_exp_adj_text.setText("");
+	}
+}
+

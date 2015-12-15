@@ -1,0 +1,31 @@
+package com.innovery.mpm.provisioning.interfaces.gui.util;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+
+import com.innovery.mpm.connection.interfaces.component.DAPBeanInterface;
+import com.innovery.mpm.provisioning.interfaces.gui.BsoResourceInterface;
+import com.innovery.mpm.provisioning.interfaces.gui.BsoResponseGridManagmentInterface;
+
+public interface ProvisioningResponseManagmentInterface {
+
+	public void getResponse();
+	
+	public void setReference(BsoResourceInterface reference);
+	
+	public void setComponents(DAPBeanInterface components);
+
+	void setGridManager(BsoResponseGridManagmentInterface gridManager);
+
+	void setBtnExecute(JButton btnExecute);
+
+	void setTextArea(JTextArea textArea);
+
+	void setActionButtonGroup(ButtonGroup actionButtonGroup);
+
+	void setResponseGridField(JPanel responseGridField);
+
+	void setResponseField(JPanel responseField);
+}

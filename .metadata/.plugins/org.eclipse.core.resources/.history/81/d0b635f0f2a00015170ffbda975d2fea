@@ -1,0 +1,71 @@
+package com.innovery.mpm.ssh.interfaces.gui.util;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
+import com.innovery.mpm.connection.interfaces.component.DAPBeanInterface;
+import com.innovery.mpm.ssh.interfaces.gui.SshResponseGridManagerInterface;
+
+public interface SshResourceUtilInterface {
+
+	public void initialState();
+		
+	public void actionOnCreate();
+	
+	public void actionOnDelete();
+	
+	public void actionOnAssurance();	
+	
+	public void backButtonActionPerformed();
+	
+	public void actionOnSmartDateSelected();
+	
+	public void actionOnServiceCodeSelected();
+	
+	public void actionOnSmartDateCheckSelected();
+	
+	public void setComponents(DAPBeanInterface components);
+	
+	public void setMsisdnField(JTextField msisdnField);
+
+	public void setServiceCodeField(JTextField serviceCodeField);
+
+	public void setServiceCodeLabel(JLabel serviceCodeLabel);
+
+	public void setServiceCodeDateField(JTextField serviceCodeDateField);
+
+	public void setServiceCodeDateLabel(JLabel serviceCodeDateLabel);
+
+	public void setSmartDateCheck(JCheckBox smartDateCheck);
+
+	public void setSmartDateField(JTextField smartDateField);
+
+	public void setSmartDateLabel(JLabel smartDateLabel);
+
+	public void setSmartDatePanel(JPanel smartDatePanel);
+
+	public void setActionButtonGroup(ButtonGroup actionButtonGroup);
+
+	public void setSmartDateCheckGroup(ButtonGroup smartDateCheckGroup);
+
+	public void setTextArea(JTextArea textArea);
+
+	public void setFrame(JFrame frame);
+
+	public void setBtnExecute(JButton btnExecute);
+
+	public void setGridManager(SshResponseGridManagerInterface gridManager);
+	
+	public void userLevel();
+
+	public void setRdbtnDeactivation(JRadioButton rdbtnDeactivation);
+
+	public void setRdbtnActivation(JRadioButton rdbtnActivation);
+}

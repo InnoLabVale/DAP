@@ -1,0 +1,98 @@
+package com.innovery.mpm.provisioning.implementations.action;
+
+import com.innovery.mpm.connection.interfaces.component.DAPBeanInterface;
+import com.innovery.mpm.provisioning.implementations.util.PROVISIONINGActions;
+import com.innovery.mpm.provisioning.implementations.util.PROVISIONINGCommands;
+import com.innovery.mpm.provisioning.interfaces.action.ActionCommandBSOInterface;
+import com.innovery.mpm.provisioning.interfaces.bean.CommandBSOInterface;
+
+public class ActionCommandProvisioning implements ActionCommandBSOInterface{
+	
+	private DAPBeanInterface components;
+	
+	public String executeBsoCommand(CommandBSOInterface bso){
+		
+		StringBuffer command;
+		
+		if(bso.getAction().equals(PROVISIONINGActions.PROVISIONING_ACTION_GET)){
+			command = new StringBuffer("GET:SRVSUB");
+		}
+		
+		else {
+			command = new StringBuffer("SET:SRVSUB");
+		}
+		
+		command.append(PROVISIONINGCommands.PROVISIONING_COMMAND_TRANSID).append(bso.getTrans_id());
+		command.append(PROVISIONINGCommands.PROVISIONING_COMMAND_MSISDN).append(bso.getMsisdn());
+		command.append(PROVISIONINGCommands.PROVISIONING_COMMAND_SERVICE).append(bso.getService());
+		command.append(PROVISIONINGCommands.PROVISIONING_COMMAND_MARKET).append(bso.getMarket());
+		command.append(PROVISIONINGCommands.PROVISIONING_COMMAND_CTYPE).append(bso.getCtype());
+		
+		components.getLogger().info("EXECUTING BSO COMMAND");
+		if (bso.getAction().equals(PROVISIONINGActions.PROVISIONING_ACTION_IN)) {
+			components.getLogger().info("BSO COMMAND: CREATE");
+			command.append(PROVISIONINGCommands.PROVISIONING_COMMAND_ACTION_IN);
+			
+		} else if (bso.getAction().equals(PROVISIONINGActions.PROVISIONING_ACTION_OUT)) {
+			components.getLogger().info("BSO COMMAND: DELETE");
+			command.append(PROVISIONINGCommands.PROVISIONING_COMMAND_ACTION_OUT);
+			
+		} else if (bso.getAction().equals(PROVISIONINGActions.PROVISIONING_ACTION_BOOK)) {
+			components.getLogger().info("BSO COMMAND: BOOK OUT");
+			command.append(PROVISIONINGCommands.PROVISIONING_COMMAND_ACTION_BOOKOUT);
+			
+		} else if (bso.getAction().equals(PROVISIONINGActions.PROVISIONING_ACTION_CHG)) {
+			components.getLogger().info("BSO COMMAND: CHANGE");
+			command.append(PROVISIONINGCommands.PROVISIONING_COMMAND_ACTION_CHG);
+			
+		} else if (bso.getAction().equals(PROVISIONINGActions.PROVISIONING_ACTION_GET)) {
+			components.getLogger().info("BSO COMMAND: ASSURANCE");
+		}
+		command.append(getAdditionaParameters(bso));
+		
+		return components.getConnectionManagerStandard().getSession().getConnection().send(command.append(PROVISIONINGCommands.PROVISIONING_COMMAND_END).toString()).trim();
+	}
+	
+	private String getAdditionaParameters(CommandBSOInterface bso){
+		StringBuffer parameters = new StringBuffer("");
+		
+		if(!bso.getAccount_B_msisdn().equals("")){
+			parameters.append(PROVISIONINGCommands.PROVISIONING_COMMAND_PARAMETER).append(bso.getAccount_B());
+		}
+		if(!bso.getAccount_C_msisdn().equals("")){
+			parameters.append(PROVISIONINGCommands.PROVISIONING_COMMAND_PARAMETER).append(bso.getAccount_C());
+		}
+		if(!bso.getDiscount_value().equals("")){
+			parameters.append(PROVISIONINGCommands.PROVISIONING_COMMAND_PARAMETER).append(bso.getDiscount_name()).append(PROVISIONINGCommands.PROVISIONING_COMMAND_VALUE).append(bso.getDiscount_value());
+		}
+		if(!bso.getParameter_1_value().equals("")){
+			if(!bso.getCug_action().equals("")){
+				parameters.append(PROVISIONINGCommands.PROVISIONING_COMMAND_ACCOUNTS).append(bso.getCug_action()).append(PROVISIONINGCommands.PROVISIONING_COMMAND_VALUE).append(bso.getParameter_1_value());
+			}
+			else{
+				parameters.append(PROVISIONINGCommands.PROVISIONING_COMMAND_PARAMETER).append(bso.getParameter_1_name()).append(PROVISIONINGCommands.PROVISIONING_COMMAND_VALUE).append(bso.getParameter_1_value());
+			}
+		}
+		if(!bso.getParameter_2_value().equals("")){
+			parameters.append(PROVISIONINGCommands.PROVISIONING_COMMAND_PARAMETER).append(bso.getParameter_2_name()).append(PROVISIONINGCommands.PROVISIONING_COMMAND_VALUE).append(bso.getParameter_2_value());
+		}
+		if(!bso.getParameter_3_value().equals("")){
+			parameters.append(PROVISIONINGCommands.PROVISIONING_COMMAND_PARAMETER).append(bso.getParameter_3_name()).append(PROVISIONINGCommands.PROVISIONING_COMMAND_VALUE).append(bso.getParameter_3_value());
+		}
+		if(!bso.getParameter_4_value().equals("")){
+			parameters.append(PROVISIONINGCommands.PROVISIONING_COMMAND_PARAMETER).append(bso.getParameter_4_name()).append(PROVISIONINGCommands.PROVISIONING_COMMAND_VALUE).append(bso.getParameter_4_value());
+		}
+		if(!bso.getParameter_5_value().equals("")){
+			parameters.append(PROVISIONINGCommands.PROVISIONING_COMMAND_PARAMETER).append(bso.getParameter_5_name()).append(PROVISIONINGCommands.PROVISIONING_COMMAND_VALUE).append(bso.getParameter_5_value());
+		}
+		if(!bso.getParameter_6_value().equals("")){
+			parameters.append(PROVISIONINGCommands.PROVISIONING_COMMAND_PARAMETER).append(bso.getParameter_6_name()).append(PROVISIONINGCommands.PROVISIONING_COMMAND_VALUE).append(bso.getParameter_6_value());
+		}
+		components.getLogger().info("ADDITIONAL PARAMETERS ADDED TO COMMAND: "+parameters);
+		return parameters.toString();
+	}
+
+	public void setComponents(DAPBeanInterface components) {
+		this.components = components;
+	}
+}

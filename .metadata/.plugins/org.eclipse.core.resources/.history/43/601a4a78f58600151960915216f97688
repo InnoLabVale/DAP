@@ -1,0 +1,9 @@
+package com.innovery.mpm.util.commands;
+
+public class AIRCommands{
+
+	public static final String AIR_COMMAND_SET = "SET:AIRSUB";
+	public static final String AIR_COMMAND_DEL = "DELETE:AIRSUB";
+	public static final String AIR_COMMAND_GET = "GET:AIRSUB";
+	
+}

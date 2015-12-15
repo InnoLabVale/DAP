@@ -1,0 +1,7 @@
+package com.innovery.mpm.util.commands;
+
+public class PROVISIONINGCommands {
+
+	public static final String PROVISIONING_COMMAND_SET = "SET:SRVSUB:TRANSID,<transid>:MSISDN,<msisdn>:SERVICE,<service>:MARKET,<market>:CTYPE,<ctype>";
+	public static final String PROVISIONING_COMMAND_GET = "GET:SRVSUB:TRANSID,<transid>:MSISDN,<msisdn>:SERVICE,<service>:MARKET,<market>:CTYPE,<ctype>";
+}

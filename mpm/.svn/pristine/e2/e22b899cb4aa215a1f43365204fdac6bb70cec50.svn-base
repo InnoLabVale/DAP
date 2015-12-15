@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opt code="OPT42">
+	<action value="in">
+		<parameter name="FEEDELAY" value="NULL|OPTBE0025"/>
+		<parameter name="FEEDISCOUNT" value="[0-9]{1,16}"/>
+		<parameter name="[ONESHOTFEE]" value="[0-9]{1,256}"/>
+	</action>
+	<action value="out"/>
+	<action value="book_out"/>
+	<action value="get">
+		<parameter name="RETURNDATA" value="ALL"/>
+	</action>
+</opt>

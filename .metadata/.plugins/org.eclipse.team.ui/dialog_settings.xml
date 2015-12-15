@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="SynchronizeViewSettings">
+		<item value="false" key="linkWithEditor"/>
+		<item value="1449866832770" key="lastactiveparticipant_sec_id"/>
+		<item value="org.tigris.subversion.subclipse.participant" key="lastactiveparticipant_id"/>
+		<section name="org.tigris.subversion.subclipse.participant.1449851326130">
+		</section>
+		<section name="org.tigris.subversion.subclipse.participant.1449866832770">
+			<item value="org.eclipse.team.ui.modelprovider_compressedfolders" key="org.eclipse.team.ui.P_LAST_MODELPROVIDER"/>
+			<item value="false" key="org.eclipse.team.ui.P_COMMIT_SET_ENABLED"/>
+		</section>
+		<section name="org.tigris.subversion.subclipse.participant.1449851283669">
+		</section>
+		<section name="org.tigris.subversion.subclipse.participant.1449851402309">
+		</section>
+		<section name="org.tigris.subversion.subclipse.participant.1449864519619">
+		</section>
+		<section name="org.tigris.subversion.subclipse.participant.1449863824918">
+		</section>
+		<section name="org.tigris.subversion.subclipse.participant.1449851501509">
+			<item value="org.eclipse.team.ui.modelprovider_compressedfolders" key="org.eclipse.team.ui.P_LAST_MODELPROVIDER"/>
+			<item value="false" key="org.eclipse.team.ui.P_COMMIT_SET_ENABLED"/>
+		</section>
+		<section name="org.tigris.subversion.subclipse.participant.1449851045991">
+		</section>
+		<section name="org.tigris.subversion.subclipse.participant.1449850982505">
+		</section>
+		<section name="org.tigris.subversion.subclipse.participant.1449851195943">
+		</section>
+		<section name="org.tigris.subversion.subclipse.participant.1449866802512">
+		</section>
+		<section name="org.tigris.subversion.subclipse.participant.1449866733092">
+		</section>
+		<section name="org.tigris.subversion.subclipse.participant.1449851356159">
+		</section>
+		<section name="org.tigris.subversion.subclipse.participant.1449864480348">
+		</section>
+		<section name="org.tigris.subversion.subclipse.participant.1449863781713">
+		</section>
+		<section name="org.tigris.subversion.subclipse.participant.1449866776173">
+		</section>
+		<section name="org.tigris.subversion.subclipse.participant.1449866666498">
+		</section>
+		<section name="org.tigris.subversion.subclipse.participant.1449864422140">
+		</section>
+		<section name="org.tigris.subversion.subclipse.participant.1449862094338">
+		</section>
+		<section name="org.tigris.subversion.subclipse.participant.1449851158262">
+		</section>
+		<section name="org.tigris.subversion.subclipse.participant.1449862496417">
+		</section>
+	</section>
+	<section name="ConfigureProjectWizard">
+		<item value="org.tigris.subversion.subclipse.ui.SharingWizard" key="selectedWizardId"/>
+	</section>
+	<section name="SynchronizeResourceSelectionDialog">
+	</section>
+	<section name="SynchronizeWizard">
+	</section>
+</section>

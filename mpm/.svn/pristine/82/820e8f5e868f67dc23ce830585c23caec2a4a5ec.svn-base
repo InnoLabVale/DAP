@@ -1,0 +1,52 @@
+<tariff_plan_list>
+	<tariff_plan id="PHXBE0001">
+		<discount>NULL|OPTBE0005|OPTBE0008|OPTBE0027</discount>
+	</tariff_plan>
+	<tariff_plan id="PHXBE0002">
+		<discount>NULL|OPTBE0006|OPTBE0009</discount>
+	</tariff_plan>
+	<tariff_plan id="PHXBE0003">
+		<discount>NULL|OPTBE0007|OPTBE0010|OPTBE0026</discount>
+	</tariff_plan>
+	<tariff_plan id="PHXBE0011">
+		<discount>NULL|OPTBE0012|OPTBE0013</discount>
+	</tariff_plan>
+	<tariff_plan id="PHXBE0014">
+		<discount>NULL|OPTBE0015|OPTBE0016</discount>
+	</tariff_plan>
+	<tariff_plan id="PHXBE0017">
+		<discount>NULL|OPTBE0018|OPTBE0019</discount>
+	</tariff_plan>
+	<tariff_plan id="PHXBE0028">
+		<discount>NULL|OPTBE0029|OPTBE0030|OPTBE0035</discount>
+	</tariff_plan>
+	<tariff_plan id="PHXBE0031">
+		<discount>NULL|OPTBE0033</discount>
+	</tariff_plan>
+	<tariff_plan id="PHXBE0032">
+		<discount>NULL|OPTBE0034</discount>
+	</tariff_plan>
+	<tariff_plan id="PHXBE0032">
+		<discount>NULL|OPTBE0034</discount>
+	</tariff_plan>
+	<tariff_plan id="PHXBE0036">
+		<discount>NULL</discount>
+	</tariff_plan>
+	<tariff_plan id="PHXBE0037">
+		<discount>NULL</discount>
+	</tariff_plan>
+	<tariff_plan id="PHXBE0042">
+		<discount>NULL</discount>
+	</tariff_plan>
+	<tariff_plan id="PHXBE0043">
+		<discount>NULL</discount>
+	</tariff_plan>
+	<tariff_plan id="PHXBE0046">
+		<discount>NULL</discount>
+	</tariff_plan>
+	<tariff_plan id="PHXBE0048">
+		<discount>NULL</discount>
+	</tariff_plan>
+</tariff_plan_list>
+
+<!-- release 22/09/2014 LOTTO 46-->

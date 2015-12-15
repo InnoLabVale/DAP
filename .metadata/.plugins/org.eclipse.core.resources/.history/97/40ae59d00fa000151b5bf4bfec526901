@@ -1,0 +1,34 @@
+package com.innovery.mpm.resource.implementations.gui.grid;
+
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+
+import javax.swing.JLabel;
+
+import com.innovery.mpm.connection.interfaces.component.DAPBeanInterface;
+import com.innovery.mpm.resource.interfaces.gui.AirResourceInterface;
+
+public class SimExpiryDateResponseGrid {
+
+	private AirResourceInterface reference;
+	private DAPBeanInterface components;
+	
+	public SimExpiryDateResponseGrid(AirResourceInterface reference, DAPBeanInterface components){
+		this.reference = reference;
+		this.components = components;
+	}
+	
+	public void setGrid(String[] mpm_response_splitted){
+		
+		String[] resource_response_splitted = mpm_response_splitted[3].split(",");
+		JLabel resource_label = new JLabel("SIM EXPIRY DATE:");
+		resource_label.setFont(new Font(resource_label.getFont().getName(), Font.BOLD, resource_label.getFont().getSize()));
+		resource_label.setVisible(true);
+		
+		JLabel resource_label_value = new JLabel(resource_response_splitted[1]);
+		resource_label_value.setVisible(true);
+		
+		reference.getResponse_fieldset_grid().add(resource_label, components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 10, 15, 0, 0, 0, 0));
+		reference.getResponse_fieldset_grid().add(resource_label_value, components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 10, 15, 0, 0, 1, 0));
+	}
+}

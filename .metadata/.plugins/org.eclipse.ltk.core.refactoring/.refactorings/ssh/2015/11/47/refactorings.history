@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy element &apos;SSHMessages.java&apos; to &apos;resource/src/main/java/com.innovery.mpm.resource.implementations.util&apos;&#x0D;&#x0A;- Original project: &apos;ssh&apos;&#x0D;&#x0A;- Destination element: &apos;resource/src/main/java/com.innovery.mpm.resource.implementations.util&apos;&#x0D;&#x0A;- Original element: &apos;com.innovery.mpm.ssh.implementations.util.SSHMessages.java&apos;" description="Copy compilation unit" destination="=resource/src\/main\/java&lt;com.innovery.mpm.resource.implementations.util" element1="/src\/main\/java&lt;com.innovery.mpm.ssh.implementations.util{SSHMessages.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1447769521358" units="1" version="1.0"/>
+</session>

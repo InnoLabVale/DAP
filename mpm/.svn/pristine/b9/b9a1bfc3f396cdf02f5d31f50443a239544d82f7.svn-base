@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ropz code="ROPZ128">
+	<action value="in">
+		<parameter name="LOCALAREA" value="[0-9]+"/>
+	</action>
+	<action value="out"/>
+	<action value="chg">
+		<parameter name="LOCALAREA" value="[0-9]+"/>
+	</action>
+	<action value="get"/>
+</ropz>

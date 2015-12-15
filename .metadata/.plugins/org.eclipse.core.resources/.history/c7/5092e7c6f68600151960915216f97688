@@ -1,0 +1,8 @@
+package com.innovery.mpm.util.market;
+
+public class MARKET{
+	
+	public static final String CONSUMER = "consumer";
+	public static final String CORPORATE = "corporate";
+	
+}

@@ -1,0 +1,647 @@
+package com.innovery.mpm.resource.implementations.gui;
+
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
+import javax.swing.JFrame;
+
+import com.innovery.mpm.connection.implementations.util.gui.GUICommonInterface;
+import com.innovery.mpm.connection.interfaces.component.DAPBeanInterface;
+import com.innovery.mpm.connection.interfaces.standard.session.SessionStandardInterface;
+import com.innovery.mpm.connection.interfaces.util.AutoCompleteMsisdnInterface;
+import com.innovery.mpm.resource.implementations.util.AIRActions;
+import com.innovery.mpm.resource.interfaces.gui.AirResourceInterface;
+import com.innovery.mpm.resource.interfaces.gui.util.AirResourceResponseManagerInterface;
+import com.innovery.mpm.resource.interfaces.gui.util.AirResourceUtilInterface;
+import com.innovery.mpm.resource.interfaces.gui.util.AirResourceResponseGridManagerInterface;
+import com.innovery.mpm.resource.interfaces.gui.verification.AirResourceVerifyInterface;
+
+import javax.swing.JPanel;
+
+import java.awt.BorderLayout;
+
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import java.awt.Font;
+
+import javax.swing.JButton;
+import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JTextArea;
+import javax.swing.KeyStroke;
+import javax.swing.SwingConstants;
+import javax.swing.JRadioButton;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+
+/**
+ * 
+ * @author Valerio Boschi, Daniela R. Auricchio
+ * 
+ */
+public class AirResource implements AirResourceInterface{
+
+	private JFrame frame;
+	private JTextArea textArea;
+	
+	private JPanel panel_center;
+	private JPanel cai_command_fieldset;
+	private JPanel response_fieldset;
+	private JPanel response_fieldset_grid;
+	private JPanel execute_details_panel;
+	private JButton button_details;
+	
+	private JLabel generic_response_msg;
+	
+	private JTextField msisdn_text;
+	
+	private JComboBox resource_combo;
+	private JPanel voidResourcesPanel;
+	
+	private JRadioButton rdbtnCreate;
+	private JRadioButton rdbtnDelete;
+	private JRadioButton rdbtnGet;
+	private JRadioButton rdbtnUpdate;
+	private JRadioButton rdbtnRun;
+	private JButton btnExecute;
+	
+	private AirResourceUtilInterface util;
+	
+	private ButtonGroup radioGroupMarket;
+	private ButtonGroup radioGroupAction;
+	
+	private JRadioButton rdbtnConsumer;
+	private JRadioButton rdbtnCorporate;
+	
+	private String resourceSelected;
+	
+	private DAPBeanInterface components;
+	private AirResourceResponseManagerInterface responseManager;
+	private AirResourceResponseGridManagerInterface grid_managment;
+	private AirResourceVerifyInterface resourceVerifier;
+	
+	
+	
+	private SessionStandardInterface sessionStandard;
+	private GUICommonInterface commonGUI;
+	private AutoCompleteMsisdnInterface autocompleteMsisdn;
+	
+	public AirResource(DAPBeanInterface components) {
+		this.components = components;
+		sessionStandard = components.getConnectionManagerStandard().getSession();
+		commonGUI = components.getCommonGUI();
+		autocompleteMsisdn = components.getMsisdnCompleter();
+		
+		resourceSelected = AIRActions.DEFAULT;
+	}
+
+	public void initialize() {
+		
+		setFrameInitialSettings();
+		
+		setPanelNorth();
+		setPanelSouth();
+		setPanelWest();
+		setPanelEast();
+		setPanelCenter();
+		
+		setCaiCommandField();
+		setVoidResourcesPanel();
+		
+		setResponseField();
+		setRespondeFieldComponents();
+		setButtonDetails();
+		
+		resource_combo = new JComboBox(AIRActions.AIR_RESOURCES_OPTIONS_LIST);
+		resource_combo.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				grid_managment.resetResponseGrid();
+				JComboBox cb = (JComboBox)e.getSource();
+				setAirResourcesUtilClass();
+				util.hideOne(resourceSelected);  // resourceSelected quello corrente
+				resourceSelected = (String) cb.getSelectedItem();
+				util.showSelectedResource(resourceSelected);
+			}
+		});
+		
+		setResourceLabel();
+		setResourceCombo();
+		
+		setMsisdnLabel();
+		setMsisdnText();
+		
+		setMarketRadioButtons();
+		
+		setMarketLabel();
+		setRadioMarketGroup();
+		setRadioMarketPanel();
+		
+		setActionLabel();
+		
+		rdbtnCreate = new JRadioButton(AIRActions.AIR_ACTION_CREATE);
+		rdbtnCreate.setActionCommand(AIRActions.AIR_ACTION_CREATE);
+		rdbtnCreate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				rdbtnCreate.setActionCommand(AIRActions.AIR_ACTION_CREATE);
+				radioGroupAction.getSelection().setActionCommand(AIRActions.AIR_ACTION_CREATE);
+				util.actionResourceCall(AIRActions.AIR_ACTION_CREATE);
+				frame.validate();
+			}
+		});
+
+		rdbtnDelete = new JRadioButton(AIRActions.AIR_ACTION_DELETE);
+		rdbtnDelete.setActionCommand(AIRActions.AIR_ACTION_DELETE);
+		rdbtnDelete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				rdbtnDelete.setActionCommand(AIRActions.AIR_ACTION_DELETE);
+				radioGroupAction.getSelection().setActionCommand(AIRActions.AIR_ACTION_DELETE);
+				util.actionResourceCall(AIRActions.AIR_ACTION_DELETE);
+				frame.validate();
+			}
+		});
+
+		rdbtnGet = new JRadioButton(AIRActions.AIR_ACTION_GET);
+		rdbtnGet.setActionCommand(AIRActions.AIR_ACTION_GET);
+		rdbtnGet.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				rdbtnGet.setActionCommand(AIRActions.AIR_ACTION_GET);
+				radioGroupAction.getSelection().setActionCommand(AIRActions.AIR_ACTION_GET);
+				util.actionResourceCall(AIRActions.AIR_ACTION_GET);
+				frame.validate();
+			}
+		});
+		
+		rdbtnUpdate = new JRadioButton(AIRActions.AIR_ACTION_SET);
+		rdbtnUpdate.setActionCommand(AIRActions.AIR_ACTION_SET);
+		rdbtnUpdate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				rdbtnUpdate.setActionCommand(AIRActions.AIR_ACTION_SET);
+				radioGroupAction.getSelection().setActionCommand(AIRActions.AIR_ACTION_SET);
+				util.actionResourceCall(AIRActions.AIR_ACTION_SET);
+				frame.validate();
+			}
+		});
+		
+		rdbtnRun = new JRadioButton(AIRActions.AIR_ACTION_RUN);
+		rdbtnRun.setActionCommand(AIRActions.AIR_ACTION_RUN);
+		rdbtnRun.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				rdbtnRun.setActionCommand(AIRActions.AIR_ACTION_RUN);
+				radioGroupAction.getSelection().setActionCommand(AIRActions.AIR_ACTION_RUN);
+				util.actionResourceCall(AIRActions.AIR_ACTION_RUN);
+				frame.validate();
+			}
+		});
+		
+		setRadioActionGroup();
+		setRadioActionPanel();
+		
+		setExecuteButton();
+		
+		setAirResourcesResponseGridManagerClass();
+		
+		frame.getRootPane().setDefaultButton(btnExecute);
+		frame.setVisible(true);
+	}
+
+	private void setFrameInitialSettings(){
+		frame = new JFrame();
+		frame.setResizable(false);
+		frame.setSize(1190, 700);
+		frame.setTitle("Dashboard Assurance Prepaid - AIR Resource");
+		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		frame.getRootPane().getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke("ENTER"), "none");
+	    frame.getRootPane().getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke("released ENTER"), "press");
+
+		frame.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				frame.dispose();
+			}
+		});
+	}
+	
+	private void setPanelNorth(){
+		JPanel panel_north = new JPanel();
+		FlowLayout flowLayout_north = (FlowLayout) panel_north.getLayout();
+		flowLayout_north.setVgap(5);
+		frame.getContentPane().add(panel_north, BorderLayout.NORTH);
+
+		JLabel title_label = new JLabel("CAI Command");
+		title_label.setFont(commonGUI.setFontSize(18));
+		panel_north.add(title_label);
+	}
+
+	private void setPanelSouth(){
+		JPanel panel_south = new JPanel();
+		frame.getContentPane().add(panel_south, BorderLayout.SOUTH);
+		GridBagLayout gbl_panel_south = new GridBagLayout();
+		gbl_panel_south.columnWidths = new int[]{0, 0};
+		gbl_panel_south.rowHeights = new int[]{16, 0};
+		gbl_panel_south.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+		gbl_panel_south.rowWeights = new double[]{0.0, Double.MIN_VALUE};
+		panel_south.setLayout(gbl_panel_south);
+		
+		JLabel devByLabel = new JLabel();
+		devByLabel.setText("- By Innovery S.p.A. -");
+		devByLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		devByLabel.setForeground(Color.DARK_GRAY);
+		devByLabel.setFont(commonGUI.setFontSize(Font.BOLD, 11));
+		panel_south.add(devByLabel, commonGUI.setContraints(5, 0, 3, 0, 0, 0));
+	}
+	
+	private void setPanelWest(){
+		JPanel panel_west = new JPanel();
+		FlowLayout flowLayout_west = (FlowLayout) panel_west.getLayout();
+		flowLayout_west.setHgap(10);
+		frame.getContentPane().add(panel_west, BorderLayout.WEST);
+	}
+	
+	private void setPanelEast(){
+		JPanel panel_east = new JPanel();
+		FlowLayout flowLayout_east = (FlowLayout) panel_east.getLayout();
+		flowLayout_east.setHgap(10);
+		frame.getContentPane().add(panel_east, BorderLayout.EAST);
+	}
+	
+	private void setPanelCenter(){
+		panel_center = new JPanel();
+		frame.getContentPane().add(panel_center, BorderLayout.CENTER);
+		GridBagLayout gbl_panel_center = new GridBagLayout();
+		gbl_panel_center.columnWidths = new int[] {711, 0};
+		gbl_panel_center.rowHeights = new int[] {628, 0};
+		gbl_panel_center.columnWeights = new double[] { 0.0, 1.0 };
+		gbl_panel_center.rowWeights = new double[] { 1.0, Double.MIN_VALUE };
+		panel_center.setLayout(gbl_panel_center);
+	}
+	
+	private void setCaiCommandField(){
+		
+		cai_command_fieldset = new JPanel();
+		cai_command_fieldset.setBorder(new TitledBorder(new LineBorder(new Color(171, 173, 179)), "Consumer/Corporate CAI command", TitledBorder.LEADING, TitledBorder.TOP, commonGUI.setFontSize(Font.BOLD, 13), null));
+		panel_center.add(cai_command_fieldset, commonGUI.setContraints(GridBagConstraints.BOTH, 5, 0, 5, 5, 0, 0));
+
+		GridBagLayout gbl_cai_command_fieldset = new GridBagLayout();
+		gbl_cai_command_fieldset.columnWidths = new int[] {260, 278, 0};
+		gbl_cai_command_fieldset.rowHeights = new int[] { 0, 0, 0, 0, 0};
+		gbl_cai_command_fieldset.columnWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
+		gbl_cai_command_fieldset.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 1.0};
+		cai_command_fieldset.setLayout(gbl_cai_command_fieldset);
+	}
+	
+	private void setVoidResourcesPanel(){
+		voidResourcesPanel = new JPanel();
+		GridBagLayout gbl_resources_panel = new GridBagLayout();
+		gbl_resources_panel.columnWidths = new int[]{260, 278, 0};
+		gbl_resources_panel.columnWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
+		gbl_resources_panel.rowHeights = new int[] { 0, 0, 0, 0, 0};
+		gbl_resources_panel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		voidResourcesPanel.setLayout(gbl_resources_panel);
+		cai_command_fieldset.add(voidResourcesPanel, commonGUI.setContraintsGridWidth(GridBagConstraints.BOTH, 2, 0, 0, 0, 0, 0, 4));
+		cai_command_fieldset.revalidate();
+		cai_command_fieldset.repaint();
+	}
+	
+	private void setResourceLabel(){
+		JLabel resource_label = new JLabel("Resources");
+		resource_label.setHorizontalAlignment(SwingConstants.RIGHT);
+		cai_command_fieldset.add(resource_label, commonGUI.setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 5, 5, 0, 5, 0, 0));
+	}
+	
+	private void setResourceCombo(){
+		resource_combo.setMaximumRowCount(16);
+		resource_combo.setPrototypeDisplayValue("Supervision expiry date");
+		cai_command_fieldset.add(resource_combo, commonGUI.setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 5, 0, 0, 0, 1, 0, 16));
+	}
+	
+	private void setMsisdnLabel(){
+		JLabel msisdn_label = new JLabel("MSISDN");
+		msisdn_label.setHorizontalAlignment(SwingConstants.RIGHT);
+		cai_command_fieldset.add(msisdn_label, commonGUI.setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 5, 5, 0, 5, 0, 1));
+	}
+	
+	private void setMsisdnText(){
+		msisdn_text = new JTextField();
+		msisdn_text.setText(sessionStandard.getCurrent_msisdn());
+		msisdn_text.setColumns(10);
+		cai_command_fieldset.add(msisdn_text, commonGUI.setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 5, 0, 0, 0, 1, 1));
+		
+		JComboBox msisdn_combo = autocompleteMsisdn.setupAutoComplete(msisdn_text);
+		msisdn_text.setLayout(new BorderLayout());
+		msisdn_text.add(msisdn_combo, BorderLayout.SOUTH);
+	}
+	
+	private void setMarketRadioButtons(){
+		rdbtnConsumer = new JRadioButton(DAPBeanInterface.CONSUMER);
+		rdbtnConsumer.setActionCommand(DAPBeanInterface.CONSUMER);
+		
+		rdbtnCorporate = new JRadioButton(DAPBeanInterface.CORPORATE);
+		rdbtnCorporate.setActionCommand(DAPBeanInterface.CORPORATE);
+	}
+	
+	private void setMarketLabel(){
+		JLabel market_label = new JLabel("Market");
+		market_label.setHorizontalAlignment(SwingConstants.RIGHT);
+		cai_command_fieldset.add(market_label, commonGUI.setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 5, 5, 0, 5, 0, 2));
+	}
+	
+	private void setRadioMarketGroup(){
+		radioGroupMarket = new ButtonGroup();
+		radioGroupMarket.add(rdbtnConsumer);
+		radioGroupMarket.add(rdbtnCorporate);
+		
+		if (sessionStandard.getCurrent_market().equals(DAPBeanInterface.CONSUMER)) {
+			rdbtnConsumer.setSelected(true);
+		}
+		else if(sessionStandard.getCurrent_market().equals(DAPBeanInterface.CORPORATE)){
+			rdbtnCorporate.setSelected(true);
+		}
+	}
+	
+	private void setRadioMarketPanel(){
+		JPanel radioGroupMarket_panel = new JPanel();
+		cai_command_fieldset.add(radioGroupMarket_panel, commonGUI.setContraints(GridBagConstraints.BOTH, 5, 0, 0, 0, 1, 2));
+		
+		GroupLayout gl_radioGroupMarket_panel = new GroupLayout(radioGroupMarket_panel);
+		gl_radioGroupMarket_panel.setHorizontalGroup(
+			gl_radioGroupMarket_panel.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_radioGroupMarket_panel.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(rdbtnConsumer, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)
+					.addGap(10)
+					.addComponent(rdbtnCorporate, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+		);
+		gl_radioGroupMarket_panel.setVerticalGroup(
+			gl_radioGroupMarket_panel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_radioGroupMarket_panel.createSequentialGroup()
+					.addGroup(gl_radioGroupMarket_panel.createParallelGroup(Alignment.BASELINE)
+						.addComponent(rdbtnCorporate)
+						.addComponent(rdbtnConsumer))
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+		);
+				
+		radioGroupMarket_panel.setLayout(gl_radioGroupMarket_panel);
+		gl_radioGroupMarket_panel.setAutoCreateContainerGaps(true);
+	}
+	
+	private void setActionLabel(){
+		JLabel action_label = new JLabel("Action");
+		action_label.setHorizontalAlignment(SwingConstants.RIGHT);
+		cai_command_fieldset.add(action_label, commonGUI.setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 5, 5, 0, 5, 0, 3));
+	}
+	
+	private void setRadioActionGroup(){
+		radioGroupAction = new ButtonGroup();
+		radioGroupAction.add(rdbtnCreate);
+		radioGroupAction.add(rdbtnDelete);
+		radioGroupAction.add(rdbtnGet);
+		radioGroupAction.add(rdbtnUpdate);
+		radioGroupAction.add(rdbtnRun);
+		rdbtnCreate.setEnabled(false);
+		rdbtnDelete.setEnabled(false);
+		rdbtnGet.setEnabled(false);
+		rdbtnUpdate.setEnabled(false);
+		rdbtnRun.setEnabled(false);
+		rdbtnRun.setVisible(false);
+	}
+	
+	private void setRadioActionPanel(){
+		JPanel radioGroupAction_panel = new JPanel();
+		cai_command_fieldset.add(radioGroupAction_panel, commonGUI.setContraints(GridBagConstraints.BOTH, 5, 0, 0, 0, 1, 3));
+
+		GroupLayout gl_radioGroupAction_panel = new GroupLayout(radioGroupAction_panel);
+		gl_radioGroupAction_panel.setHorizontalGroup(
+			gl_radioGroupAction_panel.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_radioGroupAction_panel.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(rdbtnCreate, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)
+					.addGap(10)
+					.addComponent(rdbtnDelete, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
+					.addGap(10)
+					.addComponent(rdbtnGet, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)
+					.addGap(25)
+					.addComponent(rdbtnUpdate, GroupLayout.PREFERRED_SIZE, 65, GroupLayout.PREFERRED_SIZE)
+					.addGap(25)
+					.addComponent(rdbtnRun, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+		);
+		gl_radioGroupAction_panel.setVerticalGroup(
+			gl_radioGroupAction_panel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_radioGroupAction_panel.createSequentialGroup()
+					.addGroup(gl_radioGroupAction_panel.createParallelGroup(Alignment.BASELINE)
+						.addComponent(rdbtnDelete)
+						.addComponent(rdbtnCreate)
+						.addComponent(rdbtnGet)
+						.addComponent(rdbtnUpdate)
+						.addComponent(rdbtnRun))
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+		);
+
+		radioGroupAction_panel.setLayout(gl_radioGroupAction_panel);
+		gl_radioGroupAction_panel.setAutoCreateContainerGaps(true);
+	}
+	
+	private void setExecuteButton(){
+		btnExecute = new JButton(AIRActions.AIR_ACTION_EXECUTE);
+		btnExecute.setActionCommand(AIRActions.AIR_ACTION_EXECUTE);
+		execute_details_panel.add(btnExecute, commonGUI.setContraints(GridBagConstraints.CENTER, GridBagConstraints.WEST, 0, 0, 5, 0, 0, 0));
+		btnExecute.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnExecute.setEnabled(false);
+				if(btnExecute.getActionCommand().equals(AIRActions.AIR_ACTION_EXECUTE)){
+					setAirResourcesVerificationClass();
+					if(resourceVerifier.verify_input()){
+						grid_managment.resetResponseGrid();
+						Thread thread = new Thread(new Runnable() {
+							public void run() {
+								textArea.setText("Waiting for MPM response ..");
+								try {
+									Thread.sleep(100); // to give time for users
+														// to
+														// read
+								} catch (InterruptedException e) {
+									components.getLogger().warn(e.getCause());
+								} finally {
+									setAirResourcesResponseManagerClass();
+									responseManager.getResponse();
+								}
+							}
+						});
+						thread.start();
+					}
+					else{
+						btnExecute.setEnabled(true);
+					}
+				}
+				else{
+					util.backButtonActionPerformed();
+					btnExecute.setEnabled(true);
+				}
+			}
+		});
+	}
+	
+	private void setResponseField() {
+		response_fieldset = new JPanel();
+		response_fieldset.setBorder(new TitledBorder(new LineBorder(new Color(171, 173, 179)), "Response", TitledBorder.LEADING, TitledBorder.TOP, commonGUI.setFontSize(Font.BOLD, 13), null));
+		GridBagLayout gbl_response_fieldset = new GridBagLayout();
+		gbl_response_fieldset.columnWidths = new int[] { 0, 0 };
+		gbl_response_fieldset.rowHeights = new int[] { 450, 0};
+		gbl_response_fieldset.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
+		gbl_response_fieldset.rowWeights = new double[] { 1.0, Double.MIN_VALUE };
+		response_fieldset.setLayout(gbl_response_fieldset);
+		panel_center.add(response_fieldset, commonGUI.setContraints(GridBagConstraints.BOTH, 5, 0, 5, 0, 1, 0));
+	}
+	
+	private void setRespondeFieldComponents(){
+		setResponseFieldGrid();
+		setExecuteDetailsPanel();
+		setTextArea();
+	}
+	
+	private void setResponseFieldGrid(){
+		response_fieldset_grid = new JPanel();
+		GridBagLayout gbl_response_fieldset_grid = new GridBagLayout();
+		gbl_response_fieldset_grid.columnWidths = new int[] {70, 70, 70, 0};
+		gbl_response_fieldset_grid.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+		gbl_response_fieldset_grid.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_response_fieldset_grid.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		response_fieldset_grid.setLayout(gbl_response_fieldset_grid);
+		response_fieldset.add(response_fieldset_grid, commonGUI.setContraints(GridBagConstraints.BOTH, 0, 0, 5, 0, 0, 0));
+	}
+	
+	private void setExecuteDetailsPanel() {
+		execute_details_panel = new JPanel();
+		GridBagLayout gbl_execute_details_panel = new GridBagLayout();
+		gbl_execute_details_panel.columnWidths = new int[] { 0, 0, 0 };
+		gbl_execute_details_panel.rowHeights = new int[] { 0, 0 };
+		gbl_execute_details_panel.columnWeights = new double[] { 1.0, 1.0, Double.MIN_VALUE };
+		gbl_execute_details_panel.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
+		execute_details_panel.setLayout(gbl_execute_details_panel);
+		response_fieldset.add(execute_details_panel, commonGUI.setContraints(GridBagConstraints.BOTH, 0, 0, 5, 0, 0, 1));
+	}
+	
+	private void setTextArea(){
+		textArea = new JTextArea();
+		textArea.setEditable(false);
+		textArea.setVisible(false);
+		textArea.setLineWrap(true);
+		response_fieldset.add(textArea, commonGUI.setContraints(GridBagConstraints.BOTH, 5, 0, 5, 0, 0, 0));
+	}
+	
+	private void setButtonDetails(){
+		button_details = new JButton("+");
+		button_details.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent arg0) {
+				if(textArea.isVisible()){
+					textArea.setVisible(false);
+					response_fieldset_grid.setVisible(true);
+					button_details.setText("+");
+				}
+				else{
+					textArea.setVisible(true);
+					response_fieldset_grid.setVisible(false);
+					button_details.setText("-");
+				}
+			}
+		});
+		execute_details_panel.add(button_details, commonGUI.setContraints(GridBagConstraints.CENTER, GridBagConstraints.EAST, 0, 0, 5, 0, 1, 0));
+	}
+	
+	private void setAirResourcesResponseManagerClass(){
+		responseManager.setMsisdnField(msisdn_text);
+		responseManager.setActionButtonGroup(radioGroupAction);
+		responseManager.setMarketButtonGroup(radioGroupMarket);
+		responseManager.setResourceSelectedComboBox(resource_combo);
+		responseManager.setBtnExecute(btnExecute);
+		responseManager.setTextArea(textArea);
+		responseManager.setGuiResourcePanel(util.getPanelGui());
+		responseManager.setResponseGridManager(grid_managment);
+	}
+	
+	private void setAirResourcesVerificationClass(){
+		resourceVerifier.setMsisdnField(msisdn_text);
+		resourceVerifier.setGuiPanel(util.getPanelGui());
+		resourceVerifier.setActionButtonGroup(radioGroupAction);
+		resourceVerifier.setMarketButtonGroup(radioGroupMarket);
+		resourceVerifier.setResourceSelected(resourceSelected);
+		resourceVerifier.setResourceSelectedComboboxSelection(resource_combo);
+	}
+	
+	private void setAirResourcesUtilClass(){
+		util.setVoidResourcePanel(voidResourcesPanel);
+		util.setCaiCommandField(cai_command_fieldset);
+		util.setGridManger(grid_managment);
+		
+		util.setActionButtonGroup(radioGroupAction);
+		util.setRdbtnCreate(rdbtnCreate);
+		util.setRdbtnDelete(rdbtnDelete);
+		util.setRdbtnGet(rdbtnGet);
+		util.setRdbtnUpdate(rdbtnUpdate);
+		util.setRdbtnRun(rdbtnRun);
+		util.setTextArea(textArea);
+		util.setBtnExecute(btnExecute);
+		util.setFrame(frame);
+	}
+	
+	private void setAirResourcesResponseGridManagerClass(){
+		grid_managment.setResponseFieldset(response_fieldset);
+		grid_managment.setResponseFieldsetGrid(response_fieldset_grid);
+		grid_managment.setResourceComboboxSelection(resource_combo);
+		grid_managment.setActionButtonGroup(radioGroupAction);
+		grid_managment.setFrame(frame);
+	}
+	
+	public JFrame getFrame() {
+		return frame;
+	}
+
+	public JButton getBtnExecute() {
+		return btnExecute;
+	}
+
+	public JLabel getGeneric_response_msg() {
+		return generic_response_msg;
+	}
+
+	public void setGeneric_response_msg(JLabel generic_response_msg) {
+		this.generic_response_msg = generic_response_msg;
+	}
+
+	public AirResourceResponseGridManagerInterface getGrid_managment() {
+		return grid_managment;
+	}
+
+	public void setUtil(AirResourceUtilInterface util) {
+		this.util = util;
+	}
+
+	public void setResponseManager(AirResourceResponseManagerInterface responseManager) {
+		this.responseManager = responseManager;
+	}
+
+	public void setGrid_managment(AirResourceResponseGridManagerInterface grid_managment) {
+		this.grid_managment = grid_managment;
+	}
+
+	public void setResourceVerifier(AirResourceVerifyInterface resourceVerifier) {
+		this.resourceVerifier = resourceVerifier;
+	}
+}

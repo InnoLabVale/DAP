@@ -1,0 +1,19 @@
+1443695438536	Delete element
+1443695477208	Extract interface 'CSCHAINInterface'
+1443695481649	Move compilation unit
+1443695595402	Extract interface 'CTYPEInterface'
+1443695604454	Move compilation unit
+1443699323256	Delete element
+1443699357899	Extract interface 'MARKETInterface'
+1443699368929	Move compilation unit
+1443699511181	Delete element
+1443701301522	Delete element
+1443701324167	Extract interface 'MARKETInterface'
+1443701328838	Move compilation unit
+1443702737273	Rename type 'CSCHAIN'
+1443702753250	Rename type 'CSCHAINInterface'
+1443702770248	Rename type 'CTYPE'
+1443702781807	Rename type 'CTYPEInterface'
+1443702791256	Rename type 'MARKET'
+1443702801135	Rename type 'MARKETInterface'
+1443797481166	Rename type 'CtypeEInterface'

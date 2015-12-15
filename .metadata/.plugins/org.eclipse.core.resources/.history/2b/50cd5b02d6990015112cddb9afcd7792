@@ -1,0 +1,372 @@
+package com.innovery.mpm.resource.implementations.gui.util;
+
+import com.innovery.mpm.connection.interfaces.component.DAPBeanInterface;
+import com.innovery.mpm.resource.implementations.action.ActionCommonResource;
+import com.innovery.mpm.resource.implementations.bean.AccountGroupId;
+import com.innovery.mpm.resource.implementations.bean.Accumulator;
+import com.innovery.mpm.resource.implementations.bean.CommonResource;
+import com.innovery.mpm.resource.implementations.bean.CommunityId;
+import com.innovery.mpm.resource.implementations.bean.DedicatedAccount;
+import com.innovery.mpm.resource.implementations.bean.Faf;
+import com.innovery.mpm.resource.implementations.bean.Language;
+import com.innovery.mpm.resource.implementations.bean.MainBalance;
+import com.innovery.mpm.resource.implementations.bean.OfferId;
+import com.innovery.mpm.resource.implementations.bean.Pam;
+import com.innovery.mpm.resource.implementations.bean.PromotionPlan;
+import com.innovery.mpm.resource.implementations.bean.SIMExp;
+import com.innovery.mpm.resource.implementations.bean.SUPExp;
+import com.innovery.mpm.resource.implementations.bean.ServiceClass;
+import com.innovery.mpm.resource.implementations.bean.ServiceOfferings;
+import com.innovery.mpm.resource.implementations.bean.ShareAccount;
+import com.innovery.mpm.resource.implementations.gui.bean.GuiAccountGroupPanel;
+import com.innovery.mpm.resource.implementations.gui.bean.GuiAccumulatorPanel;
+import com.innovery.mpm.resource.implementations.gui.bean.GuiCommunityIdPanel;
+import com.innovery.mpm.resource.implementations.gui.bean.GuiDedicatedAccountPanel;
+import com.innovery.mpm.resource.implementations.gui.bean.GuiFafPanel;
+import com.innovery.mpm.resource.implementations.gui.bean.GuiLanguagePanel;
+import com.innovery.mpm.resource.implementations.gui.bean.GuiMainBalancePanel;
+import com.innovery.mpm.resource.implementations.gui.bean.GuiOfferIdPanel;
+import com.innovery.mpm.resource.implementations.gui.bean.GuiPamPanel;
+import com.innovery.mpm.resource.implementations.gui.bean.GuiPromotionPlanPanel;
+import com.innovery.mpm.resource.implementations.gui.bean.GuiSIMExpPanel;
+import com.innovery.mpm.resource.implementations.gui.bean.GuiSUPExpPanel;
+import com.innovery.mpm.resource.implementations.gui.bean.GuiServiceClassPanel;
+import com.innovery.mpm.resource.implementations.gui.bean.GuiServiceOfferingsPanel;
+import com.innovery.mpm.resource.implementations.gui.bean.GuiShareAccountPanel;
+import com.innovery.mpm.resource.interfaces.action.ActionCommonResourceInterface;
+import com.innovery.mpm.resource.interfaces.bean.AccountGroupIdInterface;
+import com.innovery.mpm.resource.interfaces.bean.AccumulatorInterface;
+import com.innovery.mpm.resource.interfaces.bean.CommonResourceInterface;
+import com.innovery.mpm.resource.interfaces.bean.CommunityIdInterface;
+import com.innovery.mpm.resource.interfaces.bean.DedicatedAccountInterface;
+import com.innovery.mpm.resource.interfaces.bean.FafInterface;
+import com.innovery.mpm.resource.interfaces.bean.LanguageInterface;
+import com.innovery.mpm.resource.interfaces.bean.MainBalanceInterface;
+import com.innovery.mpm.resource.interfaces.bean.OfferIdInterface;
+import com.innovery.mpm.resource.interfaces.bean.PamInterface;
+import com.innovery.mpm.resource.interfaces.bean.PromotionPlanInterface;
+import com.innovery.mpm.resource.interfaces.bean.SIMExpInterface;
+import com.innovery.mpm.resource.interfaces.bean.SUPExpInterface;
+import com.innovery.mpm.resource.interfaces.bean.ServiceClassInterface;
+import com.innovery.mpm.resource.interfaces.bean.ServiceOfferingsInterface;
+import com.innovery.mpm.resource.interfaces.bean.ShareAccountInterface;
+import com.innovery.mpm.resource.interfaces.gui.AirResourceInterface;
+import com.innovery.mpm.resource.interfaces.gui.util.AirResourceResponseManagmentInterface;
+import com.innovery.mpm.resource.implementations.util.AIRActions;
+
+public class AirResourceResponseManagment implements AirResourceResponseManagmentInterface {
+	
+	private DAPBeanInterface components;
+	private AirResourceInterface reference;
+	private String RESOURCE_TYPE;
+	
+	public void getResponse() {	
+		saveSessionInfo();
+		ActionCommonResourceInterface airExecution = new ActionCommonResource();
+		airExecution.setComponents(components);
+		String response_mpm = airExecution.ExecuteCaiCommand(createBean());
+		
+		String response_mpm_splitted = null;
+		if(reference.getRadioGroupAction().getSelection().getActionCommand().equals(AIRActions.AIR_ACTION_CREATE) ||
+		   reference.getRadioGroupAction().getSelection().getActionCommand().equals(AIRActions.AIR_ACTION_DELETE) ||
+		   reference.getRadioGroupAction().getSelection().getActionCommand().equals(AIRActions.AIR_ACTION_SET) ||
+		   reference.getRadioGroupAction().getSelection().getActionCommand().equals(AIRActions.AIR_ACTION_RUN)){
+				response_mpm_splitted = response_mpm;
+		}
+		
+		else if(reference.getRadioGroupAction().getSelection().getActionCommand().equals(AIRActions.AIR_ACTION_GET)){
+			response_mpm_splitted = notFoundResourceVerify(split(response_mpm, RESOURCE_TYPE), RESOURCE_TYPE);
+		}
+		reference.getGrid_managment().setResponseGridAssurance(response_mpm_splitted);
+		reference.getTextArea().setText(response_mpm_splitted);
+		reference.getBtnExecute().setEnabled(true);
+	    
+	    if(response_mpm.equals(components.getErrorMessages().get_NOT_LOGGED_WARN()) || 
+	       response_mpm.equals(components.getErrorMessages().get_MPM_CONNECTION_WARN())){
+			if(response_mpm.equals(components.getErrorMessages().get_NOT_LOGGED_WARN())){
+				reference.getBtnExecute().setText(AIRActions.AIR_ACTION_RECONNECT);
+				reference.getBtnExecute().setActionCommand(AIRActions.AIR_ACTION_RECONNECT);
+			}
+			else if(response_mpm.equals(components.getErrorMessages().get_MPM_CONNECTION_WARN())){
+				reference.getBtnExecute().setText(AIRActions.AIR_ACTION_HOME);
+				reference.getBtnExecute().setActionCommand(AIRActions.AIR_ACTION_HOME);
+			}
+		}
+
+//		else{
+//			
+//			if(response_mpm.equals(components.getErrorMessages().get_USER_NOT_FOUND())){
+//				reference.getGrid_managment().setResponseGridAssurance(response_mpm);
+//				reference.getTextArea().setText(response_mpm);
+//				reference.getBtnExecute().setEnabled(true);
+//			}
+//			
+//			else {
+//				String response_mpm_splitted = null;
+//				if(reference.getRadioGroupAction().getSelection().getActionCommand().equals(AIRActions.AIR_ACTION_CREATE) ||
+//				   reference.getRadioGroupAction().getSelection().getActionCommand().equals(AIRActions.AIR_ACTION_DELETE) ||
+//				   reference.getRadioGroupAction().getSelection().getActionCommand().equals(AIRActions.AIR_ACTION_SET) ||
+//				   reference.getRadioGroupAction().getSelection().getActionCommand().equals(AIRActions.AIR_ACTION_RUN)){
+//						response_mpm_splitted = response_mpm;
+//				}
+//				
+//				else if(reference.getRadioGroupAction().getSelection().getActionCommand().equals(AIRActions.AIR_ACTION_GET)){
+//					response_mpm_splitted = notFoundResourceVerify(split(response_mpm, RESOURCE_TYPE), RESOURCE_TYPE);
+//				}
+//				reference.getGrid_managment().setResponseGridAssurance(response_mpm_splitted);
+//				reference.getTextArea().setText(response_mpm_splitted);
+//				reference.getBtnExecute().setEnabled(true);
+//			}
+//		}
+//		reference.getBtnExecute().setEnabled(true);
+	}
+	
+	private CommonResourceInterface createBean(){
+		components.getLogger().info("CREATING BEAN FOR RESOURCE SELECTED");
+		CommonResourceInterface resource = new CommonResource();
+		resource.setResourceSelected((String) reference.getResource_combo().getSelectedItem());
+		resource.setMsisdn(reference.getMsisdn_text().getText());
+		resource.setMarket(reference.getRadioGroupMarket().getSelection().getActionCommand());
+		resource.setAction(reference.getRadioGroupAction().getSelection().getActionCommand());
+		
+		if (reference.getResourceSelected().equals(AIRActions.ACCOUNT_GRUOP_ID)) {
+			AccountGroupIdInterface agi = new AccountGroupId();
+			agi.setAgi(((GuiAccountGroupPanel) reference.getUtil().getPanelGui()).getText().getText());
+			RESOURCE_TYPE = "ACCOUNTGROUPID";
+			resource.setAccountGroupId(agi);
+
+		} else if (reference.getResourceSelected().equals(AIRActions.ACCUMULATOR)) {
+			AccumulatorInterface accumulator = new Accumulator();
+			accumulator.setAccId(((GuiAccumulatorPanel) reference.getUtil().getPanelGui()).getIdText().getText());
+			accumulator.setAccValueAbs(((GuiAccumulatorPanel) reference.getUtil().getPanelGui()).getValueAbsText().getText());
+			accumulator.setAccValueRel(((GuiAccumulatorPanel) reference.getUtil().getPanelGui()).getValueRelText().getText());
+			accumulator.setStartDate(((GuiAccumulatorPanel) reference.getUtil().getPanelGui()).getStartDateText().getText());
+			accumulator.setEndDate(((GuiAccumulatorPanel) reference.getUtil().getPanelGui()).getEndDateText().getText());
+			RESOURCE_TYPE = "ACCUMULATOR";
+			resource.setAccumulator(accumulator);
+
+		} else if (reference.getResourceSelected().equals(AIRActions.COMMUNITY)) {
+			CommunityIdInterface community = new CommunityId();
+			community.setCommNew_1(((GuiCommunityIdPanel) reference.getUtil().getPanelGui()).getIdNewText_1().getText());
+			community.setCommNew_2(((GuiCommunityIdPanel) reference.getUtil().getPanelGui()).getIdNewText_2().getText());
+			community.setCommNew_3(((GuiCommunityIdPanel) reference.getUtil().getPanelGui()).getIdNewText_3().getText());
+			RESOURCE_TYPE = "COMMUNITYIDLIST";
+			resource.setCommunityId(community);
+
+		} else if (reference.getResourceSelected().equals(AIRActions.DEDICATED_ACCOUNT)) {
+			DedicatedAccountInterface ded = new DedicatedAccount();
+			ded.setDedicatedId(((GuiDedicatedAccountPanel) reference.getUtil().getPanelGui()).getIdText().getText());
+			
+			if(((GuiDedicatedAccountPanel) reference.getUtil().getPanelGui()).getUnitSelected()!=null){
+				if(((GuiDedicatedAccountPanel) reference.getUtil().getPanelGui()).getUnitSelected().equals(GuiDedicatedAccountPanel.TIME)){
+					ded.setDedicatedUnit("0");
+				}
+				else if(((GuiDedicatedAccountPanel) reference.getUtil().getPanelGui()).getUnitSelected().equals(GuiDedicatedAccountPanel.MONEY)){
+					ded.setDedicatedUnit("1");
+				}
+				else if(((GuiDedicatedAccountPanel) reference.getUtil().getPanelGui()).getUnitSelected().equals(GuiDedicatedAccountPanel.VOLUME)){
+					ded.setDedicatedUnit("6");
+				}
+				else if(((GuiDedicatedAccountPanel) reference.getUtil().getPanelGui()).getUnitSelected().equals(GuiDedicatedAccountPanel.SSU)){
+					ded.setDedicatedUnit("5");
+				}
+			}
+			
+			ded.setDedicatedValueNew(((GuiDedicatedAccountPanel) reference.getUtil().getPanelGui()).getValueText().getText());
+			ded.setDedicatedValueRelative(((GuiDedicatedAccountPanel) reference.getUtil().getPanelGui()).getValueAdjText().getText());
+			ded.setDedicatedExpiry(((GuiDedicatedAccountPanel) reference.getUtil().getPanelGui()).getExpiryText().getText());
+			ded.setDedicatedExpiryAdjustment(((GuiDedicatedAccountPanel) reference.getUtil().getPanelGui()).getExpiryAdjText().getText());
+			RESOURCE_TYPE = "DEDICATEDACCOUNT";
+			resource.setDedicatedAccount(ded);
+
+		} else if (reference.getResourceSelected().equals(AIRActions.FAF)) {
+			FafInterface faf = new Faf();
+			faf.setNumber(((GuiFafPanel) reference.getUtil().getPanelGui()).getNumberText().getText());
+			faf.setKindicator(((GuiFafPanel) reference.getUtil().getPanelGui()).getKindText().getText());
+			RESOURCE_TYPE = "FAF";
+			resource.setFaf(faf);
+
+		} else if (reference.getResourceSelected().equals(AIRActions.LANGUAGE)) {
+			LanguageInterface lang = new Language();
+			lang.setLanguage(((GuiLanguagePanel) reference.getUtil().getPanelGui()).getLang_combo().getSelectedIndex());
+			RESOURCE_TYPE = "LANGUAGE";
+			resource.setLanguage(lang);
+
+		} else if (reference.getResourceSelected().equals(AIRActions.BALANCE)) {
+			MainBalanceInterface balance = new MainBalance();
+			balance.setAdjustment(((GuiMainBalancePanel) reference.getUtil().getPanelGui()).getMainBalanceText().getText());
+			RESOURCE_TYPE = "ACCOUNTVALUE1";
+			resource.setMainBalance(balance);
+
+		} else if (reference.getResourceSelected().equals(AIRActions.OFFER)) {
+			OfferIdInterface offer =  new OfferId();
+			offer.setOfferId(((GuiOfferIdPanel) reference.getUtil().getPanelGui()).getIdText().getText());
+			offer.setType(((GuiOfferIdPanel) reference.getUtil().getPanelGui()).getTypeText().getText());
+			offer.setStartDate(((GuiOfferIdPanel) reference.getUtil().getPanelGui()).getStartDateText().getText());
+			offer.setStartDateRelative(((GuiOfferIdPanel) reference.getUtil().getPanelGui()).getStartDateAdjText().getText());
+			offer.setExpiryDate(((GuiOfferIdPanel) reference.getUtil().getPanelGui()).getEndDateText().getText());
+			offer.setExpiryDateRelative(((GuiOfferIdPanel) reference.getUtil().getPanelGui()).getEndDateAdjText().getText());
+			RESOURCE_TYPE = "OFFER";
+			resource.setOfferId(offer);
+
+		} else if (reference.getResourceSelected().equals(AIRActions.PAM)) {
+			PamInterface pam = new Pam();
+			pam.setPamServiceId(((GuiPamPanel) reference.getUtil().getPanelGui()).getServiceText().getText());
+			pam.setPamClassId(((GuiPamPanel) reference.getUtil().getPanelGui()).getClassText().getText());
+			pam.setPamClassIdNew(((GuiPamPanel) reference.getUtil().getPanelGui()).getClassNewText().getText());
+			pam.setPamClassIdOld(((GuiPamPanel) reference.getUtil().getPanelGui()).getClassOldText().getText());
+			pam.setPamSchedulId(((GuiPamPanel) reference.getUtil().getPanelGui()).getSchedText().getText());
+			pam.setPamSchedulIdNew(((GuiPamPanel) reference.getUtil().getPanelGui()).getSchedNewText().getText());
+			pam.setPamSchedulIdOld(((GuiPamPanel) reference.getUtil().getPanelGui()).getSchedOldText().getText());
+			pam.setCurrentPamPeriod(((GuiPamPanel) reference.getUtil().getPanelGui()).getPamPeriodText().getText());
+			pam.setDeferredToDate(((GuiPamPanel) reference.getUtil().getPanelGui()).getPamDateText().getText());
+			pam.setService_priority(((GuiPamPanel) reference.getUtil().getPanelGui()).getPamPriorityText().getText());
+			pam.setService_priority_old(((GuiPamPanel) reference.getUtil().getPanelGui()).getPamPriorityOldText().getText());
+			pam.setService_priority_new(((GuiPamPanel) reference.getUtil().getPanelGui()).getPamPriorityNewText().getText());
+			RESOURCE_TYPE = "PAM";
+			resource.setPam(pam);
+
+		} else if (reference.getResourceSelected().equals(AIRActions.PROMOTION_PLAN)) {
+			PromotionPlanInterface pplan = new PromotionPlan();
+			pplan.setPromotionPlan(((GuiPromotionPlanPanel) reference.getUtil().getPanelGui()).getIdText().getText());
+			pplan.setStartDate(((GuiPromotionPlanPanel) reference.getUtil().getPanelGui()).getStartDateText().getText());
+			pplan.setEndDate(((GuiPromotionPlanPanel) reference.getUtil().getPanelGui()).getEndDateText().getText());
+			RESOURCE_TYPE = "PROMOTIONPLAN";
+			resource.setPromotionPlan(pplan);
+
+		} else if (reference.getResourceSelected().equals(AIRActions.SERVICE_CLASS)) {
+			ServiceClassInterface sc = new ServiceClass();
+			sc.setServiceClass(((GuiServiceClassPanel) reference.getUtil().getPanelGui()).getScText().getText());
+			RESOURCE_TYPE = "SERVICECLASS";
+			resource.setServiceClass(sc);
+
+		} else if (reference.getResourceSelected().equals(AIRActions.SERVICE_OFFERING)) {
+			ServiceOfferingsInterface so = new ServiceOfferings();
+			
+			if(!((GuiServiceOfferingsPanel) reference.getUtil().getPanelGui()).getSoText().getText().equals("")){
+				
+				if(((GuiServiceOfferingsPanel) reference.getUtil().getPanelGui()).getSoText().getText().contains(",")){
+					String[] service_offerings_list = ((GuiServiceOfferingsPanel) reference.getUtil().getPanelGui()).getSoText().getText().split(",");
+					so.setServiceofferingsList(service_offerings_list);
+				}
+				else{
+					so.setServiceOffering(((GuiServiceOfferingsPanel) reference.getUtil().getPanelGui()).getSoText().getText());
+				}
+				so.setBit(true);
+			}
+			
+			else if(!((GuiServiceOfferingsPanel) reference.getUtil().getPanelGui()).getSo_dec_text().getText().equals("")){
+				
+				String[] bit_list_converted = fromDecimalToBit(((GuiServiceOfferingsPanel) reference.getUtil().getPanelGui()).getSo_dec_text().getText());
+				so.setServiceofferingsList(bit_list_converted);
+				so.setBit(false);
+			}
+			RESOURCE_TYPE = "SERVICEOFFERINGS";
+			resource.setServiceOfferings(so);
+
+		} else if (reference.getResourceSelected().equals(AIRActions.SHARE_ACCOUNT)) {
+			ShareAccountInterface share =  new ShareAccount();
+			share.setUCID(((GuiShareAccountPanel) reference.getUtil().getPanelGui()).getUcText().getText());
+			share.setUCMValueNew(((GuiShareAccountPanel) reference.getUtil().getPanelGui()).getUcValueText().getText());
+			share.setUCMValueAdj(((GuiShareAccountPanel) reference.getUtil().getPanelGui()).getUcValueAdjText().getText());
+			share.setUTID(((GuiShareAccountPanel) reference.getUtil().getPanelGui()).getUtText().getText());
+			share.setUTMValueNew(((GuiShareAccountPanel) reference.getUtil().getPanelGui()).getUtValueText().getText());
+			RESOURCE_TYPE = "SHAREACCOUNT";
+			resource.setShareAccount(share);
+
+		} else if (reference.getResourceSelected().equals(AIRActions.SIM)) {
+			SIMExpInterface sim = new SIMExp();
+			sim.setSimExpDate(((GuiSIMExpPanel) reference.getUtil().getPanelGui()).getSimExpText().getText());
+			sim.setSimExpDateAdj(((GuiSIMExpPanel) reference.getUtil().getPanelGui()).getSimExpAdjText().getText());
+			RESOURCE_TYPE = "SFEEEXPDATE";
+			resource.setSim(sim);
+
+		} else if (reference.getResourceSelected().equals(AIRActions.SUP)) {
+			SUPExpInterface sup = new SUPExp();
+			sup.setSupExpDate(((GuiSUPExpPanel) reference.getUtil().getPanelGui()).getSupExpText().getText());
+			sup.setSupExpDateAdj(((GuiSUPExpPanel) reference.getUtil().getPanelGui()).getSupExpAdjText().getText());
+			RESOURCE_TYPE = "SUPEXPDATE";
+			resource.setSup(sup);
+		}
+		components.getLogger().info("RESOURCE "+RESOURCE_TYPE+" CREATED");
+		return resource;
+	}
+	
+	private void saveSessionInfo(){
+		components.getLogger().info("SAVING SESSION");
+		if (!components.getConnectionManagerStandard().getSession().getCurrent_msisdn().equals(reference.getMsisdn_text().getText())) {
+			components.getConnectionManagerStandard().getSession().setCurrent_msisdn(reference.getMsisdn_text().getText());
+			components.getMsisdnCompleter().store(reference.getMsisdn_text().getText());
+		}
+		if(!components.getConnectionManagerStandard().getSession().getCurrent_market().equals(reference.getRadioGroupMarket().getSelection().getActionCommand())){
+			components.getConnectionManagerStandard().getSession().setCurrent_market(reference.getRadioGroupMarket().getSelection().getActionCommand());
+		}
+		components.getLogger().info("SESSION SAVED");
+	}
+
+	private static final String RESOURCE_NOT_FOUND = " not found";
+
+	private String notFoundResourceVerify(String inputResponse, String resource_type){
+		if(inputResponse.endsWith(":0;")){
+			return resource_type+RESOURCE_NOT_FOUND;
+		}
+		return inputResponse;
+	}
+	
+	private String[] fromDecimalToBit(String decimal_value){
+		StringBuffer so_bit_string_normal = new StringBuffer(Integer.toBinaryString(Integer.parseInt(decimal_value)).toString());
+		char[] bit_list = so_bit_string_normal.reverse().toString().toCharArray();
+		String[] complete_bit_sequence = new String[31];
+		for(int i=0; i<complete_bit_sequence.length; i++){
+			complete_bit_sequence[i] = "0";
+		}
+		for(int i=0; i<bit_list.length; i++){
+			if(bit_list[i]=='1'){
+				complete_bit_sequence[i] = "1";
+			}
+			else{
+				complete_bit_sequence[i] = "0";
+			}
+		}
+		return complete_bit_sequence;
+	}
+	
+	private String split(String response, String pattern){
+		response = response.replace(";", "").trim();
+		String[] response_parts = response.split(":");
+		String response_splitted = split_string(response_parts, pattern);
+		
+		if(response_splitted.equals("error_found")){
+			return response;
+		}
+		return response_splitted;
+	}
+	
+	private String split_string(String[] response_parts, String pattern){
+		String found="";
+		boolean error = true;
+		if(response_parts[0].equals("RESP") && (response_parts[2].equals("0"))){
+			error = false;
+			for(int i=2; i<response_parts.length; i++){
+				if(response_parts[i].contains(pattern)){
+					found = ":"+response_parts[i];
+				}
+			}
+		}
+		if(error==false){
+			if(response_parts[1].contains("TRANSID,")){
+				return "RESP:"+response_parts[1]+":0"+found+";";
+			}
+			return "RESP:0"+found+";";
+		}
+		return "error_found";
+	}
+	
+	public void setReference(AirResourceInterface reference) {
+		this.reference = reference;
+	}
+
+	public void setComponents(DAPBeanInterface components) {
+		this.components = components;
+	}
+}

@@ -1,0 +1,446 @@
+package com.innovery.mpm.option.implementations.gui;
+
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
+import javax.swing.JFrame;
+
+import org.apache.log4j.Logger;
+import org.jdom2.JDOMException;
+import org.xml.sax.SAXException;
+
+import com.innovery.mpm.connection.interfaces.component.DAPBeanInterface;
+import com.innovery.mpm.connection.interfaces.util.NotificationInterface;
+import com.innovery.mpm.option.implementations.gui.tablemodel.util.MultiLineCellRenderer;
+import com.innovery.mpm.option.implementations.gui.tablemodel.util.MultiLineHeaderRenderer;
+import com.innovery.mpm.option.implementations.gui.tablemodel.util.OptionTableModel;
+import com.innovery.mpm.option.interfaces.gui.OptionManagerInterface;
+import com.innovery.mpm.option.interfaces.gui.tablemodel.util.OptionTableModelInterface;
+import com.innovery.mpm.option.interfaces.xml.XmlReaderInterface;
+
+import javax.swing.JPanel;
+
+import java.awt.BorderLayout;
+
+import javax.swing.JLabel;
+
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
+import java.awt.Font;
+
+import javax.swing.JButton;
+import javax.swing.JScrollPane;
+import javax.swing.JComponent;
+import javax.swing.KeyStroke;
+import javax.swing.SwingConstants;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.JRadioButton;
+import javax.swing.JTextField;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.io.IOException;
+import java.util.Enumeration;
+
+import javax.swing.JTable;
+import javax.swing.ButtonGroup;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPathExpressionException;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumn;
+
+import java.awt.Color;
+
+import javax.swing.UIManager;
+
+/**
+ * 
+ * @author Daniela R. Auricchio, Valerio Boschi
+ * 
+ */
+public class OptionManager implements OptionManagerInterface{
+
+	private JFrame frmMpmTool;
+	
+	private JTextField option_textField;
+	private JTable optionTable;
+	
+	private ButtonGroup marketRadioGroup;
+	private ButtonGroup ctypeRadioGroup;
+	
+	private JRadioButton rdbtnConsumer;
+	private JRadioButton rdbtnCorporate;
+	
+	private JRadioButton rdbtnPrepaid;
+	private JRadioButton rdbtnPostpaid;
+	
+	private NotificationInterface notification;
+	
+	private Logger log;
+	private XmlReaderInterface xml_reader;
+	
+	public void initialize() {
+		
+		frmMpmTool = new JFrame();
+		BorderLayout borderLayout = (BorderLayout) frmMpmTool.getContentPane().getLayout();
+		borderLayout.setVgap(5);
+		frmMpmTool.setFont(new Font("Verdana", Font.PLAIN, 13));
+		frmMpmTool.getContentPane().setFont(new Font("Verdana", Font.PLAIN, 12));
+		frmMpmTool.setResizable(false);
+		frmMpmTool.setSize(1190, 700);
+		frmMpmTool.setTitle("Dashboard Assurance Prepaid - Option Management");
+		frmMpmTool.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
+		/* Panel North */
+		JPanel panel_north = new JPanel();
+		frmMpmTool.getContentPane().add(panel_north, BorderLayout.NORTH);
+	
+		
+		GridBagLayout gbl_panel_north = new GridBagLayout();
+		gbl_panel_north.columnWidths = new int[]{478, 170, 111, 0};
+		gbl_panel_north.rowHeights = new int[]{23, 0, 0};
+		gbl_panel_north.columnWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panel_north.rowWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
+		panel_north.setLayout(gbl_panel_north);
+		
+		JLabel title_label = new JLabel("OPTION MANAGEMENT");
+		GridBagConstraints gbc_title_label = new GridBagConstraints();
+		gbc_title_label.anchor = GridBagConstraints.WEST;
+		gbc_title_label.insets = new Insets(0, 0, 5, 5);
+		gbc_title_label.gridx = 1;
+		gbc_title_label.gridy = 0;
+		panel_north.add(title_label, gbc_title_label);
+		title_label.setFont(new Font("Verdana", Font.PLAIN, 15));
+
+		/* Panel South */
+		JPanel panel_south = new JPanel();
+		panel_south.setBorder(null);
+		panel_south.setBackground(UIManager.getColor("Panel.background"));
+		frmMpmTool.getContentPane().add(panel_south, BorderLayout.SOUTH);
+		GridBagLayout gbl_panel_south = new GridBagLayout();
+		gbl_panel_south.columnWidths = new int[]{143, 0};
+		gbl_panel_south.rowHeights = new int[] {16, 0};
+		gbl_panel_south.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+		gbl_panel_south.rowWeights = new double[]{0.0, Double.MIN_VALUE};
+		panel_south.setLayout(gbl_panel_south);
+		
+		JLabel devByLabel = new JLabel();
+		devByLabel.setText("- By Innovery S.p.A. -");
+		devByLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		devByLabel.setForeground(Color.DARK_GRAY);
+		devByLabel.setFont(new Font("Verdana", Font.BOLD, 10));
+		GridBagConstraints gbc_devByLabel = new GridBagConstraints();
+		gbc_devByLabel.insets = new Insets(5, 0, 3, 0);
+		gbc_devByLabel.gridx = 0;
+		gbc_devByLabel.gridy = 0;
+		panel_south.add(devByLabel, gbc_devByLabel);
+		
+		/* Panel West */
+		JPanel panel_west = new JPanel();
+		FlowLayout flowLayout_west = (FlowLayout) panel_west.getLayout();
+		flowLayout_west.setHgap(10);
+		frmMpmTool.getContentPane().add(panel_west, BorderLayout.WEST);
+
+		/* Panel East */
+		JPanel panel_east = new JPanel();
+		FlowLayout flowLayout_east = (FlowLayout) panel_east.getLayout();
+		flowLayout_east.setVgap(0);
+		flowLayout_east.setHgap(10);
+		frmMpmTool.getContentPane().add(panel_east, BorderLayout.EAST);
+
+		/* Panel Center */
+		JPanel panel_center = new JPanel();
+		frmMpmTool.getContentPane().add(panel_center, BorderLayout.CENTER);
+		GridBagLayout gbl_panel_center = new GridBagLayout();
+		gbl_panel_center.columnWidths = new int[]{268, 0};
+		gbl_panel_center.rowHeights = new int[]{90, 0, 0};
+		gbl_panel_center.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+		gbl_panel_center.rowWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
+		panel_center.setLayout(gbl_panel_center);
+		
+		JPanel panel = new JPanel();
+		GridBagConstraints gbc_panel = new GridBagConstraints();
+		gbc_panel.insets = new Insets(0, 0, 5, 0);
+		gbc_panel.fill = GridBagConstraints.BOTH;
+		gbc_panel.gridx = 0;
+		gbc_panel.gridy = 0;
+		panel_center.add(panel, gbc_panel);
+		GridBagLayout gbl_panel = new GridBagLayout();
+		gbl_panel.columnWidths = new int[]{0, 0, 0, 0, 108, 0};
+		gbl_panel.rowHeights = new int[]{39, 0, 35, 0};
+		gbl_panel.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panel.rowWeights = new double[]{0.0, 0.0, 1.0, Double.MIN_VALUE};
+		panel.setLayout(gbl_panel);
+		
+		JLabel market_label = new JLabel("Market");
+		market_label.setHorizontalAlignment(SwingConstants.RIGHT);
+		market_label.setFont(new Font("Verdana", Font.PLAIN, 12));
+		GridBagConstraints gbc_label = new GridBagConstraints();
+		gbc_label.insets = new Insets(10, 5, 5, 5);
+		gbc_label.anchor = GridBagConstraints.EAST;
+		gbc_label.gridx = 0;
+		gbc_label.gridy = 0;
+		panel.add(market_label, gbc_label);
+		
+		JPanel panel_market = new JPanel();
+		GridBagConstraints gbc_panel_market = new GridBagConstraints();
+		gbc_panel_market.gridwidth = 3;
+		gbc_panel_market.insets = new Insets(0, 0, 5, 0);
+		gbc_panel_market.fill = GridBagConstraints.BOTH;
+		gbc_panel_market.gridx = 2;
+		gbc_panel_market.gridy = 0;
+		panel.add(panel_market, gbc_panel_market);
+		
+		marketRadioGroup = new ButtonGroup();
+		
+		rdbtnConsumer = new JRadioButton(DAPBeanInterface.CONSUMER);
+		rdbtnConsumer.setActionCommand(DAPBeanInterface.CONSUMER);
+		marketRadioGroup.add(rdbtnConsumer);
+		
+		rdbtnCorporate = new JRadioButton(DAPBeanInterface.CORPORATE);
+		rdbtnCorporate.setActionCommand(DAPBeanInterface.CORPORATE);
+		marketRadioGroup.add(rdbtnCorporate);
+		
+		GroupLayout gl_panel_market = new GroupLayout(panel_market);
+		gl_panel_market.setHorizontalGroup(
+			gl_panel_market.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel_market.createSequentialGroup()
+					.addGap(23)
+					.addComponent(rdbtnConsumer)
+					.addGap(18)
+					.addComponent(rdbtnCorporate, GroupLayout.PREFERRED_SIZE, 98, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(97, Short.MAX_VALUE))
+		);
+		gl_panel_market.setVerticalGroup(
+			gl_panel_market.createParallelGroup(Alignment.LEADING)
+				.addGroup(Alignment.TRAILING, gl_panel_market.createSequentialGroup()
+					.addContainerGap(10, Short.MAX_VALUE)
+					.addGroup(gl_panel_market.createParallelGroup(Alignment.BASELINE)
+						.addComponent(rdbtnConsumer)
+						.addComponent(rdbtnCorporate))
+					.addContainerGap())
+		);
+		panel_market.setLayout(gl_panel_market);
+		
+		JLabel ctype_label = new JLabel("Type");
+		ctype_label.setHorizontalAlignment(SwingConstants.RIGHT);
+		ctype_label.setFont(new Font("Verdana", Font.PLAIN, 12));
+		GridBagConstraints gbc_ctype_label = new GridBagConstraints();
+		gbc_ctype_label.insets = new Insets(10, 5, 5, 5);
+		gbc_ctype_label.anchor = GridBagConstraints.EAST;
+		gbc_ctype_label.gridx = 0;
+		gbc_ctype_label.gridy = 1;
+		panel.add(ctype_label, gbc_ctype_label);
+		
+		JPanel panel_ctype = new JPanel();
+		GridBagConstraints gbc_panel_ctypet = new GridBagConstraints();
+		gbc_panel_ctypet.gridwidth = 3;
+		gbc_panel_ctypet.insets = new Insets(0, 0, 5, 0);
+		gbc_panel_ctypet.fill = GridBagConstraints.BOTH;
+		gbc_panel_ctypet.gridx = 2;
+		gbc_panel_ctypet.gridy = 1;
+		panel.add(panel_ctype, gbc_panel_ctypet);
+		
+		ctypeRadioGroup = new ButtonGroup();
+		
+		rdbtnPrepaid = new JRadioButton(DAPBeanInterface.PREPAID);
+		rdbtnPrepaid.setActionCommand(DAPBeanInterface.PREPAID);
+		ctypeRadioGroup.add(rdbtnPrepaid);
+		
+		rdbtnPostpaid = new JRadioButton(DAPBeanInterface.POSTPAID);
+		rdbtnPostpaid.setActionCommand(DAPBeanInterface.POSTPAID);
+		ctypeRadioGroup.add(rdbtnPostpaid);
+		
+		GroupLayout gl_panel_ctype = new GroupLayout(panel_ctype);
+		gl_panel_ctype.setHorizontalGroup(
+			gl_panel_ctype.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel_ctype.createSequentialGroup()
+					.addGap(23)
+					.addComponent(rdbtnPrepaid)
+					.addGap(32)
+					.addComponent(rdbtnPostpaid, GroupLayout.PREFERRED_SIZE, 98, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(97, Short.MAX_VALUE))
+		);
+		gl_panel_ctype.setVerticalGroup(
+			gl_panel_ctype.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_panel_ctype.createSequentialGroup()
+					.addContainerGap(10, Short.MAX_VALUE)
+					.addGroup(gl_panel_ctype.createParallelGroup(Alignment.BASELINE)
+						.addComponent(rdbtnPrepaid)
+						.addComponent(rdbtnPostpaid))
+					.addContainerGap())
+		);
+		panel_ctype.setLayout(gl_panel_ctype);
+		
+		frmMpmTool.getRootPane().getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke("ENTER"), "none");
+		frmMpmTool.getRootPane().getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke("released ENTER"), "press");
+		
+		JLabel label_1 = new JLabel("ROPZ");
+		GridBagConstraints gbc_label_1 = new GridBagConstraints();
+		gbc_label_1.anchor = GridBagConstraints.EAST;
+		gbc_label_1.insets = new Insets(10, 5, 0, 5);
+		gbc_label_1.gridx = 0;
+		gbc_label_1.gridy = 2;
+		panel.add(label_1, gbc_label_1);
+		
+		option_textField = new JTextField();
+		option_textField.setColumns(10);
+		GridBagConstraints gbc_ropz_textField = new GridBagConstraints();
+		gbc_ropz_textField.anchor = GridBagConstraints.WEST;
+		gbc_ropz_textField.insets = new Insets(10, 25, 0, 5);
+		gbc_ropz_textField.gridx = 2;
+		gbc_ropz_textField.gridy = 2;
+		panel.add(option_textField, gbc_ropz_textField);
+		
+		JButton btnGet = new JButton("GET");
+		btnGet.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				if (marketRadioGroup.getSelection() == null && option_textField.getText().equals("")) {
+					notification.error("Select a market.");
+				}
+				
+				else if (ctypeRadioGroup.getSelection() == null && option_textField.getText().equals("")) {
+					notification.error("Select type.");
+				}
+				
+				else if(option_textField.getText().trim().equals("")){
+					try {
+						((OptionTableModelInterface)optionTable.getModel()).setData(xml_reader.readXml(marketRadioGroup.getSelection().getActionCommand(), ctypeRadioGroup.getSelection().getActionCommand()));
+					} 
+					catch(JDOMException er){
+						log.error(er.toString());
+						
+					}
+					catch(IOException er){
+						log.error(er.toString());
+						
+					}
+					catch(SAXException er){
+						log.error(er.toString());
+						
+					}
+					catch(ParserConfigurationException er){
+						log.error(er.toString());
+					}
+				}
+				
+				else if(!option_textField.getText().trim().equals("")){
+					if(!option_textField.getText().toUpperCase().contains("ROPZ") && !option_textField.getText().toUpperCase().contains("OPT")){
+						notification.error("Option code must be ROPZ, OPT");
+						return;
+					}
+					try {
+						((OptionTableModelInterface)optionTable.getModel()).setData(xml_reader.readXml(option_textField.getText().trim().toUpperCase(), marketRadioGroup.getSelection().getActionCommand(), ctypeRadioGroup.getSelection().getActionCommand()));
+					} 
+					catch (XPathExpressionException er) {
+						log.error(er.toString());
+					}
+					catch(JDOMException er){
+						log.error(er.toString());
+						
+					}
+					catch(IOException er){
+						log.error(er.toString());
+						
+					}
+					catch(SAXException er){
+						log.error(er.toString());
+						
+					}
+					catch(ParserConfigurationException er){
+						log.error(er.toString());
+					}
+				}
+				
+				((OptionTableModel)optionTable.getModel()).fireTableDataChanged();
+				((OptionTableModelInterface)optionTable.getModel()).setColumnWidth(optionTable);
+			}
+		});
+		
+		frmMpmTool.getRootPane().setDefaultButton(btnGet);
+		
+		GridBagConstraints gbc_btnGet = new GridBagConstraints();
+		gbc_btnGet.anchor = GridBagConstraints.SOUTH;
+		gbc_btnGet.gridx = 4;
+		gbc_btnGet.gridy = 2;
+		panel.add(btnGet, gbc_btnGet);
+		
+		option_textField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if(option_textField.getText().toUpperCase().contains("ROPZ") || option_textField.getText().toUpperCase().contains("OPT")){
+					option_textField.setText(option_textField.getText().toUpperCase());
+				}
+			}
+		});
+		
+		JScrollPane scrollPane = new JScrollPane();
+		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
+		gbc_scrollPane.insets = new Insets(5, 0, 0, 0);
+		gbc_scrollPane.fill = GridBagConstraints.BOTH;
+		gbc_scrollPane.gridx = 0;
+		gbc_scrollPane.gridy = 1;
+		panel_center.add(scrollPane, gbc_scrollPane);
+		
+		optionTable = new JTable(new OptionTableModel());
+		
+		/*
+		 * Multi linea titoli
+		 */
+		MultiLineHeaderRenderer mhr = new MultiLineHeaderRenderer();
+		Enumeration<TableColumn> col_num = optionTable.getColumnModel().getColumns();
+	    while (col_num.hasMoreElements()) {
+	      col_num.nextElement().setHeaderRenderer(mhr);
+	    }
+		
+	    
+	    optionTable.setDefaultRenderer(Object.class, new MultiLineCellRenderer());
+		((OptionTableModelInterface)optionTable.getModel()).setColumnWidth(optionTable);
+		scrollPane.setViewportView(optionTable);
+		JTableHeader header = optionTable.getTableHeader();
+		header.setPreferredSize((new Dimension(1000,50)));
+		header.setAlignmentY(JTableHeader.CENTER_ALIGNMENT);
+
+		GridBagLayout gbl_discount_command_fieldset = new GridBagLayout();
+		gbl_discount_command_fieldset.columnWidths = new int[]{223, 55, 0};
+		gbl_discount_command_fieldset.rowHeights = new int[]{607, 23, 0};
+		gbl_discount_command_fieldset.columnWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
+		gbl_discount_command_fieldset.rowWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
+		
+		/* Event on close frame */
+		frmMpmTool.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				frmMpmTool.dispose();
+			}
+		});
+
+		/* Set frame visible */
+		frmMpmTool.setVisible(true);
+	}
+	
+	public JFrame getFrame() {
+		return frmMpmTool;
+	}
+
+	public void setNotification(NotificationInterface notification) {
+		this.notification = notification;
+	}
+
+	@Override
+	public void setXml_reader(XmlReaderInterface xml_reader) {
+		this.xml_reader = xml_reader;
+	}
+
+	@Override
+	public void setLog(Logger log) {
+		this.log = log;
+	}
+}

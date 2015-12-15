@@ -1,0 +1,8 @@
+package com.innovery.mpm.util.commands;
+
+public class AFCommands {
+	
+	public static final String AF_COMMAND_CREATE = "CREATE:AFSUB";
+	public static final String AF_COMMAND_DELETE = "DELETE:AFSUB";
+	public static final String AF_COMMAND_GET = "GET:AFSUB";
+}

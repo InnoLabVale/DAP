@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opt code="OPTBE0021">
+	<action value="in">
+		<parameter name="FEEDISCOUNT" value="OPTBE0021"/>
+		<parameter name="FEEDELAY" value="[0-9]{1,16}"/>
+		<parameter name="[ONESHOTFEE]" value="[0-9]{1,256}"/>
+	</action>
+	<action value="out"/>
+	<action value="get"/>
+</opt>

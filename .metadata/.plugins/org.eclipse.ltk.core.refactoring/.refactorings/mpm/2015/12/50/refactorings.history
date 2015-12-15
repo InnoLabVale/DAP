@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy element &apos;ROPZ4471.xml&apos; to &apos;ROPZ4471.xml&apos;&#x0D;&#x0A;- Original project: &apos;mpm&apos;&#x0D;&#x0A;- Destination element: &apos;ROPZ4471.xml&apos;&#x0D;&#x0A;- Original element: &apos;ROPZ4471.xml&apos;" description="Copy file" element1="src/main/resources/xml/consumer_prepaid/ROPZ4471.xml" files="1" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1449854719335" target="/mpm/src/main/resources/xml/consumer_prepaid/ROPZ4471.xml" units="0" version="1.0"/>
+</session>

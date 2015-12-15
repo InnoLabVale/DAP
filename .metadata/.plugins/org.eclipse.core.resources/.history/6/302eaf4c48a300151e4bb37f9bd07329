@@ -1,0 +1,18 @@
+package com.innovery.mpm.option.implementations.gui;
+
+import com.innovery.mpm.connection.interfaces.component.DAPBeanInterface;
+import com.innovery.mpm.option.implementations.xml.XmlReader;
+import com.innovery.mpm.option.interfaces.gui.OptionManagerInterface;
+import com.innovery.mpm.option.interfaces.xml.XmlReaderInterface;
+
+public class OptionManagerInitialization {
+
+	public OptionManagerInitialization(DAPBeanInterface components){
+		XmlReaderInterface xmlReader = new XmlReader();
+		xmlReader.setComponents(components);
+		
+		OptionManagerInterface optionManager = new OptionManager(components);
+		optionManager.setLog(components.getLogger());
+		optionManager.setXml_reader(xmlReader);;
+	}
+}

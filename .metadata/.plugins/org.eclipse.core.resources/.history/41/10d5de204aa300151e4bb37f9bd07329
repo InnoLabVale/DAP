@@ -1,0 +1,143 @@
+package com.innovery.mpm.main.implementations.dap;
+
+import org.apache.log4j.Logger;
+
+import com.innovery.mpm.af.implementations.AccountFinderInitialization;
+import com.innovery.mpm.af.interfaces.AccountFinderInitializationInterface;
+import com.innovery.mpm.allresource.implementations.AllResourceInitialization;
+import com.innovery.mpm.allresource.interfaces.AllResourceInitializationInterface;
+import com.innovery.mpm.connection.implementations.cai.ConnectionManagmentCai;
+import com.innovery.mpm.connection.implementations.cai.bean.Bsom_3300;
+import com.innovery.mpm.connection.implementations.component.DAPBean;
+import com.innovery.mpm.connection.implementations.standard.ConnectionManagmentStandard;
+import com.innovery.mpm.connection.implementations.standard.bean.Bsom_x;
+import com.innovery.mpm.connection.implementations.util.AutoCompleteMsisdn;
+import com.innovery.mpm.connection.implementations.util.CompleteDate;
+import com.innovery.mpm.connection.implementations.util.ErrorMessages;
+import com.innovery.mpm.connection.implementations.util.Notification;
+import com.innovery.mpm.connection.implementations.util.RedirectNames;
+import com.innovery.mpm.connection.implementations.util.TransIdGenerator;
+import com.innovery.mpm.connection.implementations.util.UserLevels;
+import com.innovery.mpm.connection.implementations.util.gui.GUICommon;
+import com.innovery.mpm.connection.implementations.util.gui.GUICommonInterface;
+import com.innovery.mpm.connection.interfaces.cai.ConnectionManagmentCaiInterface;
+import com.innovery.mpm.connection.interfaces.cai.bean.Bsom_3300Interface;
+import com.innovery.mpm.connection.interfaces.component.DAPBeanInterface;
+import com.innovery.mpm.connection.interfaces.standard.ConnectionManagmentStandardInterface;
+import com.innovery.mpm.connection.interfaces.standard.bean.Bsom_xInterface;
+import com.innovery.mpm.connection.interfaces.util.AutoCompleteMsisdnInterface;
+import com.innovery.mpm.connection.interfaces.util.CompleteDateInterface;
+import com.innovery.mpm.connection.interfaces.util.ErrorMessagesInterface;
+import com.innovery.mpm.connection.interfaces.util.NotificationInterface;
+import com.innovery.mpm.connection.interfaces.util.RedirectNamesInterface;
+import com.innovery.mpm.connection.interfaces.util.TransIdGeneratorInterface;
+import com.innovery.mpm.connection.interfaces.util.UserLevelsInterface;
+import com.innovery.mpm.main.implementations.gui.commandselection.CommandSelection;
+import com.innovery.mpm.main.implementations.gui.mainpage.LoginPage;
+import com.innovery.mpm.main.implementations.gui.mainpage.MainPage;
+import com.innovery.mpm.main.implementations.gui.mainpage.connection.LoginPageConnection;
+import com.innovery.mpm.main.implementations.gui.mainpage.connection.MainPageConnection;
+import com.innovery.mpm.main.implementations.gui.mainpage.util.ComboBoxManager;
+import com.innovery.mpm.main.implementations.gui.mainpage.util.IndexVerify;
+import com.innovery.mpm.main.interfaces.gui.commandselection.CommandSelectionInterface;
+import com.innovery.mpm.main.interfaces.gui.mainpage.AuthenticationPageInterface;
+import com.innovery.mpm.main.interfaces.gui.mainpage.connection.PageConnectionInterface;
+import com.innovery.mpm.main.interfaces.gui.mainpage.util.ComboBoxManagerInterface;
+import com.innovery.mpm.main.interfaces.gui.mainpage.util.IndexVerifyInterface;
+import com.innovery.mpm.option.implementations.gui.OptionManager;
+import com.innovery.mpm.option.implementations.gui.OptionManagerInitialization;
+import com.innovery.mpm.option.interfaces.gui.OptionManagerInitializationInterface;
+import com.innovery.mpm.option.interfaces.gui.OptionManagerInterface;
+import com.innovery.mpm.provisioning.implementations.ProvisioningResourceInitialization;
+import com.innovery.mpm.provisioning.interfaces.BsoResourceInitializationInterface;
+import com.innovery.mpm.resource.implementations.AirResourceInitialization;
+import com.innovery.mpm.resource.interfaces.AirResourceInitializationInterface;
+import com.innovery.mpm.ssh.implementations.SshResourceInitialization;
+import com.innovery.mpm.ssh.interfaces.SshResourceInitializationInterface;
+import com.innovery.mpm.subscriber.implementations.SubscriberInitialization;
+import com.innovery.mpm.subscriber.interfaces.SubscriberInitializationInterface;
+
+public class DAP{
+	
+	private final static int currentUserLevel = 0;
+	
+	public DAP(Logger log){
+		
+		ConnectionManagmentStandardInterface connectionManagerStandard = new ConnectionManagmentStandard();
+		ConnectionManagmentCaiInterface connectionManagerCai = new ConnectionManagmentCai();
+		UserLevelsInterface userLevels = new UserLevels();
+		GUICommonInterface commonGUI = new GUICommon();
+		TransIdGeneratorInterface TRANSID = new TransIdGenerator();
+		CompleteDateInterface dateCompleter = new CompleteDate();
+		ErrorMessagesInterface errorMessages = new ErrorMessages();
+		NotificationInterface notifications = new Notification();
+		AutoCompleteMsisdnInterface msisdnCompleter = new AutoCompleteMsisdn();
+		
+		DAPBeanInterface rootComponents = new DAPBean();
+		rootComponents.setLogger(log);
+		rootComponents.setConnectionManagerStandard(connectionManagerStandard);
+		rootComponents.setConnectionManagerCai(connectionManagerCai);
+		rootComponents.setUserLevels(userLevels);
+		rootComponents.setCommonGUI(commonGUI);
+		rootComponents.setTRANSID(TRANSID);
+		rootComponents.setNotifications(notifications);
+		rootComponents.setDateCompleter(dateCompleter);
+		rootComponents.setMsisdnCompleter(msisdnCompleter);
+		rootComponents.setErrorMessages(errorMessages);
+		rootComponents.setCurrentUserLevel(currentUserLevel);
+		
+		IndexVerifyInterface indexVerify = new IndexVerify(rootComponents);
+		RedirectNamesInterface redirection = new RedirectNames();
+		Bsom_xInterface bsom_x = new Bsom_x();
+		Bsom_3300Interface bsom_3300 = new Bsom_3300();
+		
+		AllResourceInitializationInterface allResource = new AllResourceInitialization(rootComponents);
+		AccountFinderInitializationInterface afResource = new AccountFinderInitialization(rootComponents);
+		BsoResourceInitializationInterface provisioning = new ProvisioningResourceInitialization(rootComponents);
+		OptionManagerInitializationInterface optionManagment = new OptionManagerInitialization(rootComponents);
+		AirResourceInitializationInterface airResource = new AirResourceInitialization(rootComponents);
+		SshResourceInitializationInterface sshResource = new SshResourceInitialization(rootComponents);
+		SubscriberInitializationInterface subscriber = new SubscriberInitialization(rootComponents);
+		
+		CommandSelectionInterface commandSelection = new CommandSelection(rootComponents);
+		commandSelection.setProvisioning(provisioning);
+		commandSelection.setSubscriber(subscriber);
+		commandSelection.setAirResource(airResource);
+		commandSelection.setSshResource(sshResource);
+		commandSelection.setAfResource(afResource);
+		commandSelection.setAllResource(allResource);
+		commandSelection.setOptionManagment(optionManagment);
+		
+		PageConnectionInterface initConnection = new MainPageConnection(rootComponents);
+		PageConnectionInterface retryConnection = new LoginPageConnection(rootComponents);
+		
+		initConnection.setVerify(indexVerify);
+		initConnection.setRedirection(redirection);
+		initConnection.setCommandSelection(commandSelection);
+		initConnection.setBsom_x(bsom_x);
+		initConnection.setBsom_3300(bsom_3300);
+		
+		retryConnection.setVerify(indexVerify);
+		retryConnection.setRedirection(redirection);
+		retryConnection.setCommandSelection(commandSelection);
+		retryConnection.setBsom_x(bsom_x);
+		retryConnection.setBsom_3300(bsom_3300);
+		
+		ComboBoxManagerInterface combo = new ComboBoxManager(notifications);
+		
+		AuthenticationPageInterface mainPage = new MainPage(rootComponents);
+		AuthenticationPageInterface loginPage = new LoginPage(rootComponents);
+		
+		mainPage.setConnectionPage(initConnection);
+		mainPage.setRelatedPage(loginPage);
+		mainPage.setCombo(combo);
+		
+		loginPage.setConnectionPage(retryConnection);
+		loginPage.setRelatedPage(mainPage);
+		
+		commandSelection.setMainPage(mainPage);
+		
+		mainPage.initialize();
+		
+	}
+}

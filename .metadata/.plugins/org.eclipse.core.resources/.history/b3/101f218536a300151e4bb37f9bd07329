@@ -1,0 +1,67 @@
+package com.innovery.mpm.provisioning.implementations.gui.util.options;
+
+import javax.swing.JComboBox;
+import javax.swing.JRadioButton;
+
+import com.innovery.mpm.connection.interfaces.component.DAPBeanInterface;
+import com.innovery.mpm.provisioning.interfaces.gui.util.options.ProvisioningOptionTypeInterface;
+import com.innovery.mpm.provisioning.interfaces.gui.util.options.ProvisioningTariffPlanInterface;
+
+public class ProvisioningTariffPlan implements ProvisioningOptionTypeInterface {
+	
+	private JRadioButton rdbtnIn;
+	private JRadioButton rdbtnOut;
+	private JRadioButton rdbtnBookOut;
+	private JRadioButton rdbtnChange;
+	private JRadioButton rdbtnGet;
+	
+	public void enable(){
+		rdbtnIn.setEnabled(false);
+		rdbtnOut.setEnabled(false);
+		rdbtnBookOut.setEnabled(false);
+		rdbtnChange.setEnabled(false);
+		rdbtnGet.setEnabled(true);
+	}
+
+	@Override
+	public void setRdbtnIn(JRadioButton rdbtnIn) {
+		this.rdbtnIn = rdbtnIn;
+	}
+
+	@Override
+	public void setRdbtnOut(JRadioButton rdbtnOut) {
+		this.rdbtnOut = rdbtnOut;
+	}
+
+	@Override
+	public void setRdbtnBookOut(JRadioButton rdbtnBookOut) {
+		this.rdbtnBookOut = rdbtnBookOut;
+	}
+
+	@Override
+	public void setRdbtnChange(JRadioButton rdbtnChange) {
+		this.rdbtnChange = rdbtnChange;
+	}
+
+	@Override
+	public void setRdbtnGet(JRadioButton rdbtnGet) {
+		this.rdbtnGet = rdbtnGet;
+	}
+
+	@Override
+	public void enable(String actions) {
+	}
+
+	@Override
+	public void setComponents(DAPBeanInterface components) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setOptionComboboxSelection(JComboBox optionComboboxSelection) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

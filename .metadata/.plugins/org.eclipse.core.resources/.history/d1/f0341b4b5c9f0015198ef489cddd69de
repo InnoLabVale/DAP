@@ -1,0 +1,203 @@
+package com.innovery.mpm.resource.implementations.gui.bean;
+
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+
+import javax.swing.JLabel;
+import javax.swing.JRadioButton;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+
+import com.innovery.mpm.connection.interfaces.component.DAPBeanInterface;
+import com.innovery.mpm.resource.implementations.util.AIRActions;
+
+public class GuiSIMExpPanel extends GuiResourcePanelInterface{
+
+	private static final long serialVersionUID = 1L;
+	
+	private DAPBeanInterface components;
+	
+	private JRadioButton rdbtnGet;
+	private JRadioButton rdbtnUpdate;
+	
+	private JLabel sim_exp_label;
+	private JTextField sim_exp_text;
+	
+	private JLabel sim_exp_adj_label;
+	private JTextField sim_exp_adj_text;
+	
+	public GuiSIMExpPanel(DAPBeanInterface components, JRadioButton rdbtnGet, JRadioButton rdbtnUpdate){
+		this.components = components;
+		this.rdbtnGet = rdbtnGet;
+		this.rdbtnUpdate = rdbtnUpdate;
+		initialize();
+	}
+	
+	private void setPanelDimension() {
+		setSize(711, 450);
+		GridBagLayout gbl_resources_panel = new GridBagLayout();
+		gbl_resources_panel.columnWidths = new int[] { 260, 278, 0};
+		gbl_resources_panel.columnWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
+		gbl_resources_panel.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+		gbl_resources_panel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0,	0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		setLayout(gbl_resources_panel);
+	}
+	
+	private void initialize() {
+		setPanelDimension();
+		setSimExpiryDateAbsLabel();
+		setSimExpiryDateAbsText();
+		setSimExpiryDateRelLabel();
+		setSimExpiryDateRelText();
+		setAction();
+	}
+	
+	private void setAction(){
+		rdbtnGet.setEnabled(true);
+		rdbtnUpdate.setEnabled(true);
+	}
+	
+	private void setSimExpiryDateAbsLabel(){
+		sim_exp_label = new JLabel("SIM expiry date (YYYY-MM-DD)");
+		sim_exp_label.setHorizontalAlignment(SwingConstants.RIGHT);
+		sim_exp_label.setVisible(false);
+		add(sim_exp_label, components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 8, 5, 0, 5, 0, 0));
+	}
+	
+	private void setSimExpiryDateAbsText(){
+		sim_exp_text = new JTextField();
+		sim_exp_text.setColumns(10);
+		sim_exp_text.setVisible(false);
+		
+		sim_exp_text.addKeyListener(new KeyAdapter() {
+			public void keyReleased(KeyEvent e) {
+				sim_exp_text.setText(components.getDateCompleter().complete(sim_exp_text.getText()));
+			}
+		});
+		
+		add(sim_exp_text, components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 8, 0, 0, 0, 1, 0));
+	}
+	
+	private void  setSimExpiryDateRelLabel(){
+		sim_exp_adj_label = new JLabel("SIM expiry date adjustment");
+		sim_exp_adj_label.setHorizontalAlignment(SwingConstants.RIGHT);
+		sim_exp_adj_label.setVisible(false);
+		add(sim_exp_adj_label, components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 8, 5, 0, 5, 0, 1));
+	}
+	
+	private void  setSimExpiryDateRelText(){
+		sim_exp_adj_text = new JTextField();
+		sim_exp_adj_text.setColumns(10);
+		sim_exp_adj_text.setVisible(false);
+		add(sim_exp_adj_text, components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 8, 0, 0, 0, 1, 1));
+	}
+	
+	public JTextField getSimExpText(){
+		return sim_exp_text;
+	}
+	
+	public JTextField getSimExpAdjText(){
+		return sim_exp_adj_text;
+	}
+
+	public void setPanelAction(String action){
+		if(action.equals(AIRActions.AIR_ACTION_CREATE)){
+			this.actionCreate();
+		}
+		
+		else if(action.equals(AIRActions.AIR_ACTION_DELETE)){
+			this.actionDelete();
+		}
+		
+		else if(action.equals(AIRActions.AIR_ACTION_GET)){
+			this.actionGet();
+		}
+		
+		else if(action.equals(AIRActions.AIR_ACTION_SET)){
+			this.actionUpdate();
+		}
+	}
+	
+	private void actionCreate(){
+		/*No action*/
+	}
+	
+	private void actionDelete(){
+		/*No action*/
+	}
+	
+	private void actionGet(){
+		sim_exp_label.setText("SIM expiry date (YYYY-MM-DD)");
+		sim_exp_adj_label.setText("SIM expiry date adjustment");
+		
+		sim_exp_label.setVisible(false);
+		sim_exp_adj_label.setVisible(false);
+		
+		this.reset();
+		
+		sim_exp_text.setVisible(false);
+		sim_exp_adj_text.setVisible(false);
+		
+		
+	}
+	
+	private void actionUpdate(){
+		sim_exp_label.setText("SIM expiry date (YYYY-MM-DD)*");
+		sim_exp_adj_label.setText("SIM expiry date adjustment*");
+		
+		sim_exp_label.setVisible(true);
+		sim_exp_adj_label.setVisible(true);
+		
+		this.reset();
+		
+		sim_exp_text.setVisible(true);
+		sim_exp_adj_text.setVisible(true);
+		
+		sim_exp_text.addKeyListener(new KeyAdapter() {
+			public void keyReleased(KeyEvent e){
+				verifyUpdateSimDate();
+			}
+		});
+		
+		sim_exp_adj_text.addKeyListener(new KeyAdapter() {
+			public void keyReleased(KeyEvent e){
+				verifyUpdateSimDateAdj();
+			}
+		});
+	}
+	
+	private void verifyUpdateSimDate(){
+		if(sim_exp_text.getText().length()>0){
+			sim_exp_adj_label.setText("SIM expiry date adjustment");
+			sim_exp_adj_text.setText("");
+			sim_exp_adj_label.setVisible(false);
+			sim_exp_adj_text.setVisible(false);
+		}
+		else{
+			sim_exp_adj_label.setText("SIM expiry date adjustment*");
+			sim_exp_adj_label.setVisible(true);
+			sim_exp_adj_text.setVisible(true);
+		}
+	}
+
+	private void verifyUpdateSimDateAdj(){
+		if(sim_exp_adj_text.getText().length()>0){
+			sim_exp_label.setText("SIM expiry date");
+			sim_exp_text.setText("");
+			sim_exp_label.setVisible(false);
+			sim_exp_text.setVisible(false);
+		}
+		else{
+			sim_exp_label.setText("SIM expiry date*");
+			sim_exp_label.setVisible(true);
+			sim_exp_text.setVisible(true);
+		}
+	}
+	
+	private void reset(){
+		sim_exp_text.setText("");
+		sim_exp_adj_text.setText("");
+	}
+}

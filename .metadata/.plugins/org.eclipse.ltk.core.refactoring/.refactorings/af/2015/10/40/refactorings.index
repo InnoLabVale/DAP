@@ -1,0 +1,13 @@
+1443693649254	Delete elements
+1443694426711	Extract interface 'GUIAfInterface'
+1443694461884	Move compilation unit
+1443694465647	Move compilation unit
+1443694544302	Delete element
+1443698732579	Rename type 'AF_ACTION'
+1443698749539	Extract interface 'ACTIONInterface'
+1443698759646	Extract interface 'AFInterface'
+1443698764408	Move compilation units
+1443702851576	Rename type 'ACTION'
+1443702863021	Rename type 'ACTIONInterface'
+1443702870837	Rename type 'AF'
+1443702876530	Rename type 'AFInterface'

@@ -1,0 +1,175 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.innovery.mpm</groupId>
+	<artifactId>mpm</artifactId>
+	<version>3.3</version>
+
+	<properties>
+		<name>DAP</name>
+		<version>25.58</version>
+		<release>16.01.11</release>
+		<config>settings</config>
+		<target>D:/MPM-java/DAP_${version}.${release}</target>
+		
+		<af.version>7.1</af.version>
+		<all-resource.version>8.0</all-resource.version>
+		<connection.version>4.3</connection.version>
+		<option.version>4.1</option.version>
+		<provisioning.version>9.1</provisioning.version>
+		<resource.version>8.1</resource.version>
+		<ssh.version>7.1</ssh.version>
+		<subscriber.version>7.1</subscriber.version>
+		
+		<spring.version>3.0.5.RELEASE</spring.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+	
+	<build>
+		<resources>
+		
+			<resource>
+				<directory>${project.basedir}/settings</directory>
+				<targetPath>${target}/settings</targetPath>
+				<includes>
+					<include>*.properties</include>
+				</includes>
+			</resource>
+			
+			<resource>
+				<directory>${project.basedir}/src/main/java</directory>
+				<targetPath></targetPath>
+				<includes>
+					<include>**/*</include>
+				</includes>
+			</resource>
+			
+			<resource>
+				<directory>${project.basedir}/src/main/resources</directory>
+				<targetPath>/resources</targetPath>
+				<includes>
+					<include>**/*</include>
+				</includes>
+			</resource>
+			
+		</resources>
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.3</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+					<encoding>Cp1252</encoding>
+				</configuration>
+			</plugin>
+
+
+			<!-- build del jar principale nella cartella di target -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<version>2.6</version>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<finalName>${name}</finalName>
+					<outputDirectory>${target}</outputDirectory>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<classpathPrefix>DAP_lib/</classpathPrefix>
+							<mainClass>com.innovery.mpm.main.implementations.Main</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+
+			<!-- build dei jar di libreria nella cartella di target -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${target}/DAP_lib</outputDirectory>
+							<overWriteReleases>false</overWriteReleases>
+							<overWriteSnapshots>false</overWriteSnapshots>
+							<overWriteIfNewer>true</overWriteIfNewer>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>2.3</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<finalName>util-${util.version}</finalName>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.ant</groupId>
+			<artifactId>ant-jsch</artifactId>
+			<version>1.9.6</version>
+		</dependency>
+		<dependency>
+			<groupId>com.innovery.mpm</groupId>
+			<artifactId>connection</artifactId>
+			<version>${connection.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.innovery.mpm</groupId>
+			<artifactId>af</artifactId>
+			<version>${af.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.innovery.mpm</groupId>
+			<artifactId>allresource</artifactId>
+			<version>${all-resource.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.innovery.mpm</groupId>
+			<artifactId>option</artifactId>
+			<version>${option.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.innovery.mpm</groupId>
+			<artifactId>provisioning</artifactId>
+			<version>${provisioning.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.innovery.mpm</groupId>
+			<artifactId>resource</artifactId>
+			<version>${resource.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.innovery.mpm</groupId>
+			<artifactId>ssh</artifactId>
+			<version>${ssh.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.innovery.mpm</groupId>
+			<artifactId>subscriber</artifactId>
+			<version>${subscriber.version}</version>
+		</dependency>
+	</dependencies>
+</project>

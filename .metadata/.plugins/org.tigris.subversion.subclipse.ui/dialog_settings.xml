@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<item value="https://hp:8443/svn/DAP/trunk/PROVISIONING" key="UrlCombo.provisioning.0"/>
+	<item value="97" key="BranchTag.location.y"/>
+	<item value="395" key="BranchTag.location.x"/>
+	<item value="https://hp:8443/svn/DAP/trunk/CONNECTION" key="UrlCombo.connection.0"/>
+	<item value="https://hp:8443/svn/DAP/trunk/OPTION" key="UrlCombo.option.0"/>
+	<item value="" key="DirectorySelectionPage.lastParent_https://hp:8443/svn/DAP"/>
+	<item value="https://hp:8443/svn/DAP/trunk/SUBSCRIBER" key="UrlCombo.subscriber.0"/>
+	<item value="435" key="ChooseUrlDialog.location.x"/>
+	<item value="107" key="ChooseUrlDialog.location.y"/>
+	<item value="https://hp:8443/svn/DAP/trunk/MPM" key="UrlCombo.mpm.0"/>
+	<item value="500" key="CommitDialog.weights.0"/>
+	<item value="500" key="CommitDialog.weights.1"/>
+	<item value="497" key="ChooseUrlDialog.size.x"/>
+	<item value="" key="DirectorySelectionPage.lastParent_https://hp:8443/!/#DAP"/>
+	<item value="370" key="ChooseUrlDialog.size.y"/>
+	<item value="384" key="BranchTag.size.y"/>
+	<item value="576" key="BranchTag.size.x"/>
+	<item value="706" key="SwitchDialogWithConflictHandling.size.y"/>
+	<item value="606" key="SwitchDialogWithConflictHandling.size.x"/>
+	<item value="380" key="SwitchDialogWithConflictHandling.location.x"/>
+	<item value="0" key="SwitchDialogWithConflictHandling.location.y"/>
+	<item value="0" key="CommitDialog.location.y"/>
+	<item value="0" key="CommitDialog.location.x"/>
+	<item value="https://hp:8443/svn/DAP/trunk/RESOURCE" key="UrlCombo.resource.0"/>
+	<item value="true" key="BranchTagDialog.sameStructure"/>
+	<item value="https://hp:8443/svn/DAP/tags/25.57.16.01.11" key="UrlCombo.af.1"/>
+	<item value="https://hp:8443/svn/DAP/trunk/ALL-RESOURCES" key="UrlCombo.allresource.0"/>
+	<item value="https://hp:8443/svn/DAP/tags/25.57.16.01.11/AF" key="UrlCombo.af.0"/>
+	<item value="https://hp:8443/svn/DAP" key="RepositorySelectionPage.lastRepository"/>
+	<item value="https://hp:8443/svn/DAP/trunk/AF" key="UrlCombo.af.2"/>
+	<item value="1366" key="CommitDialog.size.x"/>
+	<item value="false" key="BranchTagDialog.makeParents"/>
+	<item value="706" key="CommitDialog.size.y"/>
+	<item value="https://hp:8443/svn/DAP/trunk/SSH" key="UrlCombo.ssh.0"/>
+	<section name="CommitWizard">
+		<item value="true" key="ShowCompare"/>
+		<item value="500" key="VWeight2"/>
+		<item value="650" key="HWeight2"/>
+		<item value="500" key="VWeight1"/>
+		<item value="350" key="HWeight1"/>
+	</section>
+	<section name="IgnoreResourcesDialog">
+		<item value="0" key="Action"/>
+	</section>
+	<section name="NewLocationWizard">
+		<list key="ConfigurationWizardMainPage.STORE_URL_ID">
+			<item value="https://HP:8443/svn/DAP/"/>
+			<item value="https://hp:8443/!/#DAP"/>
+			<item value=""/>
+		</list>
+	</section>
+</section>

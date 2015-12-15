@@ -1,0 +1,66 @@
+package com.innovery.mpm.util.actions;
+
+public class SUBSCRIBERActions {
+
+	public static final String SUBSCRIBER_ACTION_CREATE = "create";
+	public static final String SUBSCRIBER_ACTION_DELETE = "delete";
+	public static final String SUBSCRIBER_ACTION_GET = "get";
+	public static final String SUBSCRIBER_ACTION_CHG = "chg";
+	public static final String SUBSCRIBER_ACTION_SET = "set";
+	
+	public static final String SUBSCRIBER_ACTION_GET_AMOUNT = "amount";
+	public static final String SUBSCRIBER_ACTION_GET_PROFILE  = "profile";
+	public static final String SUBSCRIBER_ACTION_GET_DATASERVICES = "data services";
+	public static final String SUBSCRIBER_ACTION_GET_TARIFF_PLAN = "tariff plan";
+	public static final String SUBSCRIBER_ACTION_GET_BILL_CYCLE = "bill cycle";
+	
+	public static final String SUBSCRIBER_ACTION_CHG_MSISDN = "Msisdn";
+	public static final String SUBSCRIBER_ACTION_CHG_TARIFF_PLAN = "Tariff plan";
+	public static final String SUBSCRIBER_ACTION_CHG_BILL_CYCLE = "Bill cycle";
+	public static final String SUBSCRIBER_ACTION_CHG_LINE_STATE = "Line state";
+	public static final String SUBSCRIBER_ACTION_CHG_DISCOUNT = "Discount";
+	public static final String SUBSCRIBER_ACTION_CHG_DATASERVICES = "Data services";
+	public static final String SUBSCRIBER_ACTION_CHG_PREFERENTIAL_LIST = "Preferential list";
+	public static final String SUBSCRIBER_ACTION_CHG_CC = "Cost control";
+	public static final String SUBSCRIBER_ACTION_CC_UNBLOCK = "Unblock CC";
+	public static final String SUBSCRIBER_ACTION_CC_UNBLOCK_CRM = "Unblock CC CRM";
+	public static final String SUBSCRIBER_ACTION_CC_UNBLOCK_NIS = "Unblock CC NIS";
+	
+	public static final String SUBSCRIBER_ACTION_ADD_BILL_CYCLE = "add bill cycle";
+	public static final String SUBSCRIBER_ACTION_SET_BILL_CYCLE = "set bill cycle";
+	public static final String SUBSCRIBER_ACTION_DEL_BILL_CYCLE = "del Bill cycle";
+	
+	public static final String SUBSCRIBER_ACTION_SET_DISCOUNT = "set discount";
+	public static final String SUBSCRIBER_ACTION_DEL_DISCOUNT = "del discount";
+	
+	public static final String SUBSCRIBER_ACTION_SET_DATA_SERVICE = "set Data service";
+	public static final String SUBSCRIBER_ACTION_ADD_DATA_SERVICE = "add Data service";
+	public static final String SUBSCRIBER_ACTION_DEL_DATA_SERVICE = "del Data service";
+	
+	public static final String SUBSCRIBER_ACTION_GET_OPTION_LIST[] = {SUBSCRIBER_ACTION_GET_AMOUNT,
+													SUBSCRIBER_ACTION_GET_PROFILE,
+													SUBSCRIBER_ACTION_GET_DATASERVICES,
+													SUBSCRIBER_ACTION_GET_TARIFF_PLAN,
+													SUBSCRIBER_ACTION_GET_BILL_CYCLE};
+	
+	public static final String[] SUBSCRIBER_ACTION_CHG_OPTION_LIST = {SUBSCRIBER_ACTION_CHG_MSISDN,
+													SUBSCRIBER_ACTION_CHG_TARIFF_PLAN,
+													SUBSCRIBER_ACTION_CHG_BILL_CYCLE,
+													SUBSCRIBER_ACTION_CHG_LINE_STATE,
+													SUBSCRIBER_ACTION_CHG_DISCOUNT,
+													SUBSCRIBER_ACTION_CHG_DATASERVICES,
+													SUBSCRIBER_ACTION_CHG_PREFERENTIAL_LIST,
+													SUBSCRIBER_ACTION_CHG_CC,
+													SUBSCRIBER_ACTION_CC_UNBLOCK,
+													SUBSCRIBER_ACTION_CC_UNBLOCK_CRM,
+													SUBSCRIBER_ACTION_CC_UNBLOCK_NIS,
+													SUBSCRIBER_ACTION_ADD_BILL_CYCLE,
+													SUBSCRIBER_ACTION_SET_BILL_CYCLE,
+													SUBSCRIBER_ACTION_DEL_BILL_CYCLE,
+													SUBSCRIBER_ACTION_SET_DISCOUNT,
+													SUBSCRIBER_ACTION_DEL_DISCOUNT,
+													SUBSCRIBER_ACTION_SET_DATA_SERVICE,
+													SUBSCRIBER_ACTION_ADD_DATA_SERVICE,
+													SUBSCRIBER_ACTION_DEL_DATA_SERVICE};
+
+}

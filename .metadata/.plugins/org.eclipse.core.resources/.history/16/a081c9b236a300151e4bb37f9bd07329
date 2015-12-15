@@ -1,0 +1,79 @@
+package com.innovery.mpm.provisioning.implementations.gui.util.options;
+
+import javax.swing.JComboBox;
+import javax.swing.JRadioButton;
+
+import com.innovery.mpm.connection.interfaces.component.DAPBeanInterface;
+import com.innovery.mpm.provisioning.interfaces.gui.util.options.ProvisioningOptionTypeInterface;
+
+public class ProvisioningPostpone implements ProvisioningOptionTypeInterface {
+	
+	private DAPBeanInterface components;
+	
+	private JRadioButton rdbtnIn;
+	private JRadioButton rdbtnOut;
+	private JRadioButton rdbtnBookOut;
+	private JRadioButton rdbtnChange;
+	private JRadioButton rdbtnGet;
+
+	public void enable(){
+		if(components.getConnectionManagerStandard().getSession().getUser_level()!=components.getUserLevels().getGuest()){
+			showCompleteActions();
+		}
+		else if(components.getConnectionManagerStandard().getSession().getUser_level()==components.getUserLevels().getGuest()){
+			showRestrictedActions();
+		}
+	}
+	
+	private void showCompleteActions(){
+		rdbtnIn.setEnabled(true);
+		rdbtnOut.setEnabled(false);
+		rdbtnBookOut.setEnabled(false);
+		rdbtnChange.setEnabled(false);
+		rdbtnGet.setEnabled(false);
+	}
+	
+	private void showRestrictedActions(){
+		rdbtnOut.setEnabled(false);
+		rdbtnBookOut.setEnabled(false);
+		rdbtnChange.setEnabled(false);
+		rdbtnGet.setEnabled(false);
+	}
+
+	public void setComponents(DAPBeanInterface components) {
+		this.components = components;
+	}
+
+	@Override
+	public void setRdbtnIn(JRadioButton rdbtnIn) {
+		this.rdbtnIn = rdbtnIn;
+	}
+
+	@Override
+	public void setRdbtnOut(JRadioButton rdbtnOut) {
+		this.rdbtnOut = rdbtnOut;
+	}
+
+	@Override
+	public void setRdbtnBookOut(JRadioButton rdbtnBookOut) {
+		this.rdbtnBookOut = rdbtnBookOut;
+	}
+
+	@Override
+	public void setRdbtnChange(JRadioButton rdbtnChange) {
+		this.rdbtnChange = rdbtnChange;
+	}
+
+	@Override
+	public void setRdbtnGet(JRadioButton rdbtnGet) {
+		this.rdbtnGet = rdbtnGet;
+	}
+
+	@Override
+	public void enable(String actions) {
+	}
+
+	@Override
+	public void setOptionComboboxSelection(JComboBox optionComboboxSelection) {
+	}
+}

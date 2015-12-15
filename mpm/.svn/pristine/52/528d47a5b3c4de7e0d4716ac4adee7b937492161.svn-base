@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ropz code="ROPZ4443">
+	<action value="in">
+		<parameter name="FEEDISCOUNT" value="NULL"/>
+		<parameter name="FEEDELAY" value="[0-9]{1,16}"/>
+		<parameter name="ACCOUNTB" value="[0-9]{1,28}"/>
+		<parameter name="[ACCOUNTC]" value="[0-9]{1,28}"/>
+	</action>
+	<action value="out"/>
+	<action value="book_out"/>
+	<action value="chg">
+		<parameter name="FEEDISCOUNT" value="NULL"/>
+		<parameter name="FEEDELAY" value="[0-9]{1,16}"/>
+		<parameter name="ACCOUNTB" value="[0-9]{1,28}"/>
+		<parameter name="[ACCOUNTC]" value="[0-9]{1,28}"/>
+	</action>
+	<action value="get"/>
+</ropz>

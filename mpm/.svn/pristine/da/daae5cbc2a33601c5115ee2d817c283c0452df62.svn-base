@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opt code="OPT53">
+	<action value="in"/>
+	<action value="out"/>
+	<action value="book_out"/>
+	<action value="get">
+		<parameter name="RETURNDATA" value="ALL"/>
+	</action>
+</opt>

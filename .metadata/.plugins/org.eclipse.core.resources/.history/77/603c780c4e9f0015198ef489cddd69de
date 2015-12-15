@@ -1,0 +1,214 @@
+package com.innovery.mpm.resource.implementations.gui.util;
+
+import java.awt.GridBagConstraints;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+
+import com.innovery.mpm.connection.interfaces.component.DAPBeanInterface;
+import com.innovery.mpm.resource.implementations.gui.bean.GuiAccountGroupPanel;
+import com.innovery.mpm.resource.implementations.gui.bean.GuiAccumulatorPanel;
+import com.innovery.mpm.resource.implementations.gui.bean.GuiCommunityIdPanel;
+import com.innovery.mpm.resource.implementations.gui.bean.GuiDedicatedAccountPanel;
+import com.innovery.mpm.resource.implementations.gui.bean.GuiFafPanel;
+import com.innovery.mpm.resource.implementations.gui.bean.GuiLanguagePanel;
+import com.innovery.mpm.resource.implementations.gui.bean.GuiMainBalancePanel;
+import com.innovery.mpm.resource.implementations.gui.bean.GuiOfferIdPanel;
+import com.innovery.mpm.resource.implementations.gui.bean.GuiPamPanel;
+import com.innovery.mpm.resource.implementations.gui.bean.GuiPromotionPlanPanel;
+import com.innovery.mpm.resource.implementations.gui.bean.GuiResourcePanelInterface;
+import com.innovery.mpm.resource.implementations.gui.bean.GuiSIMExpPanel;
+import com.innovery.mpm.resource.implementations.gui.bean.GuiSUPExpPanel;
+import com.innovery.mpm.resource.implementations.gui.bean.GuiServiceClassPanel;
+import com.innovery.mpm.resource.implementations.gui.bean.GuiServiceOfferingsPanel;
+import com.innovery.mpm.resource.implementations.gui.bean.GuiShareAccountPanel;
+import com.innovery.mpm.resource.implementations.util.AIRActions;
+import com.innovery.mpm.resource.interfaces.gui.AirResourceInterface;
+import com.innovery.mpm.resource.interfaces.gui.util.AirResourceUtilInterface;
+
+public class AirResourceUtil implements AirResourceUtilInterface {
+
+	private AirResourceInterface reference;
+	private DAPBeanInterface components;
+	
+	private JPanel caiCommandField;
+	
+	private GuiResourcePanelInterface resource_panel;
+	private JPanel voidResourcePanel;
+	
+	private ButtonGroup actionButtonGroup;
+	
+	private JRadioButton rdbtnCreate;
+	private JRadioButton rdbtnDelete;
+	private JRadioButton rdbtnGet;
+	private JRadioButton rdbtnUpdate;
+	private JRadioButton rdbtnRun;
+	
+	public void hideOne(String resourceToHide){
+		if(resourceToHide.equals(AIRActions.DEFAULT)){
+			caiCommandField.remove(voidResourcePanel);
+		}
+		
+		else {
+			caiCommandField.remove(resource_panel);
+		}
+		
+		caiCommandField.revalidate();
+		caiCommandField.repaint();
+		
+		actionButtonGroup.clearSelection();
+		
+		reference.getRdbtnCreate().setEnabled(false);
+		reference.getRdbtnDelete().setEnabled(false);
+		reference.getRdbtnGet().setEnabled(false);
+		reference.getRdbtnUpdate().setEnabled(false);
+	}
+	
+//	public void hideOne(String resourceToHide){
+//		if(resourceToHide.equals(AIRActions.DEFAULT)){
+//			reference.getCai_command_fieldset().remove(reference.getVoidResourcesPanel());
+//		}
+//		
+//		else {
+//			reference.getCai_command_fieldset().remove(resource_panel);
+//		}
+//		
+//		reference.getCai_command_fieldset().revalidate();
+//		reference.getCai_command_fieldset().repaint();
+//		
+//		reference.getRadioGroupAction().clearSelection();
+//		
+//		reference.getRdbtnCreate().setEnabled(false);
+//		reference.getRdbtnDelete().setEnabled(false);
+//		reference.getRdbtnGet().setEnabled(false);
+//		reference.getRdbtnUpdate().setEnabled(false);
+//	}
+	
+	public void showSelectedResource(String resource){
+		
+		reference.getRdbtnRun().setVisible(false);
+		
+		if(resource.equals(AIRActions.ACCOUNT_GRUOP_ID)){
+			resource_panel = new GuiAccountGroupPanel(reference, components);
+		}
+		
+		else if(resource.equals(AIRActions.ACCUMULATOR)){
+			resource_panel = new GuiAccumulatorPanel(reference, components);
+		}
+		
+		else if(resource.equals(AIRActions.COMMUNITY)){
+			resource_panel = new GuiCommunityIdPanel(reference, components);
+		}
+		
+		else if(resource.equals(AIRActions.DEDICATED_ACCOUNT)){
+			resource_panel = new GuiDedicatedAccountPanel(reference, components);
+		}
+		
+		else if(resource.equals(AIRActions.FAF)){
+			resource_panel = new GuiFafPanel(reference, components);
+		}
+		
+		else if(resource.equals(AIRActions.LANGUAGE)){
+			resource_panel = new GuiLanguagePanel(reference, components);
+		}
+		
+		else if(resource.equals(AIRActions.BALANCE)){
+			resource_panel = new GuiMainBalancePanel(reference, components);
+		}
+		
+		else if(resource.equals(AIRActions.OFFER)){
+			resource_panel = new GuiOfferIdPanel(reference, components);
+		}
+		
+		else if(resource.equals(AIRActions.PAM)){
+			resource_panel = new GuiPamPanel(reference, components);
+			reference.getRdbtnRun().setVisible(true);
+		}
+		
+		else if(resource.equals(AIRActions.PROMOTION_PLAN)){
+			resource_panel = new GuiPromotionPlanPanel(reference, components);
+		}
+		
+		else if(resource.equals(AIRActions.SERVICE_CLASS)){
+			resource_panel = new GuiServiceClassPanel(reference, components);
+		}
+		
+		else if(resource.equals(AIRActions.SERVICE_OFFERING)){
+			resource_panel = new GuiServiceOfferingsPanel(reference, components);
+		}
+		
+		else if(resource.equals(AIRActions.SHARE_ACCOUNT)){
+			resource_panel = new GuiShareAccountPanel(reference, components);
+		}
+		
+		else if(resource.equals(AIRActions.SIM)){
+			resource_panel = new GuiSIMExpPanel(reference, components);
+		}
+		
+		else if(resource.equals(AIRActions.SUP)){
+			resource_panel = new GuiSUPExpPanel(reference, components);
+		}
+		
+//		public void setSpecificResourcePanel(JPanel resource){
+		caiCommandField.add(resource_panel, components.getCommonGUI().setContraintsGridWidth(GridBagConstraints.BOTH, 2, 0, 0, 0, 0, 0, 4));
+		caiCommandField.revalidate();
+		caiCommandField.repaint();
+//		}
+		
+//		reference.setSpecificResourcePanel(resource_panel);
+		userLevel();
+	}
+	
+	public void actionResourceCall(String action){
+		resource_panel.setPanelAction(action);
+	}
+	
+	public void backButtonActionPerformed(){
+		if (reference.getBtnExecute().getActionCommand().equals(AIRActions.AIR_ACTION_RECONNECT)) {
+			components.getLogger().info(AIRActions.AIR_ACTION_RECONNECT);
+			String redirect;
+			if(components.getConnectionManagerCai().getSession().isSessionAvailable()){
+				redirect = components.getConnectionManagerCai().reconnectionCai(reference.getBtnExecute().getActionCommand());
+			}
+			else{
+				redirect = components.getConnectionManagerStandard().reconnectionStandard(reference.getBtnExecute().getActionCommand());
+			}
+			reference.getTextArea().setText(redirect);
+			reference.getGrid_managment().setResponseGridAssurance(redirect);
+			if (redirect.equals(components.getErrorMessages().get_RELOGGED())) {
+				reference.getBtnExecute().setText(AIRActions.AIR_ACTION_EXECUTE);
+				reference.getBtnExecute().setActionCommand(AIRActions.AIR_ACTION_EXECUTE);
+			}else if (redirect.equals(components.getErrorMessages().get_NOT_LOGGED_ERROR()) || 
+					  redirect.equals(components.getErrorMessages().get_MPM_CONNECTION_ERROR()) || 
+					  redirect.equals(components.getErrorMessages().get_MPM_ERROR())) {
+				reference.getBtnExecute().setText(AIRActions.AIR_ACTION_HOME);
+				reference.getBtnExecute().setActionCommand(AIRActions.AIR_ACTION_HOME);
+			}
+
+		} else if (reference.getBtnExecute().getActionCommand().equals(AIRActions.AIR_ACTION_HOME)){
+			components.getLogger().info(AIRActions.AIR_ACTION_HOME);
+			reference.getFrame().dispose();
+		}
+	}
+	
+	private void userLevel(){
+		if(components.getConnectionManagerStandard().getSession().getUser_level()!=components.getUserLevels().getRoot()){
+			reference.getRdbtnCreate().setEnabled(false);
+			reference.getRdbtnDelete().setEnabled(false);
+			reference.getRdbtnUpdate().setEnabled(false);
+		}
+	}
+
+	public void setReference(AirResourceInterface reference) {
+		this.reference = reference;
+	}
+
+	public void setComponents(DAPBeanInterface components) {
+		this.components = components;
+	}
+	
+	public GuiResourcePanelInterface getPanelGui(){
+		return resource_panel;
+	}
+}

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ropz code="ROPZ4264">
+	<action value="in">
+		<parameter name="FEEDISCOUNT" value="NULL"/>
+		<parameter name="FEEDELAY" value="[0-9]{1,16}"/>
+		<parameter name="ACCOUNTB" value="[0-9]{1,28}"/>
+		<parameter name="CTYPEB" value="prepaid|postpaid|unknown"/>
+	</action>
+	<action value="out">
+		<parameter name="ACCOUNTB" value="[0-9]{1,28}"/>
+		<parameter name="CTYPEB" value="prepaid|postpaid|unknown|unactive"/>
+	</action>
+	<action value="book_out"/>
+	<action value="chg">
+		<parameter name="ACCOUNTB" value="[0-9]{1,28}"/>
+		<parameter name="CTYPEB" value="prepaid|postpaid|unknown"/>
+		<parameter name="ACCOUNTC" value="[0-9]{1,28}"/>
+		<parameter name="CTYPEC" value="prepaid|postpaid|unknown"/>
+	</action>
+	<action value="get">
+		<parameter name="ACCOUNTB" value="[0-9]{1,28}"/>
+		<parameter name="CTYPEB" value="prepaid|postpaid|unknown"/>
+	</action>
+</ropz>

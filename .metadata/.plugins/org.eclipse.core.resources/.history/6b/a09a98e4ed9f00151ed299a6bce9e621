@@ -1,0 +1,281 @@
+package com.innovery.mpm.resource.implementations.gui;
+
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+import com.innovery.mpm.connection.interfaces.component.DAPBeanInterface;
+import com.innovery.mpm.resource.implementations.gui.grid.AccountGroupIdResponseGrid;
+import com.innovery.mpm.resource.implementations.gui.grid.AccumulatorResponseGrid;
+import com.innovery.mpm.resource.implementations.gui.grid.CommunityResponseGrid;
+import com.innovery.mpm.resource.implementations.gui.grid.DedicatedAccountResponseGrid;
+import com.innovery.mpm.resource.implementations.gui.grid.FafResponseGrid;
+import com.innovery.mpm.resource.implementations.gui.grid.LanguageResponseGrid;
+import com.innovery.mpm.resource.implementations.gui.grid.MainAccountResponseGrid;
+import com.innovery.mpm.resource.implementations.gui.grid.OfferIdResponseGrid;
+import com.innovery.mpm.resource.implementations.gui.grid.PamResponseGrid;
+import com.innovery.mpm.resource.implementations.gui.grid.PromotionPlanResponseGrid;
+import com.innovery.mpm.resource.implementations.gui.grid.ServiceClassResponseGrid;
+import com.innovery.mpm.resource.implementations.gui.grid.ServiceOfferingsResponseGrid;
+import com.innovery.mpm.resource.implementations.gui.grid.ShareAccountResponseGrid;
+import com.innovery.mpm.resource.implementations.gui.grid.SimExpiryDateResponseGrid;
+import com.innovery.mpm.resource.implementations.gui.grid.SupervisionExpiryDateResponseGrid;
+import com.innovery.mpm.resource.implementations.util.AIRActions;
+import com.innovery.mpm.resource.implementations.util.AIRCommands;
+import com.innovery.mpm.resource.interfaces.gui.AirResourceInterface;
+import com.innovery.mpm.resource.interfaces.gui.AirResponseGridManagmentInterface;
+
+public class AirResponseGridManagment implements AirResponseGridManagmentInterface {
+	
+	private static final String RESOURCE_NOT_FOUND = " not found";
+	
+	private static String CAI_COMMAND_PARAMETER_ACCOUNTGROUPID = "ACCOUNTGROUPID";
+	private static String CAI_COMMAND_PARAMETER_ACCUMULATOR = "ACCUMULATOR";
+	private static String CAI_COMMAND_PARAMETER_COMMUNITYIDLIST = "COMMUNITYIDLIST";
+	private static String CAI_COMMAND_PARAMETER_DEDICATEDACCOUNT = "DEDICATEDACCOUNT";
+	private static String CAI_COMMAND_PARAMETER_FAF ="FAF";
+	private static String CAI_COMMAND_PARAMETER_LANGUAGE ="LANGUAGE";
+	private static String CAI_COMMAND_PARAMETER_MAIN_ACCOUNT ="ACCOUNTVALUE1";
+	private static String CAI_COMMAND_PARAMETER_OFFER ="OFFER";
+	private static String CAI_COMMAND_PARAMETER_PAM ="PAM";
+	private static String CAI_COMMAND_PARAMETER_PROMOTIONPLAN ="PROMOTIONPLAN";
+	private static String CAI_COMMAND_PARAMETER_SERVICECLASS ="SERVICECLASS";
+	private static String CAI_COMMAND_PARAMETER_SERVICEOFFERINGS ="SERVICEOFFERINGS";
+	private static String CAI_COMMAND_PARAMETER_SHAREACCOUNT ="SHAREACCOUNT";
+	private static String CAI_COMMAND_PARAMETER_SFEEEXPDATE ="SFEEEXPDATE";
+	private static String CAI_COMMAND_PARAMETER_SUPEXPDATE ="SUPEXPDATE";
+
+	private AirResourceInterface reference;
+	private DAPBeanInterface components;
+	
+//	private JPanel responseFieldset;
+//	private JPanel responseFieldsetGrid;
+	
+	private JComboBox resourceComboboxSelection;
+	private ButtonGroup actionButtonGroup;
+	private JFrame frame;
+	
+	
+	public void setResponseGridAssurance(String response_mpm){
+		resetResponseGrid();
+		if(response_mpm.equals(components.getErrorMessages().get_USER_NOT_FOUND()) ||
+				   response_mpm.equals(components.getErrorMessages().get_NOT_LOGGED_WARN()) ||
+				   response_mpm.equals(components.getErrorMessages().get_MPM_CONNECTION_WARN()) ||
+				   response_mpm.equals(components.getErrorMessages().get_RELOGGED()) ||
+				   response_mpm.equals(components.getErrorMessages().get_NOT_LOGGED_ERROR())){
+			reference.getResponse_fieldset_grid().add(new JLabel(response_mpm), components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 5, 20, 0, 0, 0, 0));
+		}
+		
+		else if(response_mpm.contains(RESOURCE_NOT_FOUND)){
+			JLabel generic_response_msg = new JLabel(response_mpm);
+			reference.getResponse_fieldset_grid().add(generic_response_msg, components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 5, 20, 0, 0, 0, 0));
+		}
+		
+		else {
+			String[] responseSplitted = response_mpm.trim().replace(AIRCommands.END, "").split("\\:");		
+			
+			if(!responseSplitted[2].equals("0")){
+				JLabel generic_response_msg = new JLabel(readErrorDescription(responseSplitted[2]));
+				reference.getResponse_fieldset_grid().add(generic_response_msg, components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 5, 20, 0, 0, 0, 0));
+			}
+			
+			else if(responseSplitted[2].equals("0")){
+				if(actionButtonGroup.getSelection().getActionCommand().equals(AIRActions.AIR_ACTION_GET)){
+					resourceSelected(response_mpm);
+				}
+				
+				else{
+					JLabel generic_response_msg = new JLabel("DONE!");
+					generic_response_msg.setFont(new Font(generic_response_msg.getFont().getName(), Font.BOLD, generic_response_msg.getFont().getSize()));
+					reference.getResponse_fieldset_grid().add(generic_response_msg, components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 5, 20, 0, 0, 0, 0));
+				}
+			}
+		}
+		
+		setGridElementsVisibility();
+	}
+	
+	private void resourceSelected(String response_mpm) {
+		
+		String[] response_mpm_splitted = response_mpm.trim().replace(";", "").split("\\:");
+		String[] resource_splitted = response_mpm_splitted[3].split(",");
+		
+		String resource = resource_splitted[0];
+		
+		if (resourceComboboxSelection.getSelectedItem().equals(AIRActions.ACCOUNT_GRUOP_ID) && resource.equals(CAI_COMMAND_PARAMETER_ACCOUNTGROUPID)) {
+			new AccountGroupIdResponseGrid(reference, components).setGrid(response_mpm_splitted);
+		}
+
+		else if (resourceComboboxSelection.getSelectedItem().equals(AIRActions.ACCUMULATOR) && resource.equals(CAI_COMMAND_PARAMETER_ACCUMULATOR)) {
+			new AccumulatorResponseGrid(reference, components).setGrid(response_mpm_splitted);
+		}
+
+		else if (resourceComboboxSelection.getSelectedItem().equals(AIRActions.COMMUNITY) && resource.equals(CAI_COMMAND_PARAMETER_COMMUNITYIDLIST)) {
+			new CommunityResponseGrid(reference, components).setGrid(response_mpm_splitted);
+		}
+
+		else if (resourceComboboxSelection.getSelectedItem().equals(AIRActions.DEDICATED_ACCOUNT) && resource.equals(CAI_COMMAND_PARAMETER_DEDICATEDACCOUNT)) {
+			new DedicatedAccountResponseGrid(reference, components).setGrid(response_mpm_splitted);
+		}
+
+		else if (resourceComboboxSelection.getSelectedItem().equals(AIRActions.FAF) && resource.equals(CAI_COMMAND_PARAMETER_FAF)) {
+			new FafResponseGrid(reference, components).setGrid(response_mpm_splitted);
+		}
+
+		else if (resourceComboboxSelection.getSelectedItem().equals(AIRActions.LANGUAGE) && resource.equals(CAI_COMMAND_PARAMETER_LANGUAGE)) {
+			new LanguageResponseGrid(reference, components).setGrid(response_mpm_splitted);
+		}
+
+		else if (resourceComboboxSelection.getSelectedItem().equals(AIRActions.BALANCE) && resource.equals(CAI_COMMAND_PARAMETER_MAIN_ACCOUNT)) {
+			new MainAccountResponseGrid(reference, components).setGrid(response_mpm_splitted);
+		}
+
+		else if (resourceComboboxSelection.getSelectedItem().equals(AIRActions.OFFER) && resource.equals(CAI_COMMAND_PARAMETER_OFFER)) {
+			new OfferIdResponseGrid(reference, components).setGrid(response_mpm_splitted);
+		}
+
+		else if (resourceComboboxSelection.getSelectedItem().equals(AIRActions.PAM) && resource.equals(CAI_COMMAND_PARAMETER_PAM)) {
+			new PamResponseGrid(reference, components).setGrid(response_mpm_splitted);
+		}
+		
+		else if (resourceComboboxSelection.getSelectedItem().equals(AIRActions.PROMOTION_PLAN) && resource.equals(CAI_COMMAND_PARAMETER_PROMOTIONPLAN)) {
+			new PromotionPlanResponseGrid(reference, components).setGrid(response_mpm_splitted);
+		}
+
+		else if (resourceComboboxSelection.getSelectedItem().equals(AIRActions.SERVICE_CLASS) && resource.equals(CAI_COMMAND_PARAMETER_SERVICECLASS)) {
+			new ServiceClassResponseGrid(reference, components).setGrid(response_mpm_splitted);
+		}
+
+		else if (resourceComboboxSelection.getSelectedItem().equals(AIRActions.SERVICE_OFFERING) && resource.equals(CAI_COMMAND_PARAMETER_SERVICEOFFERINGS)) {
+			new ServiceOfferingsResponseGrid(reference, components).setGrid(response_mpm_splitted);
+		}
+
+		else if (resourceComboboxSelection.getSelectedItem().equals(AIRActions.SHARE_ACCOUNT) && resource.equals(CAI_COMMAND_PARAMETER_SHAREACCOUNT)) {
+			new ShareAccountResponseGrid(reference, components).setGrid(response_mpm_splitted);
+		}
+
+		else if (resourceComboboxSelection.getSelectedItem().equals(AIRActions.SIM) && resource.equals(CAI_COMMAND_PARAMETER_SFEEEXPDATE)) {
+			new SimExpiryDateResponseGrid(reference, components).setGrid(response_mpm_splitted);
+		}
+
+		else if (resourceComboboxSelection.getSelectedItem().equals(AIRActions.SUP) && resource.equals(CAI_COMMAND_PARAMETER_SUPEXPDATE)) {
+			new SupervisionExpiryDateResponseGrid(reference, components).setGrid(response_mpm_splitted);
+		}
+	}
+
+	private void setGridElementsVisibility(){
+		for(int i = 0; i<reference.getResponse_fieldset_grid().getComponents().length; i++){
+			reference.getResponse_fieldset_grid().getComponent(i).setVisible(true);
+		}
+		reference.getResponse_fieldset_grid().setVisible(true);
+		frame.repaint();
+		frame.validate();
+	}
+	
+	
+	
+	
+	public void resetResponseGrid(){
+		reference.getResponse_fieldset().remove(reference.getResponse_fieldset_grid());
+		reference.getResponse_fieldset().validate();
+		reference.getResponse_fieldset().repaint();
+		
+		JPanel localResponseGrid = new JPanel();
+		
+		GridBagLayout gbl_response_fieldset_grid = new GridBagLayout();
+		
+		int columns;
+		if(actionButtonGroup.getSelection()!= null && actionButtonGroup.getSelection().getActionCommand().equals(AIRActions.AIR_ACTION_GET)){
+			columns = resourceComboboxSelection.getSelectedIndex(); 
+		}
+		
+		else {
+			columns = -1;
+		}
+		
+		if(columns==-1){
+			gbl_response_fieldset_grid.columnWidths = new int[] {200 ,0};
+			gbl_response_fieldset_grid.columnWeights = new double[]{0.0, Double.MIN_VALUE};
+		}
+		
+		else if(columns==1 || columns==6 || columns==7 || columns==10 || columns==11 || columns==13 || columns==14){
+			gbl_response_fieldset_grid.columnWidths = new int[] {70, 0};
+			gbl_response_fieldset_grid.columnWeights = new double[]{0.0, Double.MIN_VALUE};
+		}
+		
+		else if(columns==5){
+			gbl_response_fieldset_grid.columnWidths = new int[] {70, 70, 0};
+			gbl_response_fieldset_grid.columnWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
+		}
+		
+		else if(columns==2 || columns==4 || columns==12){
+			gbl_response_fieldset_grid.columnWidths = new int[] {90, 90, 90, 0};
+			gbl_response_fieldset_grid.columnWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
+		}
+		
+		else if(columns==8){
+			gbl_response_fieldset_grid.columnWidths = new int[] {70, 70, 70, 0};
+			gbl_response_fieldset_grid.columnWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
+		}
+		
+		else if(columns==3){
+			gbl_response_fieldset_grid.columnWidths = new int[] {100, 80, 80, 80, 0};
+			gbl_response_fieldset_grid.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		}
+		
+		else if(columns==9){
+			gbl_response_fieldset_grid.columnWidths = new int[] {70, 20, 70, 0};
+			gbl_response_fieldset_grid.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		}
+		
+		else if(columns==15){
+			gbl_response_fieldset_grid.columnWidths = new int[] {30, 20, 30, 30, 30, 20, 0};
+			gbl_response_fieldset_grid.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		}
+		
+		gbl_response_fieldset_grid.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+		gbl_response_fieldset_grid.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		
+		localResponseGrid.setLayout(gbl_response_fieldset_grid);
+		
+		reference.setResponse_fieldset_grid(localResponseGrid);
+		reference.getResponse_fieldset().add(reference.getResponse_fieldset_grid(), components.getCommonGUI().setContraints(GridBagConstraints.BOTH, 0, 0, 5, 0, 0, 0));
+	}
+	
+	private String readErrorDescription(String response_mpm){
+		try {
+			return components.getConnectionManagerStandard().getRb_errorCode().getString(response_mpm);
+		} catch (Exception e) {
+			return response_mpm;
+		}
+	}
+
+	public void setReference(AirResourceInterface reference) {
+		this.reference = reference;
+	}
+
+	public void setComponents(DAPBeanInterface components) {
+		this.components = components;
+	}
+
+	@Override
+	public void setActionButtonGroup(ButtonGroup actionButtonGroup) {
+		this.actionButtonGroup = actionButtonGroup;
+	}
+
+	@Override
+	public void setFrame(JFrame frame) {
+		this.frame = frame;
+	}
+
+	@Override
+	public void setResourceComboboxSelection(JComboBox resourceComboboxSelection) {
+		this.resourceComboboxSelection = resourceComboboxSelection;
+	}
+}

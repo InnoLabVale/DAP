@@ -1,0 +1,31 @@
+1445354563358	Move compilation units
+1445354602848	Extract interface 'LoginPageConnectionInterface'
+1445354616204	Extract interface 'MainPageConnectionInterface'
+1445354621548	Move compilation units
+1445354726381	Move compilation unit
+1445354730220	Move compilation unit
+1445354834990	Extract interface 'ComboBoxManagerInterface'
+1445354852433	Extract interface 'IndexVerifyInterface'
+1445354894931	Extract interface 'MpmBeanInterface'
+1445354901640	Move compilation units
+1445355721612	Delete element
+1445356036049	Delete element
+1445356049225	Delete element
+1445356060365	Delete element
+1445356140181	Delete element
+1445509719681	Rename type 'MainPageConnectionInterface'
+1445510832290	Delete element
+1445515327100	Rename field 'initConnection'
+1445515342734	Rename method 'setInitConnection'
+1445515353374	Rename local variable 'initConnection'
+1445515373433	Rename field 'retryConnection'
+1445515388399	Rename method 'getRetryConnection'
+1445515393009	Rename local variable 'retryConnection'
+1445515408057	Rename method 'setRetryConnection'
+1445516019638	Rename method 'setLoginPage'
+1445516123998	Rename method 'setMain'
+1445516217517	Rename type 'MainPageInterface'
+1445516640314	Delete element
+1445520628457	Rename field 'errorMessage'
+1445604997402	Delete element
+1445605004848	Delete element

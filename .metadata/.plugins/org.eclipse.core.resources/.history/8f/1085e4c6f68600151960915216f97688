@@ -1,0 +1,7 @@
+package com.innovery.mpm.util.chains;
+
+public class CSCHAIN{
+	
+	public static final String CH1 = ":CSCHAIN,CH1";
+	public static final String CH2 = ":CSCHAIN,CH2";
+}

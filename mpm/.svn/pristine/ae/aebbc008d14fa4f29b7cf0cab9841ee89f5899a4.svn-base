@@ -1,0 +1,16 @@
+###########################
+#Properties file
+###########################
+
+#CONSUMER
+sdp1=SDP5.cs
+sdp2=SDP15.cs
+sdp3=sdp5.cs
+sdp4=sdp15.cs
+sdp5=MIPOST02.cs
+sdp6=SDP3.cs
+#consumer_sdp=SDP2.cs
+
+
+
+

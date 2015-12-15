@@ -1,0 +1,5 @@
+package com.innovery.mpm.option.implementations.gui;
+
+public class OptionManagerInitialization {
+
+}

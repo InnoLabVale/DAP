@@ -1,0 +1,6 @@
+package com.innovery.mpm.option.interfaces.gui;
+
+public interface OptionManagerInitializationInterface {
+
+	public void initialize();
+}

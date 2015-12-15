@@ -1,0 +1,8 @@
+package com.innovery.mpm.util.actions;
+
+public class SSHActions{
+
+	public static final String SSH_ACTION_CREATE = "create";
+	public static final String SSH_ACTION_DELETE = "delete";
+	public static final String SSH_ACTION_GET = "get";
+}

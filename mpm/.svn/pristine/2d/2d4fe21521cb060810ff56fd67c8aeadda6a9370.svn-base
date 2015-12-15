@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ropz code="ROPZ106">
+	<action value="in">
+		<parameter name="[ACCOUNTB]" value="[0-9]{1,28}"/>
+		<parameter name="[CTYPEB]" value="prepaid|postpaid"/>
+		<parameter name="[ACCOUNTC]" value="[0-9]{1,28}"/>
+		<parameter name="[CTYPEC]" value="prepaid|postpaid"/>
+	</action>
+	<action value="out"/>
+	<action value="get"/>
+</ropz>

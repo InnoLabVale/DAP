@@ -1,0 +1,179 @@
+package com.innovery.mpm.af.implementations.gui.util;
+
+import java.awt.event.ActionEvent;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Enumeration;
+import java.util.Properties;
+import java.util.Set;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JRadioButton;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
+import java.util.Map.Entry;
+
+import com.innovery.mpm.af.implementations.util.AFActions;
+import com.innovery.mpm.af.implementations.util.AFMessages;
+import com.innovery.mpm.af.interfaces.gui.util.AccountFinderResponseGridManagerInterface;
+import com.innovery.mpm.af.interfaces.gui.util.AccountFinderUtilInterface;
+import com.innovery.mpm.connection.implementations.util.Notification;
+import com.innovery.mpm.connection.interfaces.component.DAPBeanInterface;
+
+public class AccountFinderUtil implements AccountFinderUtilInterface{
+	
+	private DAPBeanInterface components;
+	
+	private JFrame frame;
+	private JTextField msisdnTextField;
+	private ButtonGroup actionButtonGroup;
+	private ButtonGroup marketButtonGroup;
+	private JComboBox sdpComboboxSelection;
+	private JLabel sdpLabel;
+	private JButton btnExecute;
+	private JRadioButton rdbtnActivation;
+	private JRadioButton rdbtnDeactivation;
+	private JTextArea textArea;
+	private AccountFinderResponseGridManagerInterface gridManager;
+	
+	
+	public void actionOnClick(){
+		if(marketButtonGroup.getSelection()!=null && actionButtonGroup.getSelection()!=null){
+			sdpComboboxSelection.setSelectedIndex(0);
+			msisdnTextField.setEnabled(true);
+			if(actionButtonGroup.getSelection().getActionCommand().equals(AFActions.AF_ACTION_CREATE)){
+				
+				sdpComboboxSelection.setEnabled(true);
+				sdpComboboxSelection.setVisible(true);
+				sdpLabel.setVisible(true);
+			}
+			
+			else{
+				sdpComboboxSelection.setSelectedIndex(0);
+				sdpLabel.setVisible(false);
+				sdpComboboxSelection.setEnabled(false);
+				sdpComboboxSelection.setVisible(false);
+			}
+		}
+	}
+	
+	public void backButtonActionPerformed(ActionEvent e){
+		if (btnExecute.getActionCommand().equals(AFActions.AF_ACTION_RECONNECT)) {
+			components.getLogger().info(AFActions.AF_ACTION_RECONNECT);
+			String redirect;
+			if(components.getConnectionManagerCai().getSession().isSessionAvailable()){
+				redirect = components.getConnectionManagerCai().reconnectionCai(btnExecute.getActionCommand());
+			}
+			else {
+				redirect = components.getConnectionManagerStandard().reconnectionStandard(btnExecute.getActionCommand());
+			}
+			
+			textArea.setText(redirect);
+			gridManager.setResponseGridAssurance(redirect);
+			
+			if (redirect.equals(components.getErrorMessages().get_RELOGGED())) {
+				btnExecute.setText(AFActions.AF_ACTION_EXECUTE);
+				btnExecute.setActionCommand(AFActions.AF_ACTION_EXECUTE);
+			}
+			
+			else if (redirect.equals(components.getErrorMessages().get_NOT_LOGGED_ERROR()) || 
+					  redirect.equals(components.getErrorMessages().get_MPM_CONNECTION_ERROR()) || 
+					  redirect.equals(components.getErrorMessages().get_MPM_ERROR())) {
+				btnExecute.setText(AFActions.AF_ACTION_HOME);
+				btnExecute.setActionCommand(AFActions.AF_ACTION_HOME);
+			}
+
+		} else if (btnExecute.getActionCommand().equals(AFActions.AF_ACTION_HOME)){
+			components.getLogger().info(AFActions.AF_ACTION_HOME);
+			frame.dispose();
+		}
+	}
+	
+	public String[] compileComboBox(){
+		String[] sdpSelectElements = null;
+		
+		Properties pr = new Properties();
+		try {
+			pr.load(new FileInputStream(components.SDP_LIST_PATH()));
+			
+			Set<Entry<Object, Object>> sdp_list = pr.entrySet();
+			
+			Enumeration<Object> keys_list = pr.keys();
+			
+			sdpSelectElements = new String[(sdp_list.size()+1)];
+			sdpSelectElements[0]=AFActions.DEFAULT;
+			
+			int i=0;
+			
+			while(keys_list.hasMoreElements()){
+				String extracet_key = (String) keys_list.nextElement();
+				sdpSelectElements[i+1] = pr.getProperty(extracet_key);
+				i = i+1;
+			}
+		} catch (IOException e) {
+			new Notification().warning(AFMessages.AF_SDP_FILE_MISSING);
+		}
+		
+		return sdpSelectElements;
+	}
+	
+	public void userLevel(){
+		if(components.getConnectionManagerStandard().getSession().getUser_level()!=components.getUserLevels().getRoot()){
+			rdbtnActivation.setEnabled(false);
+			rdbtnDeactivation.setEnabled(false);
+		}
+	}
+
+	public void setComponents(DAPBeanInterface components) {
+		this.components = components;
+	}
+
+	public void setFrame(JFrame frame) {
+		this.frame = frame;
+	}
+
+	public void setMsisdnTextField(JTextField msisdnTextField) {
+		this.msisdnTextField = msisdnTextField;
+	}
+
+	public void setActionButtonGroup(ButtonGroup actionButtonGroup) {
+		this.actionButtonGroup = actionButtonGroup;
+	}
+
+	public void setMarketButtonGroup(ButtonGroup marketButtonGroup) {
+		this.marketButtonGroup = marketButtonGroup;
+	}
+
+	public void setSdpComboboxSelection(JComboBox sdpComboboxSelection) {
+		this.sdpComboboxSelection = sdpComboboxSelection;
+	}
+
+	public void setSdpLabel(JLabel sdpLabel) {
+		this.sdpLabel = sdpLabel;
+	}
+
+	public void setBtnExecute(JButton btnExecute) {
+		this.btnExecute = btnExecute;
+	}
+
+	public void setRdbtnActivation(JRadioButton rdbtnActivation) {
+		this.rdbtnActivation = rdbtnActivation;
+	}
+
+	public void setRdbtnDeactivation(JRadioButton rdbtnDeactivation) {
+		this.rdbtnDeactivation = rdbtnDeactivation;
+	}
+
+	public void setTextArea(JTextArea textArea) {
+		this.textArea = textArea;
+	}
+
+	public void setGridManager(AccountFinderResponseGridManagerInterface gridManager) {
+		this.gridManager = gridManager;
+	}
+}

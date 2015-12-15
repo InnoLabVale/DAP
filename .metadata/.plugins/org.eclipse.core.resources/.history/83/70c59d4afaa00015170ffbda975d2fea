@@ -1,0 +1,14 @@
+package com.innovery.mpm.resource.interfaces.gui;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+
+import com.innovery.mpm.resource.interfaces.gui.util.AirResourceResponseManagerInterface;
+import com.innovery.mpm.resource.interfaces.gui.util.AirResourceUtilInterface;
+import com.innovery.mpm.resource.interfaces.gui.util.AirResourceResponseGridManagerInterface;
+import com.innovery.mpm.resource.interfaces.gui.verification.AirResourceVerifyInterface;
+
+public interface AirResourceInterface {
+	
+	
+}

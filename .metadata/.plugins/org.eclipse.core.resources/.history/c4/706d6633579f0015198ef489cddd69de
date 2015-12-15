@@ -1,0 +1,333 @@
+package com.innovery.mpm.resource.implementations.gui.bean;
+
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+
+import javax.swing.JLabel;
+import javax.swing.JRadioButton;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+
+import com.innovery.mpm.connection.interfaces.component.DAPBeanInterface;
+import com.innovery.mpm.resource.interfaces.gui.AirResourceInterface;
+import com.innovery.mpm.resource.implementations.util.AIRActions;
+
+public class GuiAccumulatorPanel extends GuiResourcePanelInterface{
+
+	private DAPBeanInterface components;
+	
+	private JRadioButton rdbtnCreate;
+	private JRadioButton rdbtnDelete;
+	private JRadioButton rdbtnGet;
+	private JRadioButton rdbtnUpdate;
+	
+	private JLabel accumulator_id_label;
+	private JTextField accumulator_id_text;
+	
+	private JLabel accumulator_value_abs_label;
+	private JTextField accumulator_value_abs_text;
+	
+	private JLabel accumulator_value_rel_label;
+	private JTextField accumulator_value_rel_text;
+	
+	private JLabel accumulator_start_date_label;
+	private JTextField accumulator_start_date_text;
+	
+	private JLabel accumulator_end_date_label;
+	private JTextField accumulator_end_date_text;
+	
+	public GuiAccumulatorPanel(DAPBeanInterface components, JRadioButton rdbtnCreate, JRadioButton rdbtnDelete, JRadioButton rdbtnGet, JRadioButton rdbtnUpdate){
+		this.components = components;
+		this.rdbtnCreate = rdbtnCreate;
+		this.rdbtnDelete = rdbtnDelete;
+		this.rdbtnGet = rdbtnGet;
+		this.rdbtnUpdate = rdbtnUpdate;
+		initialize();
+		
+	}
+	
+	private void setPanelDimension() {
+		setSize(711, 450);
+		GridBagLayout gbl_resources_panel = new GridBagLayout();
+		gbl_resources_panel.columnWidths = new int[] { 260, 278, 0};
+		gbl_resources_panel.columnWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
+		gbl_resources_panel.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+		gbl_resources_panel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0,	0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		setLayout(gbl_resources_panel);
+	}
+
+	private void initialize() {
+		setPanelDimension();
+		setAccumulatorIdLabel();
+		setAccumulatorIdText();
+		setAccumulatorAbsValueLabel();
+		setAccumulatorAbsValueText();
+		setAccumulatorRelValueLabel();
+		setAccumulatorRelValueText();
+		setAccumulatorStartDateLabel();
+		setAccumulatorStartDateText();
+		setAccumulatorEndDateLabel();
+		setAccumulatorEndDateText();
+		setAction();
+	}
+	
+	private void setAction(){
+		rdbtnCreate.setEnabled(true);
+		rdbtnDelete.setEnabled(true);
+		rdbtnGet.setEnabled(true);
+		rdbtnUpdate.setEnabled(true);
+	}
+	
+	private void setAccumulatorIdLabel(){
+		accumulator_id_label = new JLabel("Accumulator id");
+		accumulator_id_label.setVisible(false);
+		accumulator_id_label.setHorizontalAlignment(SwingConstants.RIGHT);
+		add(accumulator_id_label, components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 8, 5, 0, 5, 0, 0));
+		
+	}
+	
+	private void setAccumulatorIdText(){
+		accumulator_id_text = new JTextField();
+		accumulator_id_text.setColumns(10);
+		accumulator_id_text.setVisible(false);
+		add(accumulator_id_text, components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 8, 0, 0, 0, 1, 0));
+	}
+	
+	private void setAccumulatorAbsValueLabel(){
+		accumulator_value_abs_label = new JLabel("Accumulator value absolute");
+		accumulator_value_abs_label.setVisible(false);
+		accumulator_value_abs_label.setHorizontalAlignment(SwingConstants.RIGHT);
+		add(accumulator_value_abs_label, components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 8, 5, 0, 5, 0, 1));
+	}
+	
+	private void setAccumulatorAbsValueText(){
+		accumulator_value_abs_text = new JTextField();
+		accumulator_value_abs_text.setColumns(10);
+		accumulator_value_abs_text.setVisible(false);
+		add(accumulator_value_abs_text, components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 8, 0, 0, 0, 1, 1));
+	}
+	
+	private void setAccumulatorRelValueLabel(){
+		accumulator_value_rel_label = new JLabel("Accumulator value adjustment");
+		accumulator_value_rel_label.setVisible(false);
+		accumulator_value_rel_label.setHorizontalAlignment(SwingConstants.RIGHT);
+		add(accumulator_value_rel_label, components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 8, 5, 0, 5, 0, 2));
+	}
+	
+	private void setAccumulatorRelValueText(){
+		accumulator_value_rel_text = new JTextField();
+		accumulator_value_rel_text.setColumns(10);
+		accumulator_value_rel_text.setVisible(false);
+		add(accumulator_value_rel_text, components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 8, 0, 0, 0, 1, 2));
+	}
+	
+	private void setAccumulatorStartDateLabel(){
+		accumulator_start_date_label = new JLabel("Start date (YYYY-MM-DD)");
+		accumulator_start_date_label.setHorizontalAlignment(SwingConstants.RIGHT);
+		accumulator_start_date_label.setVisible(false);
+		add(accumulator_start_date_label, components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 8, 5, 0, 5, 0, 3));
+	}
+	
+	private void setAccumulatorStartDateText(){
+		accumulator_start_date_text = new JTextField();
+		accumulator_start_date_text.setColumns(10);
+		accumulator_start_date_text.setVisible(false);
+		add(accumulator_start_date_text, components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 8, 0, 0, 0, 1, 3));
+	}
+	
+	private void setAccumulatorEndDateLabel(){
+		accumulator_end_date_label = new JLabel("End date (YYYY-MM-DD)");
+		accumulator_end_date_label.setVisible(false);
+		accumulator_end_date_label.setHorizontalAlignment(SwingConstants.RIGHT);
+		add(accumulator_end_date_label, components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 8, 5, 0, 5, 0, 4));
+	}
+	
+	private void setAccumulatorEndDateText(){
+		accumulator_end_date_text = new JTextField();
+		accumulator_end_date_text.setColumns(10);
+		accumulator_end_date_text.setVisible(false);
+		add(accumulator_end_date_text, components.getCommonGUI().setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 8, 0, 0, 0, 1, 4));
+	}
+
+	public JTextField getIdText(){
+		return accumulator_id_text;
+	}
+
+	public JTextField getValueAbsText(){
+		return accumulator_value_abs_text;
+	}
+
+	public JTextField getValueRelText(){
+		return accumulator_value_rel_text;
+	}
+
+	public JTextField getStartDateText(){
+		return accumulator_start_date_text;
+	}
+
+	public JTextField getEndDateText(){
+		return accumulator_end_date_text;
+	}
+
+	public void setPanelAction(String action){
+		if(action.equals(AIRActions.AIR_ACTION_CREATE)){
+			this.actionCreate();
+		}
+		
+		else if(action.equals(AIRActions.AIR_ACTION_DELETE)){
+			this.actionDelete();
+		}
+		
+		else if(action.equals(AIRActions.AIR_ACTION_GET)){
+			this.actionGet();
+		}
+		
+		else if(action.equals(AIRActions.AIR_ACTION_SET)){
+			this.actionUpdate();
+		}
+	}
+	
+	private void actionCreate(){
+		accumulator_id_label.setText("Accumulator id*");
+		accumulator_value_abs_label.setText("Accumulator value absolute*");
+		accumulator_value_rel_label.setText("Accumulator value adjustment");
+		
+		accumulator_id_label.setVisible(true);
+		accumulator_value_abs_label.setVisible(true);
+		accumulator_value_rel_label.setVisible(false);
+		accumulator_start_date_label.setVisible(true);
+		accumulator_end_date_label.setVisible(false);
+		
+		this.reset();
+		
+		accumulator_id_text.setVisible(true);
+		accumulator_value_abs_text.setVisible(true);
+		accumulator_value_rel_text.setVisible(false);
+		accumulator_start_date_text.setVisible(true);
+		accumulator_start_date_text.addKeyListener(new KeyAdapter() {
+			public void keyReleased(KeyEvent e) {
+				accumulator_start_date_text.setText(components.getDateCompleter().complete(accumulator_start_date_text.getText()));
+			}
+		});
+		accumulator_end_date_text.setVisible(false);
+		
+		
+	}
+	
+	private void actionDelete(){
+		accumulator_id_label.setText("Accumulator id*");
+		accumulator_value_abs_label.setText("Accumulator value absolute");
+		accumulator_value_rel_label.setText("Accumulator value adjustment");	
+		
+		accumulator_id_label.setVisible(true);
+		accumulator_value_abs_label.setVisible(false);
+		accumulator_value_rel_label.setVisible(false);
+		accumulator_start_date_label.setVisible(false);
+		accumulator_end_date_label.setVisible(true);
+		
+		this.reset();
+		
+		accumulator_id_text.setVisible(true);
+		accumulator_value_abs_text.setVisible(false);
+		accumulator_value_rel_text.setVisible(false);
+		accumulator_start_date_text.setVisible(false);
+		accumulator_end_date_text.setVisible(true);
+		accumulator_end_date_text.addKeyListener(new KeyAdapter() {
+			public void keyReleased(KeyEvent e) {
+				accumulator_end_date_text.setText(components.getDateCompleter().complete(accumulator_end_date_text.getText()));
+			}
+		});
+	}
+	
+	private void actionGet(){
+		accumulator_id_label.setText("Accumulator id");
+		accumulator_value_abs_label.setText("Accumulator value absolute");		
+		accumulator_value_rel_label.setText("Accumulator value adjustment");	
+		
+		accumulator_id_label.setVisible(false);
+		accumulator_value_abs_label.setVisible(false);
+		accumulator_value_rel_label.setVisible(false);
+		accumulator_start_date_label.setVisible(false);
+		accumulator_end_date_label.setVisible(false);
+		
+		this.reset();
+		
+		accumulator_id_text.setVisible(false);
+		accumulator_value_abs_text.setVisible(false);
+		accumulator_value_rel_text.setVisible(false);
+		accumulator_start_date_text.setVisible(false);
+		accumulator_end_date_text.setVisible(false);
+	}
+	
+	private void actionUpdate(){
+		accumulator_id_label.setText("Accumulator id*");
+		accumulator_value_abs_label.setText("Accumulator value absolute*");
+		accumulator_value_rel_label.setText("Accumulator value adjustment*");
+		
+		accumulator_id_label.setVisible(true);
+		accumulator_value_abs_label.setVisible(true);
+		accumulator_value_rel_label.setVisible(true);
+		accumulator_start_date_label.setVisible(true);
+		accumulator_end_date_label.setVisible(false);
+		
+		this.reset();
+		
+		accumulator_id_text.setVisible(true);
+		accumulator_value_abs_text.setVisible(true);
+		accumulator_value_rel_text.setVisible(true);
+		accumulator_start_date_text.setVisible(true);
+		accumulator_end_date_text.setVisible(false);
+		
+		accumulator_start_date_text.addKeyListener(new KeyAdapter() {
+			public void keyReleased(KeyEvent e) {
+				accumulator_start_date_text.setText(components.getDateCompleter().complete(accumulator_start_date_text.getText()));
+			}
+		});
+		
+		accumulator_value_abs_text.addKeyListener(new KeyAdapter() {
+			public void keyReleased(KeyEvent e) {
+				verifyUpdateValueAbs();
+			}
+		});
+		
+		accumulator_value_rel_text.addKeyListener(new KeyAdapter() {
+			public void keyReleased(KeyEvent e) {
+				verifyUpdateValueRel();
+			}
+		});
+	}
+	
+	private void verifyUpdateValueAbs(){
+		if(accumulator_value_abs_text.getText().length()>0){
+			accumulator_value_rel_text.setText("");
+			accumulator_value_rel_label.setVisible(false);
+			accumulator_value_rel_text.setVisible(false);
+		}
+		else{
+			accumulator_value_rel_label.setVisible(true);
+			accumulator_value_rel_text.setVisible(true);
+		}
+	}
+	
+	private void verifyUpdateValueRel(){
+		if(accumulator_value_rel_text.getText().length()>0){
+			accumulator_value_abs_text.setText("");
+			accumulator_value_abs_label.setVisible(false);
+			accumulator_value_abs_text.setVisible(false);
+		}
+		else{
+			accumulator_value_abs_label.setVisible(true);
+			accumulator_value_abs_text.setVisible(true);
+		}
+	}
+	
+	private void reset(){
+		accumulator_id_text.setText("");
+		accumulator_value_abs_text.setText("");
+		accumulator_value_rel_text.setText("");
+		accumulator_start_date_text.setText("");
+		accumulator_end_date_text.setText("");
+	}
+}

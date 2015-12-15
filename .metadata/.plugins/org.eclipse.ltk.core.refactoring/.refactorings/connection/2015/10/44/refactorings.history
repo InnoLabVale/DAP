@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring accessors="true" comment="Delete element from project &apos;connection&apos;&#x0D;&#x0A;- Original project: &apos;connection&apos;&#x0D;&#x0A;- Original element: &apos;com.innovery.mpm.connection.implementations.util.PreferedListLoader.java&apos;" description="Delete element" element1="/src\/main\/java&lt;com.innovery.mpm.connection.implementations.util{PreferedListLoader.java" elements="1" flags="589830" id="org.eclipse.jdt.ui.delete" resources="0" stamp="1446330513804" subPackages="false" version="1.0"/>
+</session>

@@ -1,0 +1,117 @@
+package com.innovery.mpm.connection.implementations.component;
+
+import com.innovery.mpm.connection.implementations.util.gui.GUICommonInterface;
+import com.innovery.mpm.connection.interfaces.cai.ConnectionManagmentCaiInterface;
+import com.innovery.mpm.connection.interfaces.component.DAPBeanInterface;
+import com.innovery.mpm.connection.interfaces.standard.ConnectionManagmentStandardInterface;
+import com.innovery.mpm.connection.interfaces.util.AutoCompleteMsisdnInterface;
+import com.innovery.mpm.connection.interfaces.util.CompleteDateInterface;
+import com.innovery.mpm.connection.interfaces.util.ErrorMessagesInterface;
+import com.innovery.mpm.connection.interfaces.util.NotificationInterface;
+import com.innovery.mpm.connection.interfaces.util.TransIdGeneratorInterface;
+import com.innovery.mpm.connection.interfaces.util.UserLevelsInterface;
+
+public class DAPBean implements DAPBeanInterface {
+	
+	public static final String CH1 = ":CSCHAIN,CH1";
+	public static final String CH2 = ":CSCHAIN,CH2";
+	
+	public static final String PREPAID = "prepaid";
+	public static final String POSTPAID = "postpaid";
+	
+	public static final String CONSUMER = "consumer";
+	public static final String CORPORATE = "corporate";
+
+	private ConnectionManagmentStandardInterface connectionManagerStandard;
+	private ConnectionManagmentCaiInterface connectionManagerCai;
+	private int currentUserLevel;
+	private UserLevelsInterface userLevels;
+	private GUICommonInterface commonGUI;
+	private TransIdGeneratorInterface TRANSID;
+	private NotificationInterface notifications;
+	private CompleteDateInterface dateCompleter;
+	private AutoCompleteMsisdnInterface msisdnCompleter;
+	private ErrorMessagesInterface errorMessages;
+	
+	public int getCurrentUserLevel() {
+		return currentUserLevel;
+	}
+
+	public void setCurrentUserLevel(int currentUserLevel) {
+		this.currentUserLevel = currentUserLevel;
+	}
+	 
+	public UserLevelsInterface getUserLevels() {
+		return userLevels;
+	}
+	 
+	public void setUserLevels(UserLevelsInterface userLevels) {
+		this.userLevels = userLevels;
+	}
+	
+	public GUICommonInterface getCommonGUI() {
+		return commonGUI;
+	}
+	
+	public void setCommonGUI(GUICommonInterface commonGUI) {
+		this.commonGUI = commonGUI;
+	}
+	
+	public TransIdGeneratorInterface getTRANSID() {
+		return TRANSID;
+	}
+	
+	public void setTRANSID(TransIdGeneratorInterface tRANSID) {
+		TRANSID = tRANSID;
+	}
+	
+	public NotificationInterface getNotifications() {
+		return notifications;
+	}
+	
+	public void setNotifications(NotificationInterface notifications) {
+		this.notifications = notifications;
+	}
+	
+	public CompleteDateInterface getDateCompleter() {
+		return dateCompleter;
+	}
+	
+	public void setDateCompleter(CompleteDateInterface dateCompleter) {
+		this.dateCompleter = dateCompleter;
+	}
+	
+	public AutoCompleteMsisdnInterface getMsisdnCompleter() {
+		return msisdnCompleter;
+	}
+	
+	public void setMsisdnCompleter(AutoCompleteMsisdnInterface msisdnCompleter) {
+		this.msisdnCompleter = msisdnCompleter;
+	}
+	
+	public ErrorMessagesInterface getErrorMessages() {
+		return errorMessages;
+	}
+	
+	public void setErrorMessages(ErrorMessagesInterface errorMessages) {
+		this.errorMessages = errorMessages;
+	}
+
+	public ConnectionManagmentStandardInterface getConnectionManagerStandard() {
+		return connectionManagerStandard;
+	}
+
+	public void setConnectionManagerStandard(
+			ConnectionManagmentStandardInterface connectionManagerStandard) {
+		this.connectionManagerStandard = connectionManagerStandard;
+	}
+
+	public ConnectionManagmentCaiInterface getConnectionManagerCai() {
+		return connectionManagerCai;
+	}
+
+	public void setConnectionManagerCai(
+			ConnectionManagmentCaiInterface connectionManagerCai) {
+		this.connectionManagerCai = connectionManagerCai;
+	}
+}

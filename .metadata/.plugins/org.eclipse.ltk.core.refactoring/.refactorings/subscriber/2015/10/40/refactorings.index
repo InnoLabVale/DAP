@@ -1,0 +1,35 @@
+1443790376062	Extract interface 'SubscriberAssuranceInterface'
+1443790458214	Move compilation unit
+1443791129064	Extract interface 'SubscriberChangeInterface'
+1443791137873	Move compilation unit
+1443791159405	Move compilation unit
+1443791163675	Move compilation unit
+1443794121824	Extract interface 'SubscriberCreateInterface'
+1443794127295	Move compilation unit
+1443794237184	Extract interface 'SubscriberDataServiceVerificationInterface'
+1443794241372	Move compilation unit
+1443794351802	Extract interface 'SubscriberFeeDiscountVerificationInterface'
+1443794355854	Move compilation unit
+1443794445382	Extract interface 'SubscriberResponseManagmentInterface'
+1443794477836	Move compilation unit
+1443795078823	Extract interface 'SubscriberTariffPlanInterface'
+1443795104006	Move compilation unit
+1443795935561	Extract interface 'SubscriberTypeInterface'
+1443795939675	Move compilation unit
+1443796361627	Extract interface 'SubscriberUtilCommonInterface'
+1443796366008	Move compilation unit
+1443798013537	Extract interface 'ChangeBillCycleVerificationInterface'
+1443798018232	Move compilation unit
+1443799986272	Extract interface 'ChangeMsisdnInterface'
+1443799991848	Move compilation unit
+1443800124950	Extract interface 'ChangePreferentialListInterface'
+1443800182440	Move compilation unit
+1443801286260	Rename type 'SUBSCRIBER_ACTION'
+1443801297227	Extract interface 'SubscriberActionsInterface'
+1443801314628	Move compilation unit
+1443897201540	Delete element
+1443972798172	Copy compilation unit
+1443973277392	Extract interface 'ActionCostControlUnblockInterface'
+1443973284412	Move compilation unit
+1443973292872	Delete element
+1443973313543	Delete element

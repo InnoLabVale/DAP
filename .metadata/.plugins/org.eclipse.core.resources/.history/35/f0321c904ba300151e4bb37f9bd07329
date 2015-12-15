@@ -1,0 +1,48 @@
+package com.innovery.mpm.main.implementations;
+
+import java.security.GeneralSecurityException;
+
+import org.apache.log4j.Logger;
+
+import com.innovery.mpm.connection.implementations.util.Notification;
+import com.innovery.mpm.connection.interfaces.util.NotificationInterface;
+import com.innovery.mpm.main.implementations.dap.DAP;
+import com.innovery.mpm.main.implementations.util.LookAndFeel;
+import com.innovery.mpm.main.implementations.util.PackagesControl;
+import com.innovery.mpm.main.implementations.util.SettingFilesControl;
+
+/**
+ * 
+ * @author Valerio Boschi, Daniela R. Auricchio
+ * 
+ */
+public class Main {
+	
+	private final static Logger log = Logger.getLogger("mpmlogger");
+	private final static String messageNotification = "Fatal error occured!";
+
+	public static void main(String[] args) throws Exception {
+		NotificationInterface notifications = new Notification();
+		
+		LookAndFeel nimbusInitialization = new LookAndFeel(notifications);
+		nimbusInitialization.lookAndFeelLoad();
+		
+		PackagesControl packageControl = new PackagesControl(notifications, log);
+		SettingFilesControl fileControl = new SettingFilesControl(notifications);
+		
+//		try {
+//			if(!packageControl.verifyPackagesList() || !fileControl.verifySdpTestListFile()){
+//				System.exit(-1);
+//			}
+//			else{
+				new DAP(log);
+//			}
+//		} 
+//
+//		catch (GeneralSecurityException e) {
+//			new Notification().error(messageNotification);
+//			log.error(messageNotification);
+//			log.error(e);
+//		}
+	}
+}

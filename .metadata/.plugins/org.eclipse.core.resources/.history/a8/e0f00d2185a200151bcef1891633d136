@@ -1,0 +1,114 @@
+package com.innovery.mpm.provisioning.implementations.gui.util;
+
+import com.innovery.mpm.connection.interfaces.component.DAPBeanInterface;
+import com.innovery.mpm.provisioning.implementations.action.ActionCommandBSO;
+import com.innovery.mpm.provisioning.implementations.bean.CommandBSO;
+import com.innovery.mpm.provisioning.implementations.util.PROVISIONINGActions;
+import com.innovery.mpm.provisioning.interfaces.action.ActionCommandBSOInterface;
+import com.innovery.mpm.provisioning.interfaces.bean.CommandBSOInterface;
+import com.innovery.mpm.provisioning.interfaces.gui.BsoResourceInterface;
+import com.innovery.mpm.provisioning.interfaces.gui.util.ProvisioningResponseManagmentInterface;
+
+public class ProvisioningResponseManagment implements ProvisioningResponseManagmentInterface{
+	
+	private DAPBeanInterface components;
+	private BsoResourceInterface reference;
+	
+	public void getResponse() {	
+		
+		
+		saveSessionInfo();
+		ActionCommandBSOInterface actionBso = new ActionCommandBSO();
+		actionBso.setComponents(components);
+		
+		String response_mpm = actionBso.executeBsoCommand(createBean());
+		
+		reference.getTextArea().setText(response_mpm);
+		reference.getGrid_managment().setResponseGridAssurance(response_mpm);
+	    reference.getBtnExecute().setEnabled(true);
+	    
+//	    reference.getGrid_managment().resetResponseGrid();
+	    
+	    if(response_mpm.equals(components.getErrorMessages().get_NOT_LOGGED_WARN()) ||
+	       response_mpm.equals(components.getErrorMessages().get_MPM_CONNECTION_WARN())){
+	    
+			if(response_mpm.equals(components.getErrorMessages().get_NOT_LOGGED_WARN())){
+				reference.getBtnExecute().setText("Reconnect");
+				reference.getBtnExecute().setActionCommand("reconnect");
+			}
+			else if(response_mpm.equals(components.getErrorMessages().get_MPM_CONNECTION_WARN())){
+				reference.getBtnExecute().setText("Home");
+				reference.getBtnExecute().setActionCommand("home");
+			}
+		}
+	}
+	
+	private CommandBSOInterface createBean(){
+		components.getLogger().info("CREATING NEW CommandBSO");
+		CommandBSOInterface bso = new CommandBSO();
+		
+		bso.setMsisdn(reference.getMsisdn_field().getText());
+		bso.setService(technicalOptionManagment((String) reference.getSelectOptionCombo().getSelectedItem()));
+		bso.setMarket(reference.getRadioGroupMarket().getSelection().getActionCommand());
+		bso.setCtype(reference.getRadioGroupCtype().getSelection().getActionCommand());
+		bso.setAction(reference. getRadioGroupAction().getSelection().getActionCommand());
+		bso.setTrans_id(components.getTRANSID().generateTransID());
+		bso.setParameter_1_name(reference.getParameter_1_label().getText());
+		bso.setParameter_1_value(reference.getParameter_1_field().getText());
+		bso.setParameter_2_name(reference.getParameter_2_label().getText());
+		bso.setParameter_2_value(reference.getParameter_2_field().getText());
+		bso.setParameter_3_name(reference.getParameter_3_label().getText());
+		bso.setParameter_3_value(reference.getParameter_3_field().getText());
+		bso.setParameter_4_name(reference.getParameter_4_label().getText());
+		bso.setParameter_4_value(reference.getParameter_4_field().getText());
+		bso.setParameter_5_name(reference.getParameter_5_label().getText());
+		bso.setParameter_5_value(reference.getParameter_5_field().getText());
+		bso.setParameter_6_name(reference.getParameter_6_label().getText());
+		bso.setParameter_6_value(reference.getParameter_6_field().getText());
+		
+		if(reference.getDiscount_label().isVisible() && !reference.getDiscount_label().getText().equals("") && !reference.getSelectDiscountCombo().getSelectedItem().equals(PROVISIONINGActions.PROVISIONING_ACTION_DEFAULT)){
+			bso.setDiscount_name(reference.getDiscount_label().getText());
+			bso.setDiscount_value((String) reference.getSelectDiscountCombo().getSelectedItem());
+		}
+		
+		if(reference.getRadioGroupChangeCug().getSelection()!=null){
+			bso.setCug_action(reference.getRadioGroupChangeCug().getSelection().getActionCommand());
+		}
+		return bso;
+	}
+	
+	private String technicalOptionManagment(String service){
+		if(service.startsWith("SET")){
+			return service.replaceFirst("SET-", "");
+		}
+		else if(service.startsWith("GET")){
+			return service.replaceFirst("GET-", "");
+		}
+		else{
+			return service;
+		}
+	}
+	
+	private void saveSessionInfo(){
+		components.getLogger().info("SAVING SESSION");
+		if (!components.getConnectionManagerStandard().getSession().getCurrent_msisdn().equals(reference.getMsisdn_field().getText())) {
+			components.getConnectionManagerStandard().getSession().setCurrent_msisdn(reference.getMsisdn_field().getText());
+			components.getMsisdnCompleter().store(reference.getMsisdn_field().getText());
+		}
+		if(!components.getConnectionManagerStandard().getSession().getCurrent_market().equals(reference.getRadioGroupMarket().getSelection().getActionCommand())){
+			components.getConnectionManagerStandard().getSession().setCurrent_market(reference.getRadioGroupMarket().getSelection().getActionCommand());
+		}
+		if(!components.getConnectionManagerStandard().getSession().getCurrent_ctype().equals(reference.getRadioGroupCtype().getSelection().getActionCommand())){
+			components.getConnectionManagerStandard().getSession().setCurrent_ctype(reference.getRadioGroupCtype().getSelection().getActionCommand());
+		}
+		components.getLogger().info("SESSION SAVED");
+	}
+	
+	public void setReference(BsoResourceInterface reference) {
+		this.reference = reference;
+	}
+
+	public void setComponents(DAPBeanInterface components) {
+		this.components = components;
+	}
+}

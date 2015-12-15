@@ -1,0 +1,56 @@
+1450095274666	Pull up members to 'BsoResourcesVerifyInterface'
+1450100117965	Delete element
+1450107415513	Rename local variable 'parametersList'
+1450108036760	Pull up members to 'ProvisioningUtilInterface'
+1450108486499	Rename field 'cugActionComboboxSelection'
+1450108504096	Rename method 'setCugActionComboboxSelection'
+1450109314063	Delete element
+1450109322289	Delete element
+1450110953381	Pull up members to 'CommandBSOInterface'
+1450111098681	Pull up members to 'CommandBSOInterface'
+1450111240209	Pull up members to 'CommandBSOInterface'
+1450111549969	Pull up members to 'CommandBSOInterface'
+1450175950320	Pull up members to 'BsoResponseGridManagmentInterface'
+1450176061799	Pull up members to 'ProvisioningResponseManagmentInterface'
+1450176482251	Pull up members to 'BsoResponseGridManagmentInterface'
+1450176819469	Pull up members to 'ProvisioningResponseManagmentInterface'
+1450177591712	Pull up members to 'ProvisioningUtilInterface'
+1450178385363	Pull up members to 'ProvisioningResponseManagmentInterface'
+1450180606546	Pull up members to 'ProvisioningOptionLoaderInterface'
+1450181420417	Pull up members to 'ProvisioningParametersInterface'
+1450181698052	Pull up members to 'ProvisioningUtilInterface'
+1450182073723	Pull up members to 'ProvisioningPostponeInterface'
+1450182263808	Pull up members to 'ProvisioningDiscountInterface'
+1450182368987	Pull up members to 'ProvisioningTariffPlanInterface'
+1450182686959	Pull up members to 'ProvisioningMasterInterface'
+1450183057654	Rename type 'BsoResource'
+1450183075078	Rename type 'BsoResponseGridManagment'
+1450183090580	Rename type 'BsoResourceInitialization'
+1450183101967	Rename type 'ActionCommandBSO'
+1450183113047	Rename type 'CommandBSO'
+1450183132007	Move compilation units
+1450183136254	Move compilation unit
+1450183153419	Move compilation unit
+1450183159189	Delete element
+1450183179968	Rename type 'MyKeySelectionManager'
+1450183210341	Rename type 'ProvisioningResponseGridManagment'
+1450183233798	Rename type 'ProvisioningResponseManagment'
+1450183566874	Rename field 'grid_managment'
+1450183581370	Rename field 'gridManager'
+1450183595628	Rename field 'responseManagment'
+1450183613398	Rename method 'setResponseManagment'
+1450183629171	Rename method 'setGrid_managment'
+1450184329598	Pull up members to 'BsoResourceInterface'
+1450187456485	Rename method 'segmentSelection'
+1450187464992	Rename method 'serviceSelection'
+1450187541425	Rename method 'actionSelection'
+1450189195416	Delete elements
+1450189432723	Rename type 'ProvisioningMaster'
+1450189642900	Delete elements
+1450189821377	Pull up members to 'ProvisioningOptionTypeInterface'
+1450189871672	Rename field 'master'
+1450192343042	Move compilation unit
+1450192355650	Move compilation unit
+1450192408559	Delete element
+1450192436259	Move compilation unit
+1450192441447	Delete element

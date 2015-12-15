@@ -1,0 +1,221 @@
+package com.innovery.mpm.provisioning.implementations.gui.verification;
+
+import java.util.List;
+import java.util.regex.Pattern;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+
+import com.innovery.mpm.connection.interfaces.component.DAPBeanInterface;
+import com.innovery.mpm.provisioning.implementations.util.OPTION_FAMILY;
+import com.innovery.mpm.provisioning.implementations.util.PROVISIONINGActions;
+import com.innovery.mpm.provisioning.interfaces.gui.BsoResourceInterface;
+import com.innovery.mpm.provisioning.interfaces.gui.verification.BsoResourcesVerifyInterface;
+
+/**
+ * 
+ * @author Valerio Boschi, Daniela R. Auricchio
+ * 
+ */
+public class BsoResourcesVerify implements BsoResourcesVerifyInterface {
+	
+//	private BsoResourceInterface reference;
+	private DAPBeanInterface components;
+	
+	private JTextField msisdnField;
+	
+	private ButtonGroup marketButtonGroup;
+	private ButtonGroup ctypeButtonGroup;
+	private ButtonGroup actionButtonGroup;
+	
+	private JComboBox optionComboboxSelection;
+	
+	private JLabel discountLabel;
+	private JComboBox discountComboboxSelection;
+	
+	private String[] parametersList;
+	
+	private List<JTextField> fieldList;
+	private List<JLabel> labelList;
+	
+	public boolean verifyOptionalParameters() {
+		
+		if (!isMsisdn(msisdnField.getText())) {
+			components.getNotifications().error("MSISDN is mandatory. Must be numeric, from 1 to 28 digits.");
+			return false;
+		}
+		
+		else if (marketButtonGroup.getSelection() == null) {
+			components.getNotifications().error("Select an MARKET for the promotion");
+			return false;
+		}
+		
+		else if(ctypeButtonGroup.getSelection() == null){
+			components.getNotifications().error("Select an CTYPE for the promotion");
+			return false;
+		}
+		
+		else if(optionComboboxSelection.getSelectedIndex()==0){
+			components.getNotifications().error("Select an option from SERVICE list");
+			return false;
+		}
+
+		else if (actionButtonGroup.getSelection() == null) {
+			components.getNotifications().error("Select an ACTION for the promotion");
+			return false;
+		}
+		
+		else if(!((String) optionComboboxSelection.getSelectedItem()).contains("ROPZ") && !((String) optionComboboxSelection.getSelectedItem()).contains("OPT")){
+			return verifyTechnicalOption();
+		}
+
+		else if(discountLabel.isVisible() && discountComboboxSelection.isVisible() && discountComboboxSelection.getSelectedItem().equals(PROVISIONINGActions.PROVISIONING_ACTION_DEFAULT)){
+			components.getNotifications().error("FEEDISCOUNT is mandatory. Select discount option");
+			return false;
+		}
+		
+		else if(parametersList!=null){
+			for(int i=0; i<parametersList.length; i++){
+				
+				if(fieldList.get(i).isVisible()){
+					if(components.getCommonGUI().isMandatory(labelList.get(i).getText())){
+						if(labelList.get(i).getText().contains("ACCOUNTB") && !fieldList.get(i).getText().equals("")){
+							if(labelList.get(i+1).getText().contains("CTYPEB") && fieldList.get(i+1).getText().equals("")){
+								components.getNotifications().error("ACCOUNTB and CTYPEB must both provided");
+								return false;
+							}
+						}
+						
+						else if(labelList.get(i).getText().contains("ACCOUNTC") && !fieldList.get(i).getText().equals("")){
+							if(labelList.get(i+1).getText().contains("CTYPEC") && fieldList.get(i+1).getText().equals("")){
+								components.getNotifications().error("ACCOUNTC and CTYPEC must both provided");
+								return false;
+							}
+						}
+						
+						else if(labelList.get(i).getText().contains("CTYPEB") && !fieldList.get(i).getText().equals("")){
+							if(labelList.get(i-1).getText().contains("ACCOUNTB") && fieldList.get(i-1).getText().equals("")){
+								components.getNotifications().error("ACCOUNTB and CTYPEB must both provided");
+								return false;
+							}
+						}
+						
+						else if(labelList.get(i).getText().contains("CTYPEC") && !fieldList.get(i).getText().equals("")){
+							if(labelList.get(i-1).getText().contains("ACCOUNTC") && fieldList.get(i-1).getText().equals("")){
+								components.getNotifications().error("ACCOUNTC and CTYPEC must both provided");
+								return false;
+							}
+						}
+					}
+				}
+			
+					
+				if(fieldList.get(i).isVisible() && fieldList.get(i).getText().equals("") && components.getCommonGUI().isMandatory(labelList.get(i).getText())){
+					components.getNotifications().error(composeErrorMessage(labelList.get(i).getText(), reference.getInputParametersRegex().get(i)));
+					return false;
+				}
+				else if(fieldList.get(i).isVisible()
+						&& !fieldList.get(i).getText().equals("") && !regularExpression(reference.getInputParametersRegex().get(i), fieldList.get(i).getText())){
+					components.getNotifications().error(composeErrorMessage(labelList.get(i).getText(), reference.getInputParametersRegex().get(i)));
+					return false;
+				}
+			
+			}
+		}
+		return true;
+	}
+
+	private boolean regularExpression(String extrated_reg_ex, String input_parameter) {	
+		if(extrated_reg_ex.contains("|")){
+			
+			String[] regex_list = extrated_reg_ex.split("\\|");
+			for(int i=0; i<regex_list.length; i++){
+				if (Pattern.matches(regex_list[i], input_parameter)) {
+					return true;
+				}
+			}
+		}
+		
+		String reg_ex = "^" + extrated_reg_ex + "$";
+		if (Pattern.matches(reg_ex, input_parameter)) {
+			return true;
+		}
+		return false;
+	}
+
+	private String composeErrorMessage(String parameters, String regex) {
+		String msg = parameters.replace("*", "") + " not valid.";
+		return msg + " " +regexManagment(parameters, regex);
+
+	}
+	
+	private String regexManagment(String parameters, String regex){
+		String numeric = "^[0-9]*";
+		String alfa_numeric = "^[A-Z0-9]*";
+		
+		if(parameters.contains("DATE") && regex.equals("[0-9]{8}")){
+			return "Format date must be YYYYMMDD.";
+		}
+		
+		else if(parameters.contains("FEEDISCOUNT")){
+			return "Select FEEDISCOUNT for the option";
+		}
+		
+		else if(!regex.contains("[") && !regex.contains("{")){
+			return "\n"+regex.replace("|", "\n");
+		}
+		
+		else if (!Pattern.matches(numeric, regex) && !regex.contains("|")) {
+			return " It must be positive number.";
+		} 
+		
+		else if (!Pattern.matches(alfa_numeric, regex) && !regex.contains("|")) {
+			return " It must be a string.";
+		}
+		else if(regex.contains("|")){
+			String regex_new = "\n"+regex.replace("|", "\n");
+			return regex_new;
+		}
+		else{
+			return regex;
+		}
+	}
+	
+	private boolean verifyTechnicalOption(){
+		
+		if(((String) optionComboboxSelection.getSelectedItem()).contains(OPTION_FAMILY.CUG) && actionButtonGroup.getSelection().getActionCommand().equals(PROVISIONINGActions.PROVISIONING_ACTION_CHG)){
+			if(reference.getRadioGroupChangeCug().getSelection()==null){
+				components.getNotifications().error("Select an action for CUG");
+				return  false;
+			}
+			
+			else if(reference.getParameter_1_field().getText().equals("")){
+				components.getNotifications().error("\"ACCOUNTS\" is mandatory.");
+				return false;
+			}
+			else if(!isAccounts(reference.getParameter_1_field().getText())){
+				components.getNotifications().error("\"ACCOUNTS\" must be one or more MSISDN comma separated.");
+				 return false;
+			 }
+		}
+		return true;
+	}
+	
+	private boolean isMsisdn(String msisdn){
+		return Pattern.matches("^[0-9]{1,28}$", msisdn);
+	}
+	
+	private boolean isAccounts(String accounts){
+		return Pattern.matches("^[0-9]{1,28}(,[0-9]{1,28})*$", accounts);
+	}
+
+	public void setReference(BsoResourceInterface reference) {
+		this.reference = reference;
+	}
+
+	public void setComponents(DAPBeanInterface components) {
+		this.components = components;
+	}
+}

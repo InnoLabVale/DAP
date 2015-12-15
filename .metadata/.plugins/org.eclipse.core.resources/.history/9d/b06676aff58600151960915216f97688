@@ -1,0 +1,9 @@
+package com.innovery.mpm.util.commands;
+
+public class SSHCommands{
+
+	public static final String SSH_COMMAND_CREATE = "SET:SSHSUB:TRANSID,999999";
+	public static final String SSH_COMMAND_SET = "SET:SSHSUB:TRANSID,999999";
+	public static final String SSH_COMMAND_DELETE = "DELETE:SSHSUB:TRANSID,999999";
+	public static final String SSH_COMMAND_GET = "GET:SSHSUB:TRANSID,999999";
+}

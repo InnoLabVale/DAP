@@ -1,0 +1,31 @@
+package com.innovery.mpm.main.interfaces.gui.commandselection;
+
+import com.innovery.mpm.af.interfaces.AccountFinderInitializationInterface;
+import com.innovery.mpm.allresource.interfaces.AllResourceInitializationInterface;
+import com.innovery.mpm.main.interfaces.gui.mainpage.AuthenticationPageInterface;
+import com.innovery.mpm.option.interfaces.gui.OptionManagmentInitializationInterface;
+import com.innovery.mpm.provisioning.interfaces.BsoResourceInitializationInterface;
+import com.innovery.mpm.resource.interfaces.AirResourceInitializationInterface;
+import com.innovery.mpm.ssh.interfaces.SshResourceInitializationInterface;
+import com.innovery.mpm.subscriber.interfaces.SubscriberInitializationInterface;
+
+public interface CommandSelectionInterface {
+
+	public void initialize();
+	
+	public void setMainPage(AuthenticationPageInterface mainPage);
+	
+	public void setProvisioning(BsoResourceInitializationInterface provisioning);
+
+	public void setSubscriber(SubscriberInitializationInterface subscriber);
+
+	public void setAirResource(AirResourceInitializationInterface airResource);
+
+	public void setSshResource(SshResourceInitializationInterface sshResource);
+
+	public void setAfResource(AccountFinderInitializationInterface accountFinder);
+
+	public void setAllResource(AllResourceInitializationInterface allResource);
+
+	public void setOptionManagment(OptionManagmentInitializationInterface optionManagment);
+}

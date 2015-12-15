@@ -1,0 +1,116 @@
+package com.innovery.mpm.provisioning.implementations.gui.util.options;
+
+import javax.swing.JComboBox;
+import javax.swing.JRadioButton;
+
+import com.innovery.mpm.connection.interfaces.component.DAPBeanInterface;
+import com.innovery.mpm.provisioning.implementations.util.PROVISIONINGActions;
+import com.innovery.mpm.provisioning.interfaces.gui.util.options.ProvisioningMasterInterface;
+import com.innovery.mpm.provisioning.interfaces.gui.util.options.ProvisioningOptionTypeInterface;
+
+public class ProvisioningMaster implements ProvisioningOptionTypeInterface {
+	
+	private DAPBeanInterface components;
+	
+	private JRadioButton rdbtnIn;
+	private JRadioButton rdbtnOut;
+	private JRadioButton rdbtnBookOut;
+	private JRadioButton rdbtnChange;
+	private JRadioButton rdbtnGet;
+	
+	private JComboBox optionComboboxSelection;
+
+	public void enable(String actions){
+		if(components.getConnectionManagerStandard().getSession().getUser_level()!=components.getUserLevels().getGuest()){
+			showCompleteActions(actions);
+		}
+		else if(components.getConnectionManagerStandard().getSession().getUser_level()==components.getUserLevels().getGuest()){
+			showRestrictedActions();
+		}
+		showCommonActions(actions);
+	}
+	
+	private void showCompleteActions(String actions){
+		rdbtnIn.setEnabled(true);
+		rdbtnOut.setEnabled(true);
+	
+		if (actions.contains(PROVISIONINGActions.PROVISIONING_ACTION_BOOK)){
+			rdbtnBookOut.setEnabled(true);
+		}
+		
+		if (actions.contains(PROVISIONINGActions.PROVISIONING_ACTION_CHG)){
+			rdbtnChange.setEnabled(true);
+		}
+	}
+	
+	private void showRestrictedActions(){
+		rdbtnIn.setEnabled(false);
+		rdbtnOut.setEnabled(false);
+		rdbtnBookOut.setEnabled(false);
+		rdbtnChange.setEnabled(false);
+	}
+	
+	private void showCommonActions(String actions){
+		
+		if(((String) optionComboboxSelection.getSelectedItem()).startsWith("SET")){
+			rdbtnIn.setEnabled(false);
+			rdbtnOut.setEnabled(false);
+			rdbtnBookOut.setEnabled(false);
+			rdbtnChange.setEnabled(false);
+			rdbtnGet.setEnabled(false);
+			
+			if(actions.contains(PROVISIONINGActions.PROVISIONING_ACTION_IN)){
+				rdbtnIn.setEnabled(true);
+			}
+			
+			if(actions.contains(PROVISIONINGActions.PROVISIONING_ACTION_OUT)){
+				rdbtnOut.setEnabled(true);
+			}
+			
+			if(actions.contains(PROVISIONINGActions.PROVISIONING_ACTION_BOOK)){
+				rdbtnBookOut.setEnabled(true);
+			}
+			
+			if(actions.contains(PROVISIONINGActions.PROVISIONING_ACTION_CHG)){
+				rdbtnChange.setEnabled(true);
+			}
+		}
+		else{
+			rdbtnGet.setEnabled(true);
+		}
+	}
+	
+	public void setComponents(DAPBeanInterface components) {
+		this.components = components;
+	}
+
+	@Override
+	public void setRdbtnIn(JRadioButton rdbtnIn) {
+		this.rdbtnIn = rdbtnIn;
+	}
+
+	@Override
+	public void setRdbtnOut(JRadioButton rdbtnOut) {
+		this.rdbtnOut = rdbtnOut;
+	}
+
+	@Override
+	public void setRdbtnBookOut(JRadioButton rdbtnBookOut) {
+		this.rdbtnBookOut = rdbtnBookOut;
+	}
+
+	@Override
+	public void setRdbtnChange(JRadioButton rdbtnChange) {
+		this.rdbtnChange = rdbtnChange;
+	}
+
+	@Override
+	public void setRdbtnGet(JRadioButton rdbtnGet) {
+		this.rdbtnGet = rdbtnGet;
+	}
+
+	@Override
+	public void setOptionComboboxSelection(JComboBox optionComboboxSelection) {
+		this.optionComboboxSelection = optionComboboxSelection;
+	}
+}

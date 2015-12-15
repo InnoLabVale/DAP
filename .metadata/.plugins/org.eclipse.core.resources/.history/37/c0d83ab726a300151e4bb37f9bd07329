@@ -1,0 +1,41 @@
+package com.innovery.mpm.provisioning.implementations.gui.util.options;
+
+import javax.swing.JRadioButton;
+
+import com.innovery.mpm.connection.interfaces.component.DAPBeanInterface;
+import com.innovery.mpm.provisioning.interfaces.gui.BsoResourceInterface;
+import com.innovery.mpm.provisioning.interfaces.gui.util.options.ProvisioningDiscountInterface;
+
+public class ProvisioningDiscount implements ProvisioningDiscountInterface {
+
+	private DAPBeanInterface components;
+	
+	private JRadioButton rdbtnIn;
+	private JRadioButton rdbtnOut;
+	private JRadioButton rdbtnGet;
+
+	public void enable(){
+		if(components.getConnectionManagerStandard().getSession().getUser_level()!=components.getUserLevels().getGuest()){
+			showCompleteActions();
+		}
+		else if(components.getConnectionManagerStandard().getSession().getUser_level()==components.getUserLevels().getGuest()){
+			showRestrictedActions();
+		}
+	}
+	
+	private void showCompleteActions(){
+		rdbtnIn.setEnabled(true);
+		rdbtnOut.setEnabled(true);
+		rdbtnGet.setEnabled(true);
+	}
+	
+	private void showRestrictedActions(){
+		rdbtnIn.setEnabled(false);
+		rdbtnOut.setEnabled(false);
+		rdbtnGet.setEnabled(true);
+	}
+
+	public void setComponents(DAPBeanInterface components) {
+		this.components = components;
+	}
+}

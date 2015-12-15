@@ -1,0 +1,12 @@
+address1.name=VENEZIANI 3000
+address1.ip=10.1.17.100
+address1.port=3000
+
+address2.name=VENEZIANI 5000
+address2.ip=10.1.17.100
+address2.port=5000
+
+address3.name=SIMULATORE
+address3.ip=127.0.0.1
+address3.port=3000
+address3.user=itprepaid

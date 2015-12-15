@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ropz code="ROPZ781">
+	<action value="in">
+		<parameter name="FEEDISCOUNT" value="NULL|ROPZ1212|ROPZ4008"/>
+		<parameter name="FEEDELAY" value="[0-9]{1,16}"/>
+		<parameter name="SAVEBALANCE" value="on|off"/>
+		<parameter name="EXPIRYDATE" value="[0-9]{8}"/>
+	</action>
+	<action value="out">
+		<parameter name="[EXPIRYDATE]" value="[0-9]{8}"/>
+	</action>
+	<action value="book_out"/>
+	<action value="get"/>
+</ropz>

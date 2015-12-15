@@ -1,0 +1,6 @@
+package com.innovery.mpm.util.ctype;
+
+public class CTYPE{
+	public static final String PREPAID = "prepaid";
+	public static final String POSTPAID = "postpaid";
+}

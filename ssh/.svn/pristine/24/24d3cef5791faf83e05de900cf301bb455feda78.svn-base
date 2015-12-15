@@ -1,0 +1,315 @@
+package com.innovery.mpm.ssh.implementations.gui.util;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
+import com.innovery.mpm.connection.interfaces.component.DAPBeanInterface;
+import com.innovery.mpm.ssh.implementations.util.SSHActions;
+import com.innovery.mpm.ssh.interfaces.gui.SshResponseGridManagmentInterface;
+import com.innovery.mpm.ssh.interfaces.gui.util.SshResourceUtilInterface;
+
+public class SshResourceUtil implements SshResourceUtilInterface{
+	
+	private DAPBeanInterface components;
+	
+	private JTextField msisdnField;
+	
+	private JTextField serviceCodeField;
+	private JLabel serviceCodeLabel;
+	
+	private JTextField serviceCodeDateField;
+	private JLabel serviceCodeDateLabel;
+	
+	private JCheckBox smartDateCheck;
+	private JTextField smartDateField;
+	private JLabel smartDateLabel;
+	
+	private JPanel smartDatePanel;
+	
+	private ButtonGroup actionButtonGroup;
+	private ButtonGroup smartDateCheckGroup;
+	
+	private JRadioButton rdbtnActivation;
+	private JRadioButton rdbtnDeactivation;
+	
+	private JTextArea textArea;
+	private JFrame frame;
+	
+	private SshResponseGridManagmentInterface gridManager;
+	
+	private JButton btnExecute;
+	
+	public void initialState(){
+		msisdnField.setEnabled(false);
+		
+		serviceCodeField.setText("");
+		serviceCodeField.setVisible(false);
+		serviceCodeLabel.setVisible(false);
+		
+		serviceCodeDateField.setText("");
+		serviceCodeDateField.setVisible(false);
+		serviceCodeDateLabel.setVisible(false);
+		
+		smartDateLabel.setVisible(false);
+		smartDateCheck.setVisible(false);
+		smartDateField.setVisible(false);
+	}
+	
+	public void actionOnCreate(){
+		msisdnField.setEnabled(true);
+		
+		serviceCodeLabel.setText(components.getCommonGUI().mandatory(serviceCodeLabel.getText()));
+		serviceCodeField.setText("");
+		serviceCodeField.setVisible(true);
+		serviceCodeLabel.setVisible(true);
+		
+		serviceCodeDateLabel.setText(components.getCommonGUI().mandatory(serviceCodeDateLabel.getText()));
+		serviceCodeDateField.setText("");
+		serviceCodeDateField.setVisible(true);
+		serviceCodeDateLabel.setVisible(true);
+		
+		smartDateCheckGroup.clearSelection();
+		
+		smartDateLabel.setText(components.getCommonGUI().mandatory(smartDateLabel.getText()));
+		smartDateLabel.setVisible(true);
+		smartDateField.setVisible(true);
+		smartDateField.setText("");
+		smartDateCheck.setActionCommand(SSHActions.NO_SMART);
+		smartDateCheck.setVisible(false);
+		smartDatePanel.setVisible(false);
+	}
+	
+	public void actionOnDelete(){
+		msisdnField.setEnabled(true);
+		
+		serviceCodeLabel.setText(components.getCommonGUI().optional(serviceCodeLabel.getText()));
+		serviceCodeField.setText("");
+		serviceCodeField.setVisible(true);
+		serviceCodeLabel.setVisible(true);
+		
+		serviceCodeDateLabel.setText(components.getCommonGUI().optional(serviceCodeDateLabel.getText()));
+		serviceCodeDateField.setText("");
+		serviceCodeDateField.setVisible(false);
+		serviceCodeDateLabel.setVisible(false);
+		
+		smartDateCheckGroup.clearSelection();
+		
+		smartDateLabel.setText(components.getCommonGUI().optional(smartDateLabel.getText()));
+		smartDateLabel.setVisible(true);
+		smartDateField.setVisible(false);
+		smartDateField.setText("");
+		smartDateCheck.setActionCommand(SSHActions.NO_SMART);
+		smartDateCheck.setVisible(true);
+		smartDatePanel.setVisible(true);
+	}
+	
+	public void actionOnAssurance(){
+		msisdnField.setEnabled(true);
+		
+		serviceCodeLabel.setText(components.getCommonGUI().optional(serviceCodeLabel.getText()));
+		serviceCodeField.setText("");
+		serviceCodeField.setVisible(true);
+		serviceCodeLabel.setVisible(true);
+		
+		serviceCodeDateField.setText("");
+		serviceCodeDateField.setVisible(false);
+		serviceCodeDateLabel.setVisible(false);
+		
+		smartDateCheckGroup.clearSelection();
+		
+		smartDateLabel.setVisible(false);
+		smartDateField.setVisible(false);
+		smartDateField.setText("");
+		smartDateCheck.setActionCommand(SSHActions.NO_SMART);
+		smartDateCheck.setVisible(false);
+		smartDatePanel.setVisible(false);
+	}
+	
+	public void actionOnSmartDateSelected(){
+		if(smartDateField.getText().length()!=0){
+			serviceCodeField.setVisible(false);
+			serviceCodeField.setText("");
+			serviceCodeLabel.setVisible(false);
+			
+			serviceCodeDateField.setVisible(false);
+			serviceCodeDateField.setText("");
+			serviceCodeDateLabel.setVisible(false);
+		}
+		
+		else {
+			serviceCodeField.setVisible(true);
+			serviceCodeField.setText("");
+			serviceCodeLabel.setVisible(true);
+			
+			serviceCodeDateField.setVisible(true);
+			serviceCodeDateField.setText("");
+			serviceCodeDateLabel.setVisible(true);
+		}
+	}
+	
+	public void actionOnServiceCodeSelected(){
+		if(serviceCodeField.getText().length()!=0){
+			if(actionButtonGroup.getSelection().getActionCommand().equals(SSHActions.SSH_ACTION_CREATE)){
+				smartDateLabel.setVisible(false);
+				smartDateField.setVisible(false);
+				smartDateField.setText("");
+			}
+			
+			else if(actionButtonGroup.getSelection().getActionCommand().equals(SSHActions.SSH_ACTION_DELETE)){
+				smartDateLabel.setVisible(false);
+				smartDateCheck.setVisible(false);
+				smartDateCheckGroup.clearSelection();
+			}
+		}
+		
+		else {
+			if(actionButtonGroup.getSelection().getActionCommand().equals(SSHActions.SSH_ACTION_CREATE)){
+				smartDateLabel.setVisible(true);
+				smartDateField.setVisible(true);
+				smartDateField.setText("");
+			}
+			
+			else if(actionButtonGroup.getSelection().getActionCommand().equals(SSHActions.SSH_ACTION_DELETE)){
+				smartDateLabel.setVisible(true);
+				smartDateCheck.setVisible(true);
+			}
+		}
+	}
+	
+	public void actionOnSmartDateCheckSelected(){
+		if(smartDateCheck.isSelected()){
+			serviceCodeField.setVisible(false);
+			serviceCodeField.setText("");
+			serviceCodeLabel.setVisible(false);
+		}
+		
+		else{
+			serviceCodeField.setVisible(true);
+			serviceCodeField.setText("");
+			serviceCodeLabel.setVisible(true);
+		}
+	}
+	
+	public void userLevel(){
+		if (components.getConnectionManagerStandard().getSession().getUser_level() != components.getUserLevels().getRoot()) {
+			rdbtnActivation.setEnabled(false);
+			rdbtnDeactivation.setEnabled(false);
+		}
+	}
+	
+	
+	public void backButtonActionPerformed(){
+		if (btnExecute.getActionCommand().equals(SSHActions.SSH_ACTION_RECONNECT)) {
+			components.getLogger().info(SSHActions.SSH_ACTION_RECONNECT);
+			String redirect;
+			if(components.getConnectionManagerCai().getSession().isSessionAvailable()){
+				redirect = components.getConnectionManagerCai().reconnectionCai(btnExecute.getActionCommand());
+			}
+			else {
+				redirect = components.getConnectionManagerStandard().reconnectionStandard(btnExecute.getActionCommand());
+			}
+			
+			textArea.setText(redirect);
+			gridManager.setResponseGridAssurance(redirect);
+			
+			if (redirect.equals(components.getErrorMessages().get_RELOGGED())) {
+				btnExecute.setText(SSHActions.SSH_ACTION_EXECUTE);
+				btnExecute.setActionCommand(SSHActions.SSH_ACTION_EXECUTE);
+			}
+			
+			else if (redirect.equals(components.getErrorMessages().get_NOT_LOGGED_ERROR()) || 
+					 redirect.equals(components.getErrorMessages().get_MPM_CONNECTION_ERROR()) || 
+					 redirect.equals(components.getErrorMessages().get_MPM_ERROR())) {
+				btnExecute.setText(SSHActions.SSH_ACTION_HOME);
+				btnExecute.setActionCommand(SSHActions.SSH_ACTION_HOME);
+			}
+			
+		} else if (btnExecute.getActionCommand().equals(SSHActions.SSH_ACTION_HOME)){
+			components.getLogger().info(SSHActions.SSH_ACTION_HOME);
+			frame.dispose();
+		}
+	}
+	
+	public void setComponents(DAPBeanInterface components) {
+		this.components = components;
+	}
+
+	public void setMsisdnField(JTextField msisdnField) {
+		this.msisdnField = msisdnField;
+	}
+
+	public void setServiceCodeField(JTextField serviceCodeField) {
+		this.serviceCodeField = serviceCodeField;
+	}
+
+	public void setServiceCodeLabel(JLabel serviceCodeLabel) {
+		this.serviceCodeLabel = serviceCodeLabel;
+	}
+
+	public void setServiceCodeDateField(JTextField serviceCodeDateField) {
+		this.serviceCodeDateField = serviceCodeDateField;
+	}
+
+	public void setServiceCodeDateLabel(JLabel serviceCodeDateLabel) {
+		this.serviceCodeDateLabel = serviceCodeDateLabel;
+	}
+
+	public void setSmartDateCheck(JCheckBox smartDateCheck) {
+		this.smartDateCheck = smartDateCheck;
+	}
+
+	public void setSmartDateField(JTextField smartDateField) {
+		this.smartDateField = smartDateField;
+	}
+
+	public void setSmartDateLabel(JLabel smartDateLabel) {
+		this.smartDateLabel = smartDateLabel;
+	}
+
+	public void setSmartDatePanel(JPanel smartDatePanel) {
+		this.smartDatePanel = smartDatePanel;
+	}
+
+	public void setActionButtonGroup(ButtonGroup actionButtonGroup) {
+		this.actionButtonGroup = actionButtonGroup;
+	}
+
+	public void setSmartDateCheckGroup(ButtonGroup smartDateCheckGroup) {
+		this.smartDateCheckGroup = smartDateCheckGroup;
+	}
+
+	public void setTextArea(JTextArea textArea) {
+		this.textArea = textArea;
+	}
+
+	public void setFrame(JFrame frame) {
+		this.frame = frame;
+	}
+
+	@Override
+	public void setGridManager(SshResponseGridManagmentInterface gridManager) {
+		this.gridManager = gridManager;
+	}
+
+	@Override
+	public void setBtnExecute(JButton btnExecute) {
+		this.btnExecute = btnExecute;
+	}
+
+	@Override
+	public void setRdbtnActivation(JRadioButton rdbtnActivation) {
+		this.rdbtnActivation = rdbtnActivation;
+	}
+
+	@Override
+	public void setRdbtnDeactivation(JRadioButton rdbtnDeactivation) {
+		this.rdbtnDeactivation = rdbtnDeactivation;
+	}
+}

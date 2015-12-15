@@ -1,0 +1,120 @@
+package com.innovery.mpm.provisioning.interfaces.gui.util;
+
+import java.util.List;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
+import com.innovery.mpm.connection.interfaces.component.DAPBeanInterface;
+import com.innovery.mpm.provisioning.interfaces.gui.BsoResourceInterface;
+import com.innovery.mpm.provisioning.interfaces.gui.BsoResponseGridManagmentInterface;
+import com.innovery.mpm.provisioning.interfaces.gui.util.options.ProvisioningDiscountInterface;
+import com.innovery.mpm.provisioning.interfaces.gui.util.options.ProvisioningMasterInterface;
+import com.innovery.mpm.provisioning.interfaces.gui.util.options.ProvisioningPostponeInterface;
+import com.innovery.mpm.provisioning.interfaces.gui.util.options.ProvisioningTariffPlanInterface;
+import com.innovery.mpm.provisioning.interfaces.gui.util.parameters.ProvisioningParametersInterface;
+import com.innovery.mpm.provisioning.interfaces.xml.XmlScannerInterface;
+
+public interface ProvisioningUtilInterface {
+	
+	public void marketSelection();
+	
+	public void ctypeSelection();
+
+	public void serviceSelection();
+	
+	public String[] actionSelection();
+	
+	public void backButtonActionPerformed();
+	
+	public void setReference(BsoResourceInterface reference);
+	
+	public void setComponents(DAPBeanInterface components);
+
+	void setOption_scanner(XmlScannerInterface option_scanner);
+
+	void setOption_parameters(ProvisioningParametersInterface option_parameters);
+
+	void setOptionLoader(ProvisioningOptionLoaderInterface optionLoader);
+
+	void setTariff_plan(ProvisioningTariffPlanInterface tariff_plan);
+
+	void setPostpone(ProvisioningPostponeInterface postpone);
+
+	void setDiscount(ProvisioningDiscountInterface discount);
+
+	void setMaster(ProvisioningMasterInterface master);
+
+	void setInputParametersRegex(List<String> inputParametersRegex);
+
+	void setLabelList(List<JLabel> labelList);
+
+	void setCugActionPanel(JPanel cugActionPanel);
+
+	void setCugActionButtonGroup(ButtonGroup cugActionComboboxSelection);
+
+	void setCugActionLabel(JLabel cugActionLabel);
+
+	void setDiscountComboboxSelection(JComboBox discountComboboxSelection);
+
+	void setDiscountLabel(JLabel discountLabel);
+
+	void setRdbtnGet(JRadioButton rdbtnGet);
+
+	void setRdbtnChange(JRadioButton rdbtnChange);
+
+	void setRdbtnBookOut(JRadioButton rdbtnBookOut);
+
+	void setRdbtnOut(JRadioButton rdbtnOut);
+
+	void setRdbtnIn(JRadioButton rdbtnIn);
+
+	void setParameter_6_label(JLabel parameter_6_label);
+
+	void setParameter_5_label(JLabel parameter_5_label);
+
+	void setParameter_4_label(JLabel parameter_4_label);
+
+	void setParameter_3_label(JLabel parameter_3_label);
+
+	void setParameter_2_label(JLabel parameter_2_label);
+
+	void setParameter_1_label(JLabel parameter_1_label);
+
+	void setParameter_6_field(JTextField parameter_6_field);
+
+	void setParameter_5_field(JTextField parameter_5_field);
+
+	void setParameter_4_field(JTextField parameter_4_field);
+
+	void setParameter_3_field(JTextField parameter_3_field);
+
+	void setParameter_2_field(JTextField parameter_2_field);
+
+	void setParameter_1_field(JTextField parameter_1_field);
+
+	void setFrame(JFrame frame);
+
+	void setBtnExecute(JButton btnExecute);
+
+	void setTextArea(JTextArea textArea);
+
+	void setOptionComboboxSelection(JComboBox optionComboboxSelection);
+
+	void setCtypeButtonGroup(ButtonGroup ctypeButtonGroup);
+
+	void setMarketButtongroup(ButtonGroup marketButtongroup);
+
+	void setActionButtonGroup(ButtonGroup actionButtonGroup);
+
+	void setGridManager(BsoResponseGridManagmentInterface gridManager);
+
+	void setFieldList(List<JTextField> fieldList);
+}

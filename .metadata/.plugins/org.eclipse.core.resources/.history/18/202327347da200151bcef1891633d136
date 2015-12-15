@@ -1,0 +1,202 @@
+package com.innovery.mpm.provisioning.implementations.xml;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
+import org.jdom2.input.SAXBuilder;
+
+import com.innovery.mpm.connection.interfaces.component.DAPBeanInterface;
+import com.innovery.mpm.provisioning.implementations.util.OPTION_FAMILY;
+import com.innovery.mpm.provisioning.implementations.util.PROVISIONINGActions;
+import com.innovery.mpm.provisioning.interfaces.gui.BsoResourceInterface;
+//import com.innovery.mpm.provisioning.interfaces.xml.XmlNameComposerInterface;
+import com.innovery.mpm.provisioning.interfaces.xml.XmlScannerInterface;
+
+public class XmlScanner implements XmlScannerInterface{
+
+	private DAPBeanInterface components;
+//	private XmlNameComposerInterface fileName;
+	private Document doc;
+	private String service;
+	
+	public String getActionSelectedOption(){
+		List<Element> tagList = doc.getRootElement().getChildren();
+		StringBuffer actions = new StringBuffer();
+		if(isPostpone()){
+			return OPTION_FAMILY.POSTPONE;
+		}
+		else if(isDiscount()){
+			return OPTION_FAMILY.DISCOUNT;
+		}
+		else if(isTariffPlanAssurance()){
+			return OPTION_FAMILY.TARIFF_PLAN;
+		}
+		else{
+			for(int i=0; i<tagList.size(); i++){
+				Element e = tagList.get(i);
+				if(e.getName()!=null && e.getName().equals("action")){
+					if(i==(tagList.size()-1)){
+						actions.append(e.getAttributeValue("value"));
+					}
+					else{
+						actions.append(e.getAttributeValue("value")).append("|");
+					}
+				}
+			}
+		}
+		components.getLogger().info("PROVISIONING_ACTIONS: "+actions);
+		return actions.toString();
+	}
+	
+	private boolean isPostpone(){
+		List<Element> actionsList = doc.getRootElement().getChildren();
+		boolean discount = true;
+		boolean delay = false;
+		boolean only_in = false;
+		
+		if(actionsList.size()==1){
+			only_in = true;
+		}
+	
+		for(int i=0; i<actionsList.size(); i++){
+			Element action = actionsList.get(i);
+			if(action.getAttributeValue("value").equals(PROVISIONINGActions.PROVISIONING_ACTION_IN)){
+				List<Element> parametersList = action.getChildren();
+				for(int j=0; j<parametersList.size(); j++){
+					Element parameter = parametersList.get(j);
+					if(parameter.getAttributeValue("name").equals("FEEDISCOUNT")){
+						discount = false;
+					}
+					if(parameter.getAttributeValue("name").equals("FEEDELAY")){
+						delay = true;
+					}
+				}
+			}
+		}
+		return (discount && delay && only_in);
+	}
+	
+	private boolean isTariffPlanAssurance(){
+		if(!doc.getRootElement().getAttributeValue("code").contains("OPTBE")){
+			return false;
+		}
+		List<Element> actionsList = doc.getRootElement().getChildren();
+		boolean tpa = true;
+		for(int i=0; i<actionsList.size(); i++){
+			Element action = actionsList.get(i);
+			if(action.getAttributeValue("value").equals(PROVISIONINGActions.PROVISIONING_ACTION_IN) || 
+			   action.getAttributeValue("value").equals(PROVISIONINGActions.PROVISIONING_ACTION_OUT) || 
+			   action.getAttributeValue("value").equals(PROVISIONINGActions.PROVISIONING_ACTION_BOOK) || 
+			   action.getAttributeValue("value").equals(PROVISIONINGActions.PROVISIONING_ACTION_CHG)){
+				tpa = false;
+			}
+		}
+		return tpa;
+	}
+	
+	private boolean isDiscount(){
+		List<Element> actionsList = doc.getRootElement().getChildren();
+	
+		for(int i=0; i<actionsList.size(); i++){
+			Element action = actionsList.get(i);
+			if(action.getAttributeValue("value").equals(PROVISIONINGActions.PROVISIONING_ACTION_IN)){
+				List<Element> parametersList = action.getChildren();
+				for(int j=0; j<parametersList.size(); j++){
+					Element parameter = parametersList.get(j);
+					if(parameter.getAttributeValue("name").equals("FEEDISCOUNT")){
+						if(parameter.getAttributeValue("value").equals(service)){
+							return true;
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
+	
+	public String getParameters(String action){
+		String parameters = "";
+		List<Element> actionsList = doc.getRootElement().getChildren();
+		for(int i=0; i<actionsList.size(); i++){
+			Element currentAction = actionsList.get(i);
+			if(currentAction.getName().equals("action") && currentAction.getAttributeValue("value").equals(action)){
+				List<Element> parametersList = currentAction.getChildren();
+				if(parametersList.size()==0){
+					return null;
+				}
+				for(int j=0; j<parametersList.size(); j++){
+					String parameterName = parametersList.get(j).getAttributeValue("name");
+					if(j==(parametersList.size()-1)){
+						parameters = parameters+parameterName;
+					}
+					else{
+						parameters = parameters+parameterName+"|";
+					}
+				}
+			}
+		}
+		components.getLogger().info("PARAMETERS :"+parameters);
+		return parameters;
+	}
+	
+	public String getRegex(String parameter){
+		List<Element> actionsList = doc.getRootElement().getChildren();
+		String parameters = null;
+		for(int i=0; i<actionsList.size(); i++){
+			Element currentAction = actionsList.get(i);
+			List<Element> parametersList = currentAction.getChildren();
+			for(int j=0; j<parametersList.size(); j++){
+				Element current_parameter = parametersList.get(j);
+				if(current_parameter.getAttribute("name")!=null && current_parameter.getAttributeValue("name").equals(parameter)){
+					parameters = current_parameter.getAttributeValue("value");
+				}
+			}
+		}
+		return parameters;
+	}
+
+	public void loadSelectedOption(BsoResourceInterface reference) {
+		service = (String) reference.getSelectOptionCombo().getSelectedItem();
+		try {
+			this.doc = getName(service, reference.getRadioGroupMarket().getSelection().getActionCommand(), reference.getRadioGroupCtype().getSelection().getActionCommand());
+		} catch (JDOMException e) {
+			components.getLogger().error(e.getMessage());
+		} catch (IOException e) {
+			components.getLogger().error(e.getMessage());
+		}
+	}
+	
+	private Document getName(String service, String market, String ctype) throws JDOMException, IOException{
+		SAXBuilder builder = new SAXBuilder();
+		
+		InputStream fileResource = null;
+		String fileName = service+".xml";
+		if(market.equals(DAPBeanInterface.CONSUMER)){
+			if(ctype.equals(DAPBeanInterface.PREPAID)){
+				fileResource = getClass().getResourceAsStream(components.XML_OPTION_CONSUMER_PREPAID_PATH()+fileName);
+			}
+			
+			else if(ctype.equals(DAPBeanInterface.POSTPAID)){
+				fileResource = getClass().getResourceAsStream(components.XML_OPTION_CONSUMER_POSTPAID_PATH()+fileName);
+			}
+		}
+		else if(market.equals(DAPBeanInterface.CORPORATE)){
+			if(ctype.equals(DAPBeanInterface.PREPAID)){
+				fileResource = getClass().getResourceAsStream(components.XML_OPTION_CORPORATE_PREPAID_PATH()+fileName);
+			}
+			
+			else if(ctype.equals(DAPBeanInterface.POSTPAID)){
+				fileResource = getClass().getResourceAsStream(components.XML_OPTION_CORPORATE_POSTPAID_PATH()+fileName);
+			}
+		}
+		return builder.build(fileResource);
+	}
+
+	public void setComponents(DAPBeanInterface components) {
+		this.components = components;
+	}
+}

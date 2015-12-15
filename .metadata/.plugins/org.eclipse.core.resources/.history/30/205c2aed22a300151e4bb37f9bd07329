@@ -1,0 +1,27 @@
+package com.innovery.mpm.provisioning.interfaces.gui.util;
+
+import java.util.List;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JComboBox;
+
+import com.innovery.mpm.connection.interfaces.component.DAPBeanInterface;
+import com.innovery.mpm.provisioning.implementations.util.PROVISIONINGActions;
+import com.innovery.mpm.provisioning.implementations.xml.XmlListReader;
+import com.innovery.mpm.provisioning.interfaces.gui.BsoResourceInterface;
+import com.innovery.mpm.provisioning.interfaces.xml.XmlListReaderInterface;
+
+public interface ProvisioningOptionLoaderInterface {
+
+	void setCtypeButtonGroup(ButtonGroup ctypeButtonGroup);
+
+	void setMarketButtonGroup(ButtonGroup marketButtonGroup);
+
+	void setOptionComboboxSelection(JComboBox optionComboboxSelection);
+
+	void setComponents(DAPBeanInterface components);
+
+	void load();
+
+
+}

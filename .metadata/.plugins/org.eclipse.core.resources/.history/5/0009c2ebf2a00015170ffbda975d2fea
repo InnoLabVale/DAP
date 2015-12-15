@@ -1,0 +1,690 @@
+package com.innovery.mpm.ssh.implementations.gui;
+
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
+import javax.swing.JFrame;
+
+import com.innovery.mpm.ssh.implementations.util.SSHActions;
+import com.innovery.mpm.ssh.interfaces.gui.SshResourceInterface;
+import com.innovery.mpm.ssh.interfaces.gui.SshResponseGridManagerInterface;
+import com.innovery.mpm.ssh.interfaces.gui.util.SshResourceUtilInterface;
+import com.innovery.mpm.ssh.interfaces.gui.util.SshResponseManagmentInterface;
+import com.innovery.mpm.ssh.interfaces.gui.verification.SshResourceVerifyInterface;
+import com.innovery.mpm.connection.implementations.util.gui.GUICommonInterface;
+import com.innovery.mpm.connection.interfaces.component.DAPBeanInterface;
+import com.innovery.mpm.connection.interfaces.standard.session.SessionStandardInterface;
+import com.innovery.mpm.connection.interfaces.util.AutoCompleteMsisdnInterface;
+
+import javax.swing.JPanel;
+
+import java.awt.BorderLayout;
+
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+
+import java.awt.FlowLayout;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import java.awt.Font;
+
+import javax.swing.JButton;
+import javax.swing.border.TitledBorder;
+
+import org.apache.log4j.Logger;
+
+import javax.swing.border.LineBorder;
+
+import java.awt.Color;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JTextArea;
+import javax.swing.JComponent;
+import javax.swing.KeyStroke;
+import javax.swing.SwingConstants;
+import javax.swing.JRadioButton;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+
+/**
+ * 
+ * @author Daniela R. Auricchio, Valerio Boschi
+ * 
+ */
+public class SshResource implements SshResourceInterface {
+
+	private JFrame frame;
+	
+	private JPanel panel_center;
+	private JPanel ssh_command_fieldset;
+	private JPanel response_fieldset_grid;
+	private JPanel response_fieldset;
+	private JPanel smartstartdatepanel;
+	private JPanel execute_details_panel;
+	
+	private JRadioButton rdbtnActivation;
+	private JRadioButton rdbtnDeactivation;
+	private JRadioButton rdbtnAssurance;
+	private JRadioButton rdbtnConsumer;
+	private JRadioButton rdbtnCorporate;
+	
+	private JButton btnExecute;
+	private JButton button_details;
+	
+	private ButtonGroup radioGroupAction;
+	private ButtonGroup radioGroupMarket;
+	private ButtonGroup checkSmartStartDateGroup;
+	
+	private JLabel service_code_label;
+	private JLabel activation_date_label;
+	private JLabel smart_start_date_label;
+	
+	private JTextField msisdn_field;
+	private JTextField service_code_field;
+	private JTextField activation_date_field;
+	private JTextField smart_start_date_text;
+	
+	private JCheckBox smart_start_date_check;
+	
+	private JTextArea textArea;
+	
+	private SshResponseManagmentInterface responseManagment;
+	private SshResourceVerifyInterface response_verify;
+	private SshResourceUtilInterface util;
+	private SshResponseGridManagerInterface grid_managment;
+	private SessionStandardInterface sessionStandard;
+	private GUICommonInterface commonGUI;
+	private AutoCompleteMsisdnInterface autocompleteMsisdn;
+	
+	private Logger log;
+	
+	public void initialize() {
+		setFrameInitialSettings();
+		setPanelNorth();
+		setPanelSouth();
+		setPanelWest();
+		setPanelEast();
+		setPanelCenter();
+		
+		setBsoCommandField();
+		
+		rdbtnActivation = new JRadioButton(SSHActions.SSH_ACTION_CREATE);
+		rdbtnActivation.setActionCommand(SSHActions.SSH_ACTION_CREATE);
+		rdbtnActivation.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				util.actionOnCreate();
+			}
+		});
+		
+		rdbtnDeactivation = new JRadioButton(SSHActions.SSH_ACTION_DELETE);
+		rdbtnDeactivation.setActionCommand(SSHActions.SSH_ACTION_DELETE);
+		rdbtnDeactivation.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				util.actionOnDelete();
+			}
+		});
+		
+		rdbtnAssurance = new JRadioButton(SSHActions.SSH_ACTION_GET);
+		rdbtnAssurance.setActionCommand(SSHActions.SSH_ACTION_GET);
+		rdbtnAssurance.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				util.actionOnAssurance();
+			}
+		});
+		
+		setActionLabel();
+		setRadioActionGroup();
+		setRadioActionPanel();
+										
+		rdbtnConsumer = new JRadioButton(DAPBeanInterface.CONSUMER);
+		rdbtnConsumer.setActionCommand(DAPBeanInterface.CONSUMER);
+												
+		rdbtnCorporate = new JRadioButton(DAPBeanInterface.CORPORATE);
+		rdbtnCorporate.setActionCommand(DAPBeanInterface.CORPORATE);
+		
+		setMarketLabel();
+		setRadioMarketPanel();
+		setRadioMarketGroup();
+		
+		setMsisdnLabel();
+		setMsisdnText();
+		
+		setServiceCodeIdLabel();
+		setServiceCodeIdText();
+		
+		setActivationDateLabel();
+		setActivationDateText();
+		
+		smart_start_date_check = new JCheckBox();
+		smart_start_date_check.setActionCommand(SSHActions.NO_SMART);
+		
+		setSmartStartDateLabel();
+		setSmartStartDatePanel();
+		setSmartStartDateGroup();
+		setSmartStartDateText();
+		
+		setRespondeField();
+		setRespondeFieldComponents();
+		
+		setExecuteButton();
+		setButtonDetails();
+
+		
+		setSshResponseGridClass();
+		setSshUtilClass();
+		
+		util.initialState();
+		util.userLevel();
+		
+		frame.setVisible(true);
+	}
+
+	private void setFrameInitialSettings(){
+		frame = new JFrame();
+		frame.setResizable(false);
+		frame.setSize(1190, 700);
+		frame.setTitle("Dashboard Assurance Prepaid - SSH Resources");
+		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		frame.getRootPane().getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke("ENTER"), "none");
+		frame.getRootPane().getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke("released ENTER"), "press");
+		frame.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				getFrame().dispose();
+			}
+		});
+	}
+	
+	private void setPanelNorth(){
+		JPanel panel_north = new JPanel();
+		FlowLayout flowLayout_north = (FlowLayout) panel_north.getLayout();
+		flowLayout_north.setVgap(5);
+		frame.getContentPane().add(panel_north, BorderLayout.NORTH);
+		
+		JLabel title_label = new JLabel("SSH RESOURCES");
+		title_label.setFont(commonGUI.setFontSize(18));
+		panel_north.add(title_label);
+	}
+
+	private void setPanelSouth(){
+		JPanel panel_south = new JPanel();
+		GridBagLayout gbl_panel_south = new GridBagLayout();
+		gbl_panel_south.columnWidths = new int[]{0, 0};
+		gbl_panel_south.rowHeights = new int[] {16, 0};
+		gbl_panel_south.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+		gbl_panel_south.rowWeights = new double[]{0.0, Double.MIN_VALUE};
+		panel_south.setLayout(gbl_panel_south);
+		frame.getContentPane().add(panel_south, BorderLayout.SOUTH);
+		
+		JLabel devByLabel = new JLabel();
+		devByLabel.setText("- By Innovery S.p.A. -");
+		devByLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		devByLabel.setForeground(Color.DARK_GRAY);
+		devByLabel.setFont(commonGUI.setFontSize(Font.BOLD, 11));
+		panel_south.add(devByLabel, commonGUI.setContraints(5, 0, 3, 0, 0, 0));
+	}
+
+	private void setPanelWest(){
+		JPanel panel_west = new JPanel();
+		FlowLayout flowLayout_west = (FlowLayout) panel_west.getLayout();
+		flowLayout_west.setHgap(10);
+		frame.getContentPane().add(panel_west, BorderLayout.WEST);
+	}
+	
+	private void setPanelEast(){
+		JPanel panel_east = new JPanel();
+		FlowLayout flowLayout_east = (FlowLayout) panel_east.getLayout();
+		flowLayout_east.setHgap(10);
+		frame.getContentPane().add(panel_east, BorderLayout.EAST);
+	}
+	
+	private void setPanelCenter(){
+		panel_center = new JPanel();
+		frame.getContentPane().add(panel_center, BorderLayout.CENTER);
+		GridBagLayout gbl_panel_center = new GridBagLayout();
+		gbl_panel_center.columnWidths = new int[] {711, 0};
+		gbl_panel_center.rowHeights = new int[] {628, 0};
+		gbl_panel_center.columnWeights = new double[] { 0.0, 1.0 };
+		gbl_panel_center.rowWeights = new double[] { 1.0, Double.MIN_VALUE };
+		panel_center.setLayout(gbl_panel_center);
+	}
+	
+	private void setBsoCommandField(){
+		ssh_command_fieldset = new JPanel();
+		ssh_command_fieldset.setBorder(new TitledBorder(new LineBorder(new Color(171, 173, 179)), "SSH Resource", TitledBorder.LEADING, TitledBorder.TOP, commonGUI.setFontSize(Font.BOLD, 13), null));
+		panel_center.add(ssh_command_fieldset, commonGUI.setContraints(GridBagConstraints.BOTH, 5, 0, 5, 5, 0, 0));
+		
+		GridBagLayout gbl_ssh_command_fieldset = new GridBagLayout();
+		gbl_ssh_command_fieldset.columnWidths = new int[] {113, 578, 0};
+		gbl_ssh_command_fieldset.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0};
+		gbl_ssh_command_fieldset.columnWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
+		gbl_ssh_command_fieldset.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0 };
+		ssh_command_fieldset.setLayout(gbl_ssh_command_fieldset);
+	}
+	
+	private void setActionLabel(){
+		JLabel action_label = new JLabel("Action*");
+		ssh_command_fieldset.add(action_label, commonGUI.setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 5, 5, 0, 5, 0, 0));
+	}
+	
+	private void setRadioActionGroup(){
+		radioGroupAction = new ButtonGroup();
+		radioGroupAction.add(rdbtnActivation);
+		radioGroupAction.add(rdbtnDeactivation);
+		radioGroupAction.add(rdbtnAssurance);
+	}
+	
+	private void setRadioActionPanel(){
+		JPanel radioGroupAction_panel = new JPanel();
+		
+		ssh_command_fieldset.add(radioGroupAction_panel, commonGUI.setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 5, 0, 0, 0, 1, 0));
+		
+		GroupLayout gl_radioGroupAction_panel = new GroupLayout(radioGroupAction_panel);
+		gl_radioGroupAction_panel.setHorizontalGroup(
+			gl_radioGroupAction_panel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_radioGroupAction_panel.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(rdbtnActivation)
+					.addGap(20)
+					.addComponent(rdbtnDeactivation)
+					.addGap(20)
+					.addComponent(rdbtnAssurance)
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+		);
+		gl_radioGroupAction_panel.setVerticalGroup(
+			gl_radioGroupAction_panel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_radioGroupAction_panel.createSequentialGroup()
+					.addGroup(gl_radioGroupAction_panel.createParallelGroup(Alignment.BASELINE)
+						.addComponent(rdbtnActivation)
+						.addComponent(rdbtnDeactivation)
+						.addComponent(rdbtnAssurance))
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+		);
+		gl_radioGroupAction_panel.setAutoCreateContainerGaps(true);
+		radioGroupAction_panel.setLayout(gl_radioGroupAction_panel);
+	}
+	
+	private void setMarketLabel(){
+		JLabel market_label = new JLabel("Market*");
+		market_label.setHorizontalAlignment(SwingConstants.RIGHT);
+		ssh_command_fieldset.add(market_label, commonGUI.setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 5, 5, 0, 5, 0, 1));
+	}
+	
+	private void setRadioMarketPanel(){
+		JPanel radioGroupMarket_panel = new JPanel();
+		
+		ssh_command_fieldset.add(radioGroupMarket_panel, commonGUI.setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 5, 0, 0, 0, 1, 1));
+
+		GroupLayout gl_radioGroupMarket_panel = new GroupLayout(radioGroupMarket_panel);
+		gl_radioGroupMarket_panel.setHorizontalGroup(
+			gl_radioGroupMarket_panel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_radioGroupMarket_panel.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(rdbtnConsumer)
+					.addGap(20)
+					.addComponent(rdbtnCorporate)
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+		);
+		gl_radioGroupMarket_panel.setVerticalGroup(
+			gl_radioGroupMarket_panel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_radioGroupMarket_panel.createSequentialGroup()
+					.addGroup(gl_radioGroupMarket_panel.createParallelGroup(Alignment.BASELINE)
+						.addComponent(rdbtnConsumer)
+						.addComponent(rdbtnCorporate))
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+		);
+		gl_radioGroupMarket_panel.setAutoCreateContainerGaps(true);
+		radioGroupMarket_panel.setLayout(gl_radioGroupMarket_panel);
+	}
+	
+	private void setRadioMarketGroup(){
+		radioGroupMarket = new ButtonGroup();
+		radioGroupMarket.add(rdbtnConsumer);
+		radioGroupMarket.add(rdbtnCorporate);
+		
+		if (sessionStandard.getCurrent_market().equals(DAPBeanInterface.CONSUMER)) {
+			radioGroupMarket.setSelected(rdbtnConsumer.getModel(), true);
+		}
+		else if(sessionStandard.getCurrent_market().equals(DAPBeanInterface.CORPORATE)){
+			radioGroupMarket.setSelected(rdbtnCorporate.getModel(), true);
+		}
+	}
+	
+	private void setMsisdnLabel(){
+		JLabel msisdn_label = new JLabel("MSISDN*");
+		msisdn_label.setHorizontalAlignment(SwingConstants.RIGHT);
+		ssh_command_fieldset.add(msisdn_label, commonGUI.setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 5, 5, 0, 5, 0, 2));
+	}
+	
+	private void setMsisdnText(){
+		msisdn_field = new JTextField();
+		msisdn_field.setColumns(10);
+		msisdn_field.setText(sessionStandard.getCurrent_msisdn());
+		ssh_command_fieldset.add(msisdn_field, commonGUI.setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 5, 0, 0, 0, 1, 2));
+		
+		JComboBox msisdn_combo = autocompleteMsisdn.setupAutoComplete(msisdn_field);
+		msisdn_field.setLayout(new BorderLayout());
+		msisdn_field.add(msisdn_combo, BorderLayout.SOUTH);
+	}
+	
+	private void setServiceCodeIdLabel(){
+		service_code_label = new JLabel("Service code id");
+		service_code_label.setHorizontalAlignment(SwingConstants.RIGHT);
+		ssh_command_fieldset.add(service_code_label, commonGUI.setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 5, 5, 0, 5, 0, 3));
+	}
+	
+	private void setServiceCodeIdText(){
+		service_code_field = new JTextField();
+		service_code_field.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				util.actionOnServiceCodeSelected();
+			}
+		});
+		service_code_field.setColumns(10);
+		ssh_command_fieldset.add(service_code_field, commonGUI.setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 5, 0, 0, 0, 1, 3));
+	}
+	
+	private void setActivationDateLabel(){
+		activation_date_label = new JLabel("Activation date");
+		activation_date_label.setHorizontalAlignment(SwingConstants.RIGHT);
+		ssh_command_fieldset.add(activation_date_label, commonGUI.setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 5, 5, 0, 5, 0, 4));
+	}
+	
+	private void setActivationDateText(){
+		activation_date_field = new JTextField();
+		activation_date_field.setColumns(10);
+		ssh_command_fieldset.add(activation_date_field, commonGUI.setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 5, 0, 0, 0, 1, 4));
+	}
+	
+	private void setSmartStartDateLabel(){
+		smart_start_date_label = new JLabel("Smart recharge");
+		smart_start_date_label.setHorizontalAlignment(SwingConstants.RIGHT);
+		ssh_command_fieldset.add(smart_start_date_label, commonGUI.setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 5, 5, 0, 5, 0, 5));
+	}
+	
+	private void setSmartStartDatePanel(){
+		smartstartdatepanel = new JPanel();
+		smartstartdatepanel.setName("PANEL_SMART_DATE");
+		
+		GroupLayout gl_smartstartdate_panel = new GroupLayout(smartstartdatepanel);
+		gl_smartstartdate_panel.setHorizontalGroup(
+				gl_smartstartdate_panel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_smartstartdate_panel.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(smart_start_date_check)
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+		);
+		gl_smartstartdate_panel.setVerticalGroup(
+				gl_smartstartdate_panel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_smartstartdate_panel.createSequentialGroup()
+					.addGroup(gl_smartstartdate_panel.createParallelGroup(Alignment.BASELINE)
+						.addComponent(smart_start_date_check))
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+		);
+
+		gl_smartstartdate_panel.setAutoCreateContainerGaps(true);
+		smartstartdatepanel.setLayout(gl_smartstartdate_panel);
+		
+		ssh_command_fieldset.add(smartstartdatepanel, commonGUI.setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 5, 0, 0, 0, 1, 5));
+	}
+	
+	private void setSmartStartDateGroup(){
+		checkSmartStartDateGroup = new ButtonGroup();
+		checkSmartStartDateGroup.add(smart_start_date_check);
+		smart_start_date_check.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(checkSmartStartDateGroup.getSelection().getActionCommand().equals(SSHActions.NO_SMART)){
+					smart_start_date_check.setActionCommand(SSHActions.SMART);
+				}
+				
+				else if(checkSmartStartDateGroup.getSelection().getActionCommand().equals(SSHActions.SMART)){
+					checkSmartStartDateGroup.clearSelection();
+					smart_start_date_check.setActionCommand(SSHActions.NO_SMART);
+				}
+				util.actionOnSmartDateCheckSelected();
+			}
+		});
+	}
+	
+	private void setSmartStartDateText(){
+		smart_start_date_text = new JTextField();
+		smart_start_date_text.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				util.actionOnSmartDateSelected();
+			}
+		});
+		smart_start_date_text.setColumns(10);
+		smart_start_date_text.setName("FIELD_SMART_DATE");
+		ssh_command_fieldset.add(smart_start_date_text, commonGUI.setContraints(GridBagConstraints.VERTICAL, GridBagConstraints.WEST, 6, 0, 0, 0, 1, 5));
+	}
+	
+	private void setRespondeField(){
+		response_fieldset = new JPanel();
+		response_fieldset.setBorder(new TitledBorder(new LineBorder(new Color(171, 173, 179)), "Response", TitledBorder.LEADING, TitledBorder.TOP, commonGUI.setFontSize(Font.BOLD, 13), null));
+		panel_center.add(response_fieldset, commonGUI.setContraints(GridBagConstraints.BOTH, 5, 0, 5, 0, 1, 0));
+		GridBagLayout gbl_response_fieldset = new GridBagLayout();
+		gbl_response_fieldset.columnWidths = new int[]{0, 0};
+		gbl_response_fieldset.rowHeights = new int[]{300, 0};
+		gbl_response_fieldset.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+		gbl_response_fieldset.rowWeights = new double[]{1.0, Double.MIN_VALUE};
+		response_fieldset.setLayout(gbl_response_fieldset);
+	}
+	
+	private void setRespondeFieldComponents(){
+		setResponseFieldGrid();
+		setExecuteDetailsPanel();
+		setTextArea();
+	}
+	
+	public void resetResponseGrid(){
+		response_fieldset.remove(response_fieldset_grid);
+		response_fieldset.validate();
+		response_fieldset.repaint();
+		setResponseFieldGrid();
+	}
+	
+	private void setResponseFieldGrid(){
+		response_fieldset_grid = new JPanel();
+		GridBagLayout gbl_response_fieldset_grid = new GridBagLayout();
+		gbl_response_fieldset_grid.columnWidths = new int[]{135, 135, 135};
+		gbl_response_fieldset_grid.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0};
+		gbl_response_fieldset_grid.columnWeights = new double[]{0.0, 0.0, 0.0};
+		gbl_response_fieldset_grid.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		response_fieldset_grid.setLayout(gbl_response_fieldset_grid);
+		response_fieldset.add(response_fieldset_grid, commonGUI.setContraints(GridBagConstraints.BOTH, 0, 0, 5, 0, 0, 0));
+	}
+	
+	private void setExecuteDetailsPanel(){
+		execute_details_panel = new JPanel();
+		GridBagLayout gbl_execute_details_panel = new GridBagLayout();
+		gbl_execute_details_panel.columnWidths = new int[]{250, 250, 0};
+		gbl_execute_details_panel.rowHeights = new int[]{0, 0};
+		gbl_execute_details_panel.columnWeights = new double[]{1.0, 1.0, Double.MIN_VALUE};
+		gbl_execute_details_panel.rowWeights = new double[]{0.0, Double.MIN_VALUE};
+		execute_details_panel.setLayout(gbl_execute_details_panel);
+		response_fieldset.add(execute_details_panel, commonGUI.setContraints(GridBagConstraints.BOTH,0, 0, 5, 0, 0, 1));
+	}
+
+	private void setTextArea(){
+		textArea = new JTextArea();
+		textArea.setVisible(false);
+		textArea.setEditable(false);
+		textArea.setLineWrap(true);
+		response_fieldset.add(textArea, commonGUI.setContraints(GridBagConstraints.BOTH, 5, 0, 5, 0, 0, 0));
+	}
+	
+	private void setExecuteButton(){
+		btnExecute = new JButton(SSHActions.SSH_ACTION_EXECUTE);
+		btnExecute.setActionCommand(SSHActions.SSH_ACTION_EXECUTE);
+		execute_details_panel.add(btnExecute, commonGUI.setContraints(GridBagConstraints.CENTER, GridBagConstraints.WEST, 0, 0, 5, 0, 0, 0));
+		frame.getRootPane().setDefaultButton(btnExecute);
+		btnExecute.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnExecute.setEnabled(false);
+				if(btnExecute.getActionCommand().equals(SSHActions.SSH_ACTION_EXECUTE)){
+					setSshVerificationClass();
+					if (response_verify.sshVerify()) {
+						Thread thread = new Thread(new Runnable() {
+						    public void run() {
+					            try {
+					                Thread.sleep(100); //to give time for users to read
+					            } catch (InterruptedException e) {
+					            	log.warn(e);
+					            }finally{
+					            	resetResponseGrid();
+					            	setSshResponseGridClass();
+					            	setSshResponseManagerClass();
+					                responseManagment.getResponse();
+					            }
+						    }
+						});
+						thread.start();	
+					}
+					else{
+						btnExecute.setEnabled(true);
+					}
+				}
+				else{
+					resetResponseGrid();
+					setSshResponseGridClass();
+					util.backButtonActionPerformed();
+					btnExecute.setEnabled(true);
+				}
+			}
+		});
+	}
+
+	private void setButtonDetails(){
+		button_details = new JButton("+");
+		button_details.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				if (textArea.isVisible()) {
+					textArea.setVisible(false);
+					response_fieldset_grid.setVisible(true);
+					button_details.setText("+");
+				} else {
+					textArea.setVisible(true);
+					response_fieldset_grid.setVisible(false);
+					button_details.setText("-");
+				}
+			}
+		});
+		execute_details_panel.add(button_details, commonGUI.setContraints(GridBagConstraints.CENTER, GridBagConstraints.EAST, 0, 0, 5, 0, 1, 0));
+	}
+	
+	private void setSshResponseGridClass(){
+		grid_managment.setResponseFieldset(response_fieldset);
+		grid_managment.setResponseFieldsetGrid(response_fieldset_grid);
+		grid_managment.setActionButtonGroup(radioGroupAction);
+	}
+	
+	private void setSshResponseManagerClass(){
+		responseManagment.setGridManager(grid_managment);
+		responseManagment.setTextArea(textArea);
+		responseManagment.setBtnExecute(btnExecute);
+		responseManagment.setMsisdnField(msisdn_field);
+		responseManagment.setActionButtonGroup(radioGroupAction);
+		responseManagment.setMarketButtonGroup(radioGroupMarket);
+		responseManagment.setServiceCodeField(service_code_field);
+		responseManagment.setServiceCodeDateField(activation_date_field);
+		responseManagment.setSmartDateSelected(smart_start_date_check);
+		responseManagment.setSmartDateField(smart_start_date_text);
+	}
+	
+	private void setSshVerificationClass(){
+		response_verify.setMsisdnField(msisdn_field);
+		response_verify.setActionButtonGroup(radioGroupAction);
+		response_verify.setMarketButtonGroup(radioGroupMarket);
+		response_verify.setServiceCodeField(service_code_field);
+		response_verify.setServiceCodeDateField(activation_date_field);
+		response_verify.setSmartDateField(smart_start_date_text);
+	}
+	
+	private void setSshUtilClass(){
+		util.setFrame(frame);
+		util.setTextArea(textArea);
+		
+		util.setMsisdnField(msisdn_field);
+		
+		util.setSmartDateCheckGroup(checkSmartStartDateGroup);
+		
+		util.setSmartDatePanel(smartstartdatepanel);
+		util.setSmartDateLabel(smart_start_date_label);
+		util.setSmartDateField(smart_start_date_text);
+		util.setSmartDateCheck(smart_start_date_check);
+		
+		util.setServiceCodeLabel(service_code_label);
+		util.setServiceCodeField(service_code_field);
+		util.setServiceCodeDateLabel(activation_date_label);
+		util.setServiceCodeDateField(activation_date_field);
+		
+		util.setRdbtnActivation(rdbtnActivation);
+		util.setRdbtnDeactivation(rdbtnDeactivation);
+		
+		util.setActionButtonGroup(radioGroupAction);
+		util.setBtnExecute(btnExecute);
+		util.setGridManager(grid_managment);
+	}
+	
+//	private void setButtonAccess(){
+//		if (sessionStandard.getUser_level() != user_levels.getRoot()) {
+//			rdbtnActivation.setEnabled(false);
+//			rdbtnDeactivation.setEnabled(false);
+//		}
+//	}
+	
+	public JFrame getFrame() {
+		return frame;
+	}
+
+	public JButton getBtnExecute() {
+		return btnExecute;
+	}
+
+	public void setResponseManagment(SshResponseManagmentInterface responseManagment) {
+		this.responseManagment = responseManagment;
+	}
+
+	public void setUtil(SshResourceUtilInterface util) {
+		this.util = util;
+	}
+
+	public void setResponse_verify(SshResourceVerifyInterface response_verify) {
+		this.response_verify = response_verify;
+	}
+
+	public void setGrid_managment(SshResponseGridManagerInterface grid_managment) {
+		this.grid_managment = grid_managment;
+	}
+
+	@Override
+	public void setLog(Logger log) {
+		this.log = log;
+	}
+
+	@Override
+	public void setSessionStandard(SessionStandardInterface sessionStandard) {
+		this.sessionStandard = sessionStandard;
+	}
+
+	@Override
+	public void setCommonGUI(GUICommonInterface commonGUI) {
+		this.commonGUI = commonGUI;
+	}
+
+	@Override
+	public void setAutocompleteMsisdn(AutoCompleteMsisdnInterface autocompleteMsisdn) {
+		this.autocompleteMsisdn = autocompleteMsisdn;
+	}
+}

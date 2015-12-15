@@ -1,0 +1,124 @@
+package com.innovery.mpm.ssh.implementations.gui.util;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
+import com.innovery.mpm.connection.interfaces.component.DAPBeanInterface;
+import com.innovery.mpm.ssh.implementations.action.ActionServiceCode;
+import com.innovery.mpm.ssh.implementations.bean.ServiceCode;
+import com.innovery.mpm.ssh.implementations.util.SSHActions;
+import com.innovery.mpm.ssh.interfaces.action.ActionServiceCodeInterface;
+import com.innovery.mpm.ssh.interfaces.bean.ServiceCodeInterface;
+import com.innovery.mpm.ssh.interfaces.gui.SshResponseGridManagmentInterface;
+import com.innovery.mpm.ssh.interfaces.gui.util.SshResponseManagmentInterface;
+
+public class SshResponseManager implements SshResponseManagmentInterface{
+	
+	private DAPBeanInterface components;
+	
+	private SshResponseGridManagmentInterface gridManager;
+	private JTextArea textArea;
+	private JButton btnExecute;
+	private JTextField msisdnField;
+	private JTextField serviceCodeField;
+	private JTextField serviceCodeDateField;
+	private JCheckBox smartDateSelected;
+	private JTextField smartDateField;
+	private ButtonGroup actionButtonGroup;
+	private ButtonGroup marketButtonGroup;
+	
+	public void getResponse(){
+		saveSessionInfo();
+		ActionServiceCodeInterface sci = new ActionServiceCode();
+		sci.setComponents(components);
+		
+	    String response_mpm = sci.executeServiceCodeCommand(createBean());
+	    
+	    gridManager.setResponseGridAssurance(response_mpm);
+	    textArea.setText(response_mpm);
+	    
+	    btnExecute.setEnabled(true);
+		    
+	    if(response_mpm.equals(components.getErrorMessages().get_NOT_LOGGED_WARN()) || 
+	       response_mpm.equals(components.getErrorMessages().get_MPM_CONNECTION_WARN())){
+			if(response_mpm.equals(components.getErrorMessages().get_NOT_LOGGED_WARN())){
+				btnExecute.setText(SSHActions.SSH_ACTION_RECONNECT);
+				btnExecute.setActionCommand(SSHActions.SSH_ACTION_RECONNECT);
+			}
+			else if(response_mpm.equals(components.getErrorMessages().get_MPM_CONNECTION_WARN())){
+				btnExecute.setText(SSHActions.SSH_ACTION_HOME);
+				btnExecute.setActionCommand(SSHActions.SSH_ACTION_HOME);
+			}
+		}
+	}
+	
+	private ServiceCodeInterface createBean(){
+		ServiceCodeInterface sc = new ServiceCode();
+		sc.setMsisdn(msisdnField.getText());
+		sc.setAction(actionButtonGroup.getSelection().getActionCommand());
+		sc.setServiceCodeId(serviceCodeField.getText());
+		sc.setActivationDate(serviceCodeDateField.getText());
+		sc.setSmartStartDate_check(smartDateSelected.isSelected());
+		sc.setSmartStartDate_text(smartDateField.getText());
+		return sc;
+	}
+	
+	private void saveSessionInfo(){
+		components.getLogger().info("SAVING SESSION");
+		if (!components.getConnectionManagerStandard().getSession().getCurrent_msisdn().equals(msisdnField.getText())) {
+			components.getConnectionManagerStandard().getSession().setCurrent_msisdn(msisdnField.getText());
+			components.getMsisdnCompleter().store(msisdnField.getText());
+		}
+		if(!components.getConnectionManagerStandard().getSession().getCurrent_market().equals(marketButtonGroup.getSelection().getActionCommand())){
+			components.getConnectionManagerStandard().getSession().setCurrent_market(marketButtonGroup.getSelection().getActionCommand());
+		}
+		components.getLogger().info("SESSION SAVED");
+	}
+
+	public void setComponents(DAPBeanInterface components) {
+		this.components = components;
+	}
+
+	public void setGridManager(SshResponseGridManagmentInterface gridManager) {
+		this.gridManager = gridManager;
+	}
+
+	public void setTextArea(JTextArea textArea) {
+		this.textArea = textArea;
+	}
+
+	public void setBtnExecute(JButton btnExecute) {
+		this.btnExecute = btnExecute;
+	}
+
+	public void setMsisdnField(JTextField msisdnField) {
+		this.msisdnField = msisdnField;
+	}
+
+	public void setServiceCodeField(JTextField serviceCodeField) {
+		this.serviceCodeField = serviceCodeField;
+	}
+
+	public void setServiceCodeDateField(JTextField serviceCodeDateField) {
+		this.serviceCodeDateField = serviceCodeDateField;
+	}
+
+	public void setSmartDateSelected(JCheckBox smartDateSelected) {
+		this.smartDateSelected = smartDateSelected;
+	}
+
+	public void setSmartDateField(JTextField smartDateField) {
+		this.smartDateField = smartDateField;
+	}
+
+	public void setActionButtonGroup(ButtonGroup actionButtonGroup) {
+		this.actionButtonGroup = actionButtonGroup;
+	}
+
+	public void setMarketButtonGroup(ButtonGroup marketButtonGroup) {
+		this.marketButtonGroup = marketButtonGroup;
+	}
+}

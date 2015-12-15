@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CommitComments>	<CommitComment>tag versione 25.57.16.01.11 - 12/12/2015</CommitComment>
+	<CommitComment>Rinominate classi responseManager e responseGrid, e spostata la grid nelpackage util</CommitComment>
+	<CommitComment>Inserito il nuovo XML per il rilascio di gennaio 2016</CommitComment>
+	<CommitComment>Eliminato il metodo getReference perchè nell&apos;implementazione è stata eliminata la variabile reference e il sul GET
+</CommitComment>
+	<CommitComment>Eliminata definitivamente la variabile REFERENCE.</CommitComment>
+	<CommitComment>cambiata la griglia della PAM con più spazio da UCVALUE e UTID</CommitComment>
+	<CommitComment>aggiunto:
+grid_managment.setResponseFieldset(response_fieldset);
+grid_managment.setResponseFieldsetGrid(response_fieldset_grid);
+
+per la classe gridManager e spostata la chiamata del metodo privato che setta le variabili nella fine dell&apos;inizializzazione, a riga 217.</CommitComment>
+	<CommitComment>//		grid_managment.setReference(air_resource);
+Eliminato &quot;reference&quot; dal grid manager. Non più settato qui.</CommitComment>
+	<CommitComment>sostituite le costanti locali con la costante
+public final static String AIR_RESOURCE_NOT_FOUND = &quot; not found&quot;;
+nella classe AIRMessages</CommitComment>
+	<CommitComment>Aggiunta costante 
+public final static String AIR_RESOURCE_NOT_FOUND = &quot; not found&quot;;</CommitComment>
+</CommitComments>
